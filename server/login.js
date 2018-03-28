@@ -43,7 +43,7 @@ module.exports = class {
     //   (new member()).GetMemberFromAccount(req.session.session_id, callback);
     // });
 
-    this.router.get("/", function(req, res) {
+    this.router.post("/", function(req, res) {
       // if (req.session.sessionAdmin_id) {
       //   res.send("Admin登入中\n請先登出Admin");
       // } else if (req.session.session_id) {
@@ -64,8 +64,8 @@ module.exports = class {
           res.locals.username = req.body.ID;
           //設定session
           req.session.session_id = req.body.ID; //res.locals.username
-          //res.redirect('/');
-          res.render('./UI/home.html');
+          //res.redirect('/home');
+          res.send('successed!');
           return;
         }
       });
@@ -86,10 +86,10 @@ module.exports = class {
     //   res.send('successed');
     // });
     //
-    // this.router.get("/IsLogined", function(req, res) {
-    //   if (req.session.session_id) res.send(req.session.session_id);
-    //   else res.send('false');
-    // });
+    this.router.get("/IsLogined", function(req, res) {
+      if (req.session.session_id) res.send(req.session.session_id);
+      else res.send('false');
+    });
     //
     // this.router.post("/ifMemberExist", function(req, res) {
     //   var User = new member();

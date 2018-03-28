@@ -9,7 +9,12 @@ module.exports = class {
       res.sendfile('./UI/index.html', function(err) {
         if (err) res.send(404);
       });
-      // res.end(JSON.stringify({success:true , data:result}));
+    });
+
+    this.router.get("/home", function(req, res) {
+      res.sendfile('./UI/home.html', function(err) {
+        if (err) res.send(404);
+      });
     });
 
     // this.router.get("/new_arrival", function(req, res) {
