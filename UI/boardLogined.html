@@ -98,7 +98,7 @@
 
 <div id="fullpage">
   <div id="header">
-    <img src="./assets/timelog.png" alt="logo" style="width:10%;display: inline;">
+    <img src="./assets/timelog.png" alt="logo" style="width:8%;display: inline;">
     <div style="display: inline;margin-left:20px;">
       User :
       <div id="user" style="display: inline;">unknown
@@ -116,28 +116,45 @@
 
 
   <div id="Board" class="section">
-    <div class="row">
-      <div class="form-group col-md-4">
-        <div id="sandbox-container">
+    <div class="container">
+      <div class="row">
+        <div class="form-group col-md-4">
+          <h3>Add a log</h3>
+          <div id="dtBox"></div>
+          <div class="row col-md-12">
+            Date:
+            <input id="recordDate" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              Start:
+              <input type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
+            </div>
+            <div class="col-md-5">
+              End:
+              <input type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
+            </div>
+          </div>
+          <script type="text/javascript">
+            $(document).ready(function() {
+              $("#dtBox").DateTimePicker({
+                dateFormat: "MM-dd-yyyy",
+                timeFormat: "HH:mm",
+                dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA"
+              });
+            });
+          </script>
+          <div class="row">
+
+          </div>
         </div>
 
-        <script type="text/javascript">
-          $('#sandbox-container').datepicker({
-            format: "mm-dd-yyyy",
-            calendarWeeks: true,
-            todayHighlight: true,
-            orientation: "top auto",
-          });
-
-          console.log("aaa");
-          console.log($('#sandbox-container').datepicker("getDate"));
-        </script>
-      </div>
-      <div class="form-group col-md-4">
-        11
-      </div>
-      <div class="form-group col-md-4">
-        11
+        <div class="form-group col-md-4">
+          11
+        </div>
+        <div class="form-group col-md-4">
+          11
+        </div>
       </div>
     </div>
   </div>
