@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 //route file declare
 const Index = require('./server/index.js');
 const Admin = require('./server/admin.js');
-const Api = require('./server/Api.js');
 const Login = require('./server/login.js');
 
 //main framwork declare
