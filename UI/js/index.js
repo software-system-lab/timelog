@@ -5,14 +5,17 @@ $(document).ready(function() {
       "ID": ($('#ID').val()),
       "Password": ($('#Password').val())
     }
-    Post('/login', data, function(msg) {
-      if (msg == 'successed!')
-        location.href = "./home";
-      else {
-        alert(msg);
-      }
-      //CheckLogin();
-    });
+    if ($('#ID').val() != "") {
+      Post('/login', data, function(msg) {
+        if (msg == 'successed!')
+          location.href = "./home";
+        else {
+          $("#error").html("<br><div class='alert alert-danger' role='alert'>" + msg + " Please try again.</div>")
+        }
+        //CheckLogin();
+      });
+    }
+
   });
 });
 

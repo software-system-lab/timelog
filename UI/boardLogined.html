@@ -1,0 +1,149 @@
+<script type=" text/javascript ">
+  $(document).ready(function() {
+    $('#fullpage').fullpage({
+      //导航
+      //menu: '#menu',
+      lockAnchors: true,
+      //anchors: ['firstPage', 'secondPage'],
+      navigation: true,
+      navigationPosition: 'right',
+      navigationTooltips: ['Board', 'Statistics'],
+      showActiveTooltip: true,
+      slidesNavigation: false,
+      slidesNavPosition: 'bottom',
+
+      //滚动
+      css3: true,
+      scrollingSpeed: 700,
+      autoScrolling: true,
+      fitToSection: true,
+      fitToSectionDelay: 1000,
+      scrollBar: false,
+      easing: 'easeInOutCubic',
+      easingcss3: 'ease',
+      loopBottom: true,
+      loopTop: true,
+      loopHorizontal: true,
+      continuousVertical: false,
+      continuousHorizontal: false,
+      scrollHorizontally: false,
+      interlockedSlides: false,
+      dragAndMove: true,
+      offsetSections: false,
+      resetSliders: false,
+      fadingEffect: true,
+      normalScrollElements: '#element1, .element2',
+      scrollOverflow: false,
+      scrollOverflowReset: false,
+      scrollOverflowOptions: null,
+      touchSensitivity: 15,
+      normalScrollElementTouchThreshold: 5,
+      bigSectionsDestination: null,
+
+      //可访问
+      keyboardScrolling: true,
+      animateAnchor: true,
+      recordHistory: false,
+
+      //设计
+      controlArrows: true,
+      verticalCentered: true,
+      sectionsColor: ['#f2f2f2', '#E0FFFF', '#7BAABE', 'whitesmoke', '#000'],
+      paddingTop: '0em',
+      paddingBottom: '10px',
+      fixedElements: '#header',
+      responsiveWidth: 0,
+      responsiveHeight: 0,
+      responsiveSlides: false,
+      parallax: false,
+      parallaxOptions: {
+        type: 'reveal',
+        percentage: 62,
+        property: 'translate'
+      },
+
+      //自定义选择器
+      sectionSelector: '.section',
+      slideSelector: '.slide',
+
+      lazyLoading: true,
+
+      //事件
+      onLeave: function(index, nextIndex, direction) {},
+      afterLoad: function(anchorLink, index) {},
+      afterRender: function() {},
+      afterResize: function() {},
+      afterResponsive: function(isResponsive) {},
+      afterSlideLoad: function(anchorLink, index, slideAnchor, slideIndex) {},
+      onSlideLeave: function(anchorLink, index, slideIndex, direction, nextSlideIndex) {}
+    });
+  });
+</script>
+
+<style type="text/css">
+  #header {
+    position: fixed;
+    top: 0px;
+    padding-left: 20px;
+  }
+
+  #header a {
+    padding: 5px;
+    margin-left: 10px;
+    display: inline-block;
+    border: 3px solid #FFE4C4;
+    border-radius: 5px;
+  }
+</style>
+
+<div id="fullpage">
+  <div id="header">
+    <img src="./assets/timelog.png" alt="logo" style="width:10%;display: inline;">
+    <div style="display: inline;margin-left:20px;">
+      User :
+      <div id="user" style="display: inline;">unknown
+      </div>
+      --- My Project / Group :
+      <div id="project" style="display: inline;">unknown
+      </div>
+    </div>
+    <div style="display: inline-block;">
+      <!-- <a href="#timelog ">TimeLog</a>
+            <a href="#toDoList ">To Do List</a> -->
+    </div>
+  </div>
+
+
+
+  <div id="Board" class="section">
+    <div class="row">
+      <div class="form-group col-md-4">
+        <div id="sandbox-container">
+        </div>
+
+        <script type="text/javascript">
+          $('#sandbox-container').datepicker({
+            format: "mm-dd-yyyy",
+            calendarWeeks: true,
+            todayHighlight: true,
+            orientation: "top auto",
+          });
+
+          console.log("aaa");
+          console.log($('#sandbox-container').datepicker("getDate"));
+        </script>
+      </div>
+      <div class="form-group col-md-4">
+        11
+      </div>
+      <div class="form-group col-md-4">
+        11
+      </div>
+    </div>
+  </div>
+
+  <div id="Statistics" class="section">
+    1toDoList
+  </div>
+
+</div>
