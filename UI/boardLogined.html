@@ -128,11 +128,11 @@
           <div class="row">
             <div class="col-md-5">
               Start:
-              <input type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
+              <input id="recordStart" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
             </div>
             <div class="col-md-5">
               End:
-              <input type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
+              <input id="recordStop" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
             </div>
           </div>
           <script type="text/javascript">
@@ -144,8 +144,11 @@
               });
             });
           </script>
-          <div class="row">
-
+          <br>
+          <div class="row col-md-12">
+            <div id="Start" class="btn btn-success " onclick="setStart()" style="margin:5px;">Start</div>
+            <div id="Stop" class="btn btn-warning" onclick="setStop()" style="margin:5px;">Stop</div>
+            <div id="status"></div>
           </div>
         </div>
 
