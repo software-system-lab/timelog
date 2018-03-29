@@ -4,13 +4,13 @@
 timelog is a web app for users to record how they use time.
 It have been developed by node.js and mySQL.
 
-##Version
+## Version
 *Now developing* comming soon
-#How to use
-##Sever
+# How to use
+## Sever
 1.Clone the project
 2.Install node.js
-[https://nodejs.org/]
+https://nodejs.org/
 
 3.In terminal,cd to the root folder of this project
 
@@ -20,7 +20,7 @@ cd "Path"/timelog
 
 node timelog
 
-##Website
+## Website
 
-###login
+### login
 ![](/UI/assets/sampleLogin.png)
