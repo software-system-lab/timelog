@@ -137,10 +137,17 @@
           </div>
           <script type="text/javascript">
             $(document).ready(function() {
+              var Today = new Date();
+              var month = (Today.getMonth() + 1).toString();
+              if (month.length == 1)
+                month = "0" + month;
+              var Todaystr = (Today.getFullYear()).toString() + '-' + month + '-' + (Today.getDate()).toString();
+              $("#recordDate").val(Todaystr);
+
               $("#dtBox").DateTimePicker({
                 dateFormat: "MM-dd-yyyy",
                 timeFormat: "HH:mm",
-                dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA"
+                dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA",
               });
             });
           </script>
@@ -163,6 +170,9 @@
   </div>
 
   <div id="Statistics" class="section">
+    1toDoList
+  </div>
+  <div id="s" class="section">
     1toDoList
   </div>
 
