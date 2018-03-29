@@ -23,10 +23,6 @@ function CheckLogin() {
   var callback = function(loginStatus) {
     if (loginStatus != "false") {
       location.href = "./home";
-    } else {
-      $(".body").html("<img src='./assets/timelog.png' alt='logo' style='width:100px; display: block; margin: auto;'> < \
-        h2 > Not Logined < /h2> < \
-        a href = './' > Click Here To Login < /a>")
     }
   }
   Get(apiUrl, callback);

@@ -87,8 +87,19 @@ module.exports = class {
     // });
     //
     this.router.get("/IsLogined", function(req, res) {
-      if (req.session.session_id) res.send(req.session.session_id);
-      else res.send('false');
+      if (req.session.session_id) {
+        var User = new member();
+        User.GetMemberFromAccount(req.session.session_id, function(err, results) {
+          var proj = results.Project;
+          if (results.Project)
+            proj = "N/A"
+          var data = {
+            "Name": results.Name,
+            "Project": proj
+          }
+          res.send(data);
+        });
+      } else res.send('false');
     });
     //
     // this.router.post("/ifMemberExist", function(req, res) {
