@@ -9,7 +9,7 @@ function CheckLogin() {
       $(".body").load('boardLogined.html');
       setTimeout(function() {
         $("#user").text(loginStatus.Name);
-        $("#project").text(loginStatus.Project);
+        $("#team").text(loginStatus.Team);
       }, 500)
     } else {
       $(".body").html("<img src='./assets/timelog.png' alt='logo' style='width:100px; display: block; margin: auto;'> \
@@ -28,7 +28,7 @@ var t;
 function setStart() {
   $('#recordStart').focus();
   $('.dtpicker-buttonSet').click();
-  $('#status').text("counting~");
+  $('#Status').text("counting~");
   timedCount();
 }
 
@@ -46,13 +46,13 @@ function timedCount() {
   if (s.length == 1)
     s = "0" + s.toString();
 
-  $('#status').text("counting~ " + h + " : " + m + " : " + s);
+  $('#Status').text("counting~ " + h + " : " + m + " : " + s);
   t = setTimeout("timedCount()", 1000);
 }
 
 function setStop() {
   $('#recordStop').focus();
   $('.dtpicker-buttonSet').click();
-  $('#status').text("");
+  $('#Status').text("");
   clearTimeout(t);
 }

@@ -104,7 +104,7 @@
       <div id="user" style="display: inline;">unknown
       </div>
       --- My Project / Group :
-      <div id="project" style="display: inline;">unknown
+      <div id="team" style="display: inline;">unknown
       </div>
     </div>
     <div style="display: inline-block;">
@@ -121,16 +121,18 @@
         <div class="form-group col-md-4">
           <h3>Add a log</h3>
           <div id="dtBox"></div>
-          <div class="row col-md-12">
-            Date:
-            <input id="recordDate" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+          <div class="form-row">
+            <div class="col-md-12">
+              Date:
+              <input id="recordDate" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+            </div>
           </div>
-          <div class="row">
-            <div class="col-md-5">
+          <div class="form-row">
+            <div class="col-md-6">
               Start:
               <input id="recordStart" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
               End:
               <input id="recordStop" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
             </div>
@@ -151,25 +153,28 @@
               });
             });
           </script>
-          <br>
-          <div class="row col-md-12">
+          <div class="form-row">
             <div id="Start" class="btn btn-success " onclick="setStart()" style="margin:5px;">Start</div>
             <div id="Stop" class="btn btn-warning" onclick="setStop()" style="margin:5px;">Stop</div>
-            <div id="status"></div>
+            <div id="Status"></div>
           </div>
-          <br>
-          <div class="row col-md-12">
+          <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="inputCity">Event</label>
-              <input type="text" class="form-control" id="inputCity">
-
+              <label for="Event">Event</label>
+              <input type="text" class="form-control" id="Event">
             </div>
             <div class="form-group col-md-6">
-              <label for="inputState">Tag</label>
-              <select id="inputState" class="form-control">
+              <label for="Tag">Tag</label>
+              <select id="Tag" class="form-control">
                 <option selected>Choose...</option>
                 <option>...</option>
               </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-12">
+              <label for="Comment">Comment</label>
+              <textarea class="form-control" id="Comment" rows="3"></textarea>
             </div>
           </div>
 

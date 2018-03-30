@@ -90,12 +90,13 @@ module.exports = class {
       if (req.session.session_id) {
         var User = new member();
         User.GetMemberFromAccount(req.session.session_id, function(err, results) {
-          var proj = results.Project;
-          if (results.Project)
-            proj = "N/A"
+          var team = results.Team;
+          if (!results.Team)
+            team = "N/A";
+          console.log(team);
           var data = {
             "Name": results.Name,
-            "Project": proj
+            "Team": team
           }
           res.send(data);
         });

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018-03-28 09:10:08
+-- 產生時間： 2018-03-30 09:47:16
 -- 伺服器版本: 10.1.30-MariaDB
 -- PHP 版本： 7.2.2
 
@@ -21,17 +21,6 @@ SET time_zone = "+00:00";
 --
 -- 資料庫： `timelog`
 --
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `project`
---
-
-CREATE TABLE `project` (
-  `projectName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `owner` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -62,6 +51,17 @@ CREATE TABLE `sessions` (
 -- --------------------------------------------------------
 
 --
+-- 資料表結構 `team`
+--
+
+CREATE TABLE `team` (
+  `TeamName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `owner` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- 資料表結構 `typetag`
 --
 
@@ -82,19 +82,13 @@ CREATE TABLE `user` (
   `Name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `Mail` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Project` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
+  `Team` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` int(1) NOT NULL DEFAULT '0' COMMENT '2為admin'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 已匯出資料表的索引
 --
-
---
--- 資料表索引 `project`
---
-ALTER TABLE `project`
-  ADD PRIMARY KEY (`projectName`),
-  ADD KEY `owner` (`owner`);
 
 --
 -- 資料表索引 `record`
@@ -103,6 +97,13 @@ ALTER TABLE `record`
   ADD PRIMARY KEY (`RecordID`),
   ADD KEY `user` (`User`),
   ADD KEY `tag` (`Tag`);
+
+--
+-- 資料表索引 `team`
+--
+ALTER TABLE `team`
+  ADD PRIMARY KEY (`TeamName`),
+  ADD KEY `owner` (`owner`);
 
 --
 -- 資料表索引 `typetag`
@@ -116,7 +117,7 @@ ALTER TABLE `typetag`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `project` (`Project`);
+  ADD KEY `project` (`Team`);
 
 --
 -- 在匯出的資料表使用 AUTO_INCREMENT
@@ -139,17 +140,17 @@ ALTER TABLE `typetag`
 --
 
 --
--- 資料表的 Constraints `project`
---
-ALTER TABLE `project`
-  ADD CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `user` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
 -- 資料表的 Constraints `record`
 --
 ALTER TABLE `record`
   ADD CONSTRAINT `tag` FOREIGN KEY (`Tag`) REFERENCES `record` (`RecordID`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `user` FOREIGN KEY (`User`) REFERENCES `user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- 資料表的 Constraints `team`
+--
+ALTER TABLE `team`
+  ADD CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `user` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- 資料表的 Constraints `typetag`
@@ -161,7 +162,7 @@ ALTER TABLE `typetag`
 -- 資料表的 Constraints `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `project` FOREIGN KEY (`Project`) REFERENCES `project` (`projectName`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `project` FOREIGN KEY (`Team`) REFERENCES `team` (`TeamName`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
