@@ -93,7 +93,6 @@ module.exports = class {
           var team = results.Team;
           if (!results.Team)
             team = "N/A";
-          console.log(team);
           var data = {
             "Name": results.Name,
             "Team": team

@@ -139,13 +139,6 @@
           </div>
           <script type="text/javascript">
             $(document).ready(function() {
-              var Today = new Date();
-              var month = (Today.getMonth() + 1).toString();
-              if (month.length == 1)
-                month = "0" + month;
-              var Todaystr = (Today.getFullYear()).toString() + '-' + month + '-' + (Today.getDate()).toString();
-              $("#recordDate").val(Todaystr);
-
               $("#dtBox").DateTimePicker({
                 dateFormat: "MM-dd-yyyy",
                 timeFormat: "HH:mm",
@@ -154,30 +147,34 @@
             });
           </script>
           <div class="form-row">
-            <div id="Start" class="btn btn-success " onclick="setStart()" style="margin:5px;">Start</div>
+            <div id="Start" class="btn btn-success" onclick="setStart()" style="margin:5px;">Start</div>
             <div id="Stop" class="btn btn-warning" onclick="setStop()" style="margin:5px;">Stop</div>
             <div id="Status"></div>
           </div>
           <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-7">
               <label for="Event">Event</label>
               <input type="text" class="form-control" id="Event">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
               <label for="Tag">Tag</label>
               <select id="Tag" class="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
+                <option value="NULL" selected>Choose...</option>
+                <option value="0">...</option>
               </select>
             </div>
           </div>
           <div class="form-row">
             <div class="col-md-12">
               <label for="Comment">Comment</label>
-              <textarea class="form-control" id="Comment" rows="3"></textarea>
+              <textarea class="form-control" id="Comment" rows="3" value=""></textarea>
             </div>
           </div>
-
+          <hr>
+          <div class="form-row">
+            <div id="Add" class="btn btn-info col-md-6" onclick="addALog()" style="margin:5px;">Add</div>
+            <div id="Clear" class="btn btn-danger col-md-4" onclick="clearAll()" style="margin:5px;">Clear</div>
+          </div>
         </div>
 
         <div class="form-group col-md-4">

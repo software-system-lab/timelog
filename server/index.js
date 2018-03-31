@@ -1,3 +1,5 @@
+var Record = require('./recordApi.js');
+
 module.exports = class {
   constructor(router) {
     this.router = router;
@@ -14,6 +16,17 @@ module.exports = class {
     this.router.get("/home", function(req, res) {
       res.sendfile('./UI/home.html', function(err) {
         if (err) res.send(404);
+      });
+    });
+
+    this.router.post("/addALog", function(req, res) {
+      var record = new Record();
+      record.addALog(req.body, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send("successed");
+        }
       });
     });
 
