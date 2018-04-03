@@ -4,7 +4,8 @@ $(document).ready(function() {
   setTimeout(function() {
     $('#Stop').hide();
     setToday();
-  }, 300);
+    getRecentLog();
+  }, 500);
 });
 
 function CheckLogin() {
@@ -29,9 +30,12 @@ function CheckLogin() {
 function setToday() {
   var Today = new Date();
   var month = (Today.getMonth() + 1).toString();
+  var date = (Today.getDate()).toString();
   if (month.length == 1)
     month = "0" + month;
-  var Todaystr = (Today.getFullYear()).toString() + '-' + month + '-' + (Today.getDate()).toString();
+  if (date.length == 1)
+    date = "0" + date;
+  var Todaystr = (Today.getFullYear()).toString() + '-' + month + '-' + date;
   $("#recordDate").val(Todaystr);
 }
 
@@ -67,6 +71,7 @@ function timedCount() {
 };
 
 function setStop() {
+  s = m = h = 0;
   $('#Start').show();
   $('#Stop').hide();
   $('#recordStop').focus();
@@ -82,8 +87,9 @@ function addALog() {
     $('#recordStop').addClass("is-invalid");
   if ($('#Event').val() == "")
     $('#Event').addClass("is-invalid");
-
-  if ($('#recordStart').val() != "" || $('#recordStop').val() != "" || $('#Event').val() != "") {
+  if ($('#recordStart').val() == "" || $('#recordStop').val() == "" || $('#Event').val() == "")
+    alert("Please check your log!");
+  if ($('#recordStart').val() != "" && $('#recordStop').val() != "" && $('#Event').val() != "") {
     var url = '/addALog';
     var data = {
       "user": useR,
@@ -96,10 +102,12 @@ function addALog() {
     };
     var callback = function(msg) {
       alert(msg);
+      if (msg == "successed")
+        clearAll();
     }
     Post(url, data, callback);
   }
-}
+};
 
 function clearAll() {
   setToday();
@@ -111,4 +119,26 @@ function clearAll() {
   $('#recordStart').removeClass("is-invalid");
   $('#recordStop').removeClass("is-invalid");
   $('#Event').removeClass("is-invalid");
+};
+
+function getRecentLog() {
+  var url = '/getRecentLog';
+  var data = {
+    "user": useR
+  };
+  var callback = function(results) {
+    if (results != "failed") {
+      for (var i = 0; i < results.length; i++) {
+        $("#recentLog").append(
+          "<tr> \
+              <th scope='row'>" + results[i].Event + "</th> \
+              <td>" + results[i].Tag + "</td> \
+              <td>" + results[i].Date + "</td> \
+              <td>" + results[i].timeInterval + "</td> \
+            </tr>"
+        );
+      }
+    }
+  }
+  Post(url, data, callback);
 };

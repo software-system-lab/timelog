@@ -30,6 +30,17 @@ module.exports = class {
       });
     });
 
+    this.router.post("/getRecentLog", function(req, res) {
+      var record = new Record();
+      record.GetRecentLog(req.body.user, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send(results);
+        }
+      });
+    });
+
     // this.router.get("/new_arrival", function(req, res) {
     //     var callback = function(msg) {
     //         res.send(msg);
