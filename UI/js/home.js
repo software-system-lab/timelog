@@ -12,7 +12,7 @@ function CheckLogin() {
   var apiUrl = '/login/IsLogined'
   var callback = function(loginStatus) {
     if (loginStatus != "false") {
-      $(".body").load('boardLogined.html');
+      $("body").load('boardLogined.html');
       setTimeout(function() {
         useR = loginStatus.Name;
         $("#user").text(loginStatus.Name);
@@ -135,9 +135,37 @@ function getRecentLog() {
               <td>" + results[i].Tag + "</td> \
               <td>" + results[i].Date + "</td> \
               <td>" + results[i].timeInterval + "</td> \
+              <td ><span class='red'>\
+                  <i class='fa fa-times' onclick='getLogDetail(event)' style='cursor:pointer;' data-toggle='modal' data-target='#ModalMore' data-recordID ='" + results[i].RecordID + "'>🖊️</i> \
+                  </span> \
+              </td> \
             </tr>"
         );
       }
+    }
+  }
+  Post(url, data, callback);
+};
+
+function getLogDetail(event) {
+  var url = '/getLogDetail';
+  var data = {
+    RecordID: event.target.dataset.recordid
+  };
+  var callback = function(msg) {
+    if (msg == "failed")
+      alert("Please Retry");
+    else {
+      $("#ModalMore").modal('show');
+      console.log(msg);
+      var h = "a"
+      $("#recordDate_More").val(msg.Date);
+      $("#recordStart_More").val(msg.Start);
+      $("#recordStop_More").val(msg.End);
+      $("#timeInterval_More").val(msg.timeInterval);
+      $("#Event_More").val(msg.Event);
+      $("#Tag_More").val(msg.Tag);
+      $("#Comment_More").val(msg.Comment);
     }
   }
   Post(url, data, callback);

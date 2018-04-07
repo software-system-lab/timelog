@@ -186,7 +186,7 @@
                 <th class="col-xs-4">Tag</th>
                 <th class="col-xs-1">Date</th>
                 <th class="col-xs-1">Interval</th>
-                <th class="col-xs-1">xxx</th>
+                <th class="col-xs-1">More</th>
               </tr>
             </thead>
             <tbody id="recentLog">
@@ -207,5 +207,74 @@
   <div id="s" class="section">
     1toDoList
   </div>
+</div>
 
+
+<!-- Modal for more-->
+<div class="modal fade" id="ModalMore" tabindex="-1" role="dialog" aria-labelledby="ModalMoreLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalMoreLabel">About this Log</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div id="dtBox_More"></div>
+        <div class="form-row">
+          <div class="col-md-12">
+            Date:
+            <input id="recordDate_More" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-6">
+            Start:
+            <input id="recordStart_More" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
+          </div>
+          <div class="col-md-6">
+            End:
+            <input id="recordStop_More" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
+          </div>
+        </div>
+        <div class="form-row">
+          Time Interval :
+          <div id="timeInterval"> </div>
+        </div>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $("#dtBox_More").DateTimePicker({
+              dateFormat: "MM-dd-yyyy",
+              timeFormat: "HH:mm",
+              dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA",
+            });
+          });
+        </script>
+        <div class="form-row">
+          <div class="form-group col-md-7">
+            <label for="Event">Event</label>
+            <input type="text" class="form-control" id="Event_More">
+          </div>
+          <div class="form-group col-md-5">
+            <label for="Tag">Tag</label>
+            <select id="Tag_More" class="form-control">
+              <option value="NULL" selected>Choose...</option>
+              <option value="0">...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-12">
+            <label for="Comment">Comment</label>
+            <textarea class="form-control" id="Comment_More" rows="3" value=""></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="modifyLogBtn">Modify this Log</button>
+      </div>
+    </div>
+  </div>
 </div>

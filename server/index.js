@@ -41,19 +41,15 @@ module.exports = class {
       });
     });
 
-    // this.router.get("/new_arrival", function(req, res) {
-    //     var callback = function(msg) {
-    //         res.send(msg);
-    //     };
-    //     (new ItemPreview()).AddItemPreview(callback);
-    // });
-    //
-    // this.router.get("/categoryItemRAND/:cate", function(req, res) {
-    //     var callback = function(msg) {
-    //         res.send(msg);
-    //         //console.log(msg);
-    //     };
-    //     (new CategoryItem(req.params.cate)).AddItems(callback);
-    // });
+    this.router.post("/getLogDetail", function(req, res) {
+      var record = new Record();
+      record.GetALog(req.body.RecordID, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send(results[0]);
+        }
+      });
+    });
   }
 }
