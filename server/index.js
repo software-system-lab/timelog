@@ -1,4 +1,5 @@
 var Record = require('./recordApi.js');
+var Tag = require('./tagApi.js');
 
 module.exports = class {
   constructor(router) {
@@ -18,6 +19,8 @@ module.exports = class {
         if (err) res.send(404);
       });
     });
+
+    ////////////////////////////////////////////////////////////////////////////
 
     this.router.post("/addALog", function(req, res) {
       var record = new Record();
@@ -51,5 +54,19 @@ module.exports = class {
         }
       });
     });
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    this.router.post("/GetUserTags", function(req, res) {
+      var tag = new Tag();
+      tag.GetUserTags(req.body.user, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send(results);
+        }
+      });
+    });
+
   }
 }

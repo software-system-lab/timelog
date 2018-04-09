@@ -17,14 +17,31 @@ function CheckLogin() {
         useR = loginStatus.Name;
         $("#user").text(loginStatus.Name);
         $("#team").text(loginStatus.Team);
+        GetTags();
       }, 300)
     } else {
-      $(".body").html("<img src='./assets/timelog.png' alt='logo' style='width:100px; display: block; margin: auto;'> \
+      $("body").html("<img src='./assets/timelog.png' alt='logo' style='width:100px; display: block; margin: auto;'> \
       <h2> Not Logined </h2>  \
         <a href = './'> Click Here To Login </a>")
     }
   }
   Get(apiUrl, callback);
+};
+
+function GetTags() {
+  var apiUrl = '/GetUserTags';
+  var data = {
+    "user": useR
+  };
+  var callback = function(results) {
+    if (results != "failed") {
+      for (var i = 0; i < results.length; i++) {
+        $("#Tag").append("<option value='" + results[i].TagID + "'>" + results[i].Name + "</option>")
+        $("#Tag_More").append("<option value='" + results[i].TagID + "'>" + results[i].Name + "</option>")
+      }
+    }
+  }
+  Post(apiUrl, data, callback);
 };
 
 function setToday() {

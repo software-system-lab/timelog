@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018-03-30 09:47:16
+-- 產生時間： 2018-04-09 04:43:38
 -- 伺服器版本: 10.1.30-MariaDB
 -- PHP 版本： 7.2.2
 
@@ -30,10 +30,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `record` (
   `RecordID` int(11) NOT NULL,
+  `Event` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `User` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `Tag` int(11) DEFAULT NULL,
   `Time_start` datetime NOT NULL,
-  `Time_until` datetime NOT NULL
+  `Time_until` datetime NOT NULL,
+  `Comment` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -127,13 +129,13 @@ ALTER TABLE `user`
 -- 使用資料表 AUTO_INCREMENT `record`
 --
 ALTER TABLE `record`
-  MODIFY `RecordID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `RecordID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用資料表 AUTO_INCREMENT `typetag`
 --
 ALTER TABLE `typetag`
-  MODIFY `TagID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `TagID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 已匯出資料表的限制(Constraint)
@@ -143,7 +145,7 @@ ALTER TABLE `typetag`
 -- 資料表的 Constraints `record`
 --
 ALTER TABLE `record`
-  ADD CONSTRAINT `tag` FOREIGN KEY (`Tag`) REFERENCES `record` (`RecordID`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `tag` FOREIGN KEY (`Tag`) REFERENCES `typetag` (`TagID`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `user` FOREIGN KEY (`User`) REFERENCES `user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
