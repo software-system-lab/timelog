@@ -1,4 +1,5 @@
 var useR;
+var ChoosenRecordID = null;
 $(document).ready(function() {
   CheckLogin();
   setTimeout(function() {
@@ -145,8 +146,9 @@ function getRecentLog() {
   };
   var callback = function(results) {
     if (results != "failed") {
+      var content = "";
       for (var i = 0; i < results.length; i++) {
-        $("#recentLog").append(
+        content +=
           "<tr> \
               <th scope='row'>" + results[i].Event + "</th> \
               <td>" + results[i].Tag + "</td> \
@@ -156,8 +158,8 @@ function getRecentLog() {
                   <i class='fa fa-times' onclick='getLogDetail(event)' style='cursor:pointer;' data-toggle='modal' data-target='#ModalMore' data-recordID ='" + results[i].RecordID + "'>🖊️</i> \
                   </span> \
               </td> \
-            </tr>"
-        );
+            </tr>";
+        $("#recentLog").html(content);
       }
     }
   }
@@ -166,6 +168,7 @@ function getRecentLog() {
 
 function getLogDetail(event) {
   var url = '/getLogDetail';
+  ChoosenRecordID = event.target.dataset.recordid;
   var data = {
     RecordID: event.target.dataset.recordid
   };
@@ -174,8 +177,9 @@ function getLogDetail(event) {
       alert("Please Retry");
     else {
       $("#ModalMore").modal('show');
-      console.log(msg);
-      var h = "a"
+
+      if (msg.Tag == null)
+        msg.Tag = "NULL";
       $("#recordDate_More").val(msg.Date);
       $("#recordStart_More").val(msg.Start);
       $("#recordStop_More").val(msg.End);
@@ -187,3 +191,47 @@ function getLogDetail(event) {
   }
   Post(url, data, callback);
 };
+
+function modifyALog() {
+  if ($('#recordStart_More').val() == "")
+    $('#recordStart_More').addClass("is-invalid");
+  if ($('#recordStop_More').val() == "")
+    $('#recordStop_More').addClass("is-invalid");
+  if ($('#Event_More').val() == "")
+    $('#Event_More').addClass("is-invalid");
+  if ($('#recordStart_More').val() == "" || $('#recordStop_More').val() == "" || $('#Event_More').val() == "")
+    alert("Please check your log!");
+  if ($('#recordStart_More').val() != "" && $('#recordStop_More').val() != "" && $('#Event_More').val() != "") {
+    var url = '/modifyALog';
+    var data = {
+      "RecordID": ChoosenRecordID,
+      "recordDate": $('#recordDate_More').val(),
+      "recordStart": $('#recordStart_More').val(),
+      "recordStop": $('#recordStop_More').val(),
+      "Event": $('#Event_More').val(),
+      "Tag": $('#Tag_More').val(),
+      "Comment": $('#Comment_More').val()
+    };
+    var callback = function(msg) {
+      alert(msg);
+      if (msg == "successed")
+        $('#ModalMore').modal('hide');
+    }
+    Post(url, data, callback);
+  }
+};
+
+function deleteALog() {
+  var url = '/deleteALog';
+  var data = {
+    "RecordID": ChoosenRecordID
+  };
+  var callback = function(msg) {
+    alert(msg);
+    if (msg == "successed") {
+      $('#ModalMore').modal('hide');
+      getRecentLog();
+    }
+  }
+  Post(url, data, callback);
+}

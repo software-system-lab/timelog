@@ -33,6 +33,28 @@ module.exports = class {
       });
     });
 
+    this.router.post("/modifyALog", function(req, res) {
+      var record = new Record();
+      record.modifyALog(req.body, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send("successed");
+        }
+      });
+    });
+
+    this.router.post("/deleteALog", function(req, res) {
+      var record = new Record();
+      record.deleteALog(req.body.RecordID, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send("successed");
+        }
+      });
+    });
+
     this.router.post("/getRecentLog", function(req, res) {
       var record = new Record();
       record.GetRecentLog(req.body.user, function(err, results) {

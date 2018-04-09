@@ -22,6 +22,31 @@ VALUES (" + data.user + ",'" + data.Event + "'," + tag + ",'" + time_start + "',
       });
   }
 
+  modifyALog(data, callback) {
+    var time_start = data.recordDate + " " + data.recordStart;
+    var time_until = data.recordDate + " " + data.recordStop;
+    var tag = data.Tag;
+    if (tag != "NULL")
+      tag = "'" + tag + "'";
+    var cmd = "UPDATE `record` SET `Event`='" + data.Event + "',`Tag`=" + tag + ",`Time_start`='" + time_start + "',`Time_until`='" + time_until + "',`Comment`='" + data.Comment + "' WHERE `RecordID`=" + data.RecordID + ";";
+    //console.log(cmd);
+    this.db.query(
+      cmd,
+      function(err, result, fields) {
+        callback(err, result);
+      });
+  }
+
+  deleteALog(recordID, callback) {
+    var cmd = "DELETE FROM `record` WHERE `record`.`RecordID` = " + recordID + ";";
+    //console.log(cmd);
+    this.db.query(
+      cmd,
+      function(err, result, fields) {
+        callback(err, result);
+      });
+  }
+
   GetRecentLog(user, callback) {
     var cmd = "SELECT `RecordID`,`Event`, `Tag`, DATE_FORMAT(Time_start,'%Y-%m-%d') AS Date, DATE_FORMAT(TIMEDIFF(`Time_until`,`Time_start`),'%k:%i') AS timeInterval FROM `record` WHERE User ='" + user + "'ORDER BY `Time_until` DESC LIMIT 8;";
     //console.log(cmd);
