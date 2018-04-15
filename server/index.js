@@ -77,6 +77,17 @@ module.exports = class {
       });
     });
 
+    this.router.post("/getStatisticsBar", function(req, res) {
+      var record = new Record();
+      record.GetDurationData(req.body, function(err, results) {
+        if (results == null) {
+          res.send("failed")
+        } else {
+          res.send(results);
+        }
+      });
+    });
+
     ////////////////////////////////////////////////////////////////////////////
 
     this.router.post("/GetUserTags", function(req, res) {

@@ -1,13 +1,15 @@
 var useR;
 var ChoosenRecordID = null;
 var usertaGs = new Map();
-usertaGs.set(null, "none");
+usertaGs.set(null, {
+  "name": "none",
+});
 
 $(document).ready(function() {
   CheckLogin();
   setTimeout(function() {
     $('#Stop').hide();
-    setToday();
+    setDefaltDay();
     getRecentLog();
   }, 500);
   setTimeout(function() {
@@ -45,23 +47,32 @@ function GetTags() {
       for (var i = 0; i < results.length; i++) {
         $("#Tag").append("<option value='" + results[i].TagID + "'>" + results[i].Name + "</option>")
         $("#Tag_More").append("<option value='" + results[i].TagID + "'>" + results[i].Name + "</option>")
-        usertaGs.set(results[i].TagID, results[i].Name);
+        usertaGs.set(results[i].TagID, {
+          "name": results[i].Name
+        });
       }
     }
   }
   Post(apiUrl, data, callback);
 };
 
-function setToday() {
+function setDefaltDay() {
   var Today = new Date();
   var month = (Today.getMonth() + 1).toString();
   var date = (Today.getDate()).toString();
+  var dateBeforeAWeek = (Today.getDate() - 7).toString();
   if (month.length == 1)
     month = "0" + month;
   if (date.length == 1)
     date = "0" + date;
+  if (dateBeforeAWeek.length == 1)
+    dateBeforeAWeek = "0" + dateBeforeAWeek;
   var Todaystr = (Today.getFullYear()).toString() + '-' + month + '-' + date;
+  var dayBeforeAWeekstr = (Today.getFullYear()).toString() + '-' + month + '-' + dateBeforeAWeek;
+
   $("#recordDate").val(Todaystr);
+  $("#Duration_end").val(Todaystr);
+  $("#Duration_start").val(dayBeforeAWeekstr);
 }
 
 var s = 0;
@@ -137,7 +148,7 @@ function addALog() {
 };
 
 function clearAll() {
-  setToday();
+  setDefaltDay();
   $('#recordStart').val("");
   $('#recordStop').val("");
   $('#Event').val("");
@@ -160,7 +171,7 @@ function getRecentLog() {
         content +=
           "<tr> \
               <th scope='row'>" + results[i].Event + "</th> \
-              <td>" + usertaGs.get(results[i].Tag) + "</td> \
+              <td>" + usertaGs.get(results[i].Tag).name + "</td> \
               <td>" + results[i].Date + "</td> \
               <td>" + results[i].timeInterval + "</td> \
               <td ><span class='red'>\
@@ -168,9 +179,9 @@ function getRecentLog() {
                   </span> \
               </td> \
             </tr>";
-        $("#recentLog").html(content);
-        $('#fullpage').fullpage.reBuild();
       }
+      $("#recentLog").html(content);
+      $('#fullpage').fullpage.reBuild();
     }
   }
   Post(url, data, callback);
@@ -249,43 +260,39 @@ function deleteALog() {
 }
 
 function renderData() {
-  var ctx = $("#BarChart");
-  var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255,99,132,1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
-    }
-  });
+  var url = '/getStatisticsBar';
+  var data = {
+    "user": useR,
+    "start": $("#Duration_start").val(),
+    "end": $("#Duration_end").val()
+  };
+  var callback = function(results) {
+    if (results != "failed") {
+      console.log(results);
+      var resultToBarChart = computeBarChartData(results);
+      console.log(resultToBarChart);
 
-  $('#fullpage').fullpage.reBuild();
+      $('#fullpage').fullpage.reBuild();
+    }
+  }
+  Post(url, data, callback);
+}
+
+function computeBarChartData(data) {
+  var tagGroup = usertaGs;
+
+  tagGroup.forEach((val) => {
+    val.h = 0;
+    val.m = 0;
+  })
+
+  for (var i = 0; i < data.length; i++) {
+    var IntervalStr = data[i].timeInterval.split(":")
+    tagGroup.get(data[i].Tag).h += parseInt(IntervalStr[0]);
+    tagGroup.get(data[i].Tag).m += parseInt(IntervalStr[1]);
+  }
+  var result = {
+
+  }
+  return tagGroup;
 }

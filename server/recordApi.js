@@ -67,4 +67,15 @@ VALUES (" + data.user + ",'" + data.Event + "'," + tag + ",'" + time_start + "',
         callback(err, result);
       });
   }
+
+  GetDurationData(duration, callback) {
+    var cmd = "SELECT `RecordID`, `Tag`, DATE_FORMAT(TIMEDIFF(`Time_until`,`Time_start`),'%k:%i') AS timeInterval FROM `record` \
+     WHERE User ='" + duration.user + "'ORDER BY `Time_until` DESC LIMIT 8;";
+    //console.log(cmd);
+    this.db.query(
+      cmd,
+      function(err, result, fields) {
+        callback(err, result);
+      });
+  }
 }
