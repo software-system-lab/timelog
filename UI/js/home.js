@@ -120,8 +120,10 @@ function addALog() {
     };
     var callback = function(msg) {
       alert(msg);
-      if (msg == "successed")
+      if (msg == "successed") {
         clearAll();
+        getRecentLog();
+      }
     }
     Post(url, data, callback);
   }
@@ -214,8 +216,10 @@ function modifyALog() {
     };
     var callback = function(msg) {
       alert(msg);
-      if (msg == "successed")
+      if (msg == "successed") {
         $('#ModalMore').modal('hide');
+        getRecentLog();
+      }
     }
     Post(url, data, callback);
   }

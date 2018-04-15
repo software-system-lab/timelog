@@ -87,6 +87,7 @@ module.exports = class {
     // });
     //
     this.router.get("/IsLogined", function(req, res) {
+      //console.log(req.sessionID);
       if (req.session.session_id) {
         var User = new member();
         User.GetMemberFromAccount(req.session.session_id, function(err, results) {

@@ -48,7 +48,7 @@
       //设计
       controlArrows: true,
       verticalCentered: true,
-      sectionsColor: ['#f2f2f2', '#E0FFFF', '#7BAABE', 'whitesmoke', '#000'],
+      sectionsColor: ['#9CC69B', '#E8DAB2', '#93A8AC', 'whitesmoke', '#000'],
       paddingTop: '0em',
       paddingBottom: '10px',
       fixedElements: '#header',
@@ -81,6 +81,8 @@
 </script>
 
 <style type="text/css">
+  * {}
+
   #header {
     position: fixed;
     top: 0px;
@@ -95,6 +97,17 @@
     border-radius: 5px;
   }
 </style>
+
+<div id="dtBox"></div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#dtBox").DateTimePicker({
+      dateFormat: "MM-dd-yyyy",
+      timeFormat: "HH:mm",
+      dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA",
+    });
+  });
+</script>
 
 <div id="fullpage">
   <div id="header">
@@ -120,7 +133,7 @@
       <div class="row">
         <div class="form-group col-md-4">
           <h3>Add a log</h3>
-          <div id="dtBox"></div>
+
           <div class="form-row">
             <div class="col-md-12">
               Date:
@@ -137,15 +150,6 @@
               <input id="recordStop" type="text" class="form-control" data-field="time" data-format="hh:mm" readonly>
             </div>
           </div>
-          <script type="text/javascript">
-            $(document).ready(function() {
-              $("#dtBox").DateTimePicker({
-                dateFormat: "MM-dd-yyyy",
-                timeFormat: "HH:mm",
-                dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA",
-              });
-            });
-          </script>
           <div class="form-row">
             <div id="Start" class="btn btn-success" onclick="setStart()" style="margin:5px;">Start</div>
             <div id="Stop" class="btn btn-warning" onclick="setStop()" style="margin:5px;">Stop</div>
@@ -220,7 +224,7 @@
           </button>
       </div>
       <div class="modal-body">
-        <div id="dtBox_More"></div>
+        <!-- <div id="dtBox_More"></div> -->
         <div class="form-row">
           <div class="col-md-12">
             Date:
@@ -241,7 +245,7 @@
           Time Interval :
           <div id="timeInterval"> </div>
         </div>
-        <script type="text/javascript">
+        <!-- <script type="text/javascript">
           $(document).ready(function() {
             $("#dtBox_More").DateTimePicker({
               dateFormat: "MM-dd-yyyy",
@@ -249,7 +253,7 @@
               dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA",
             });
           });
-        </script>
+        </script> -->
         <div class="form-row">
           <div class="form-group col-md-7">
             <label for="Event">Event</label>

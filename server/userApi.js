@@ -8,7 +8,7 @@ module.exports = class {
 
   GetMemberFromAccount(account, callback) {
     this.db.query(
-      "SELECT * FROM `user` WHERE ID ='" + account + "';",
+      "SELECT * FROM `user` WHERE ID =" + this.db.escape(account) + ";",
       function(err, result, fields) {
         callback(err, result[0]);
       });
