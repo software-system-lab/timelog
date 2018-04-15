@@ -1,5 +1,8 @@
 var useR;
 var ChoosenRecordID = null;
+var usertaGs = new Map();
+usertaGs.set(null, "none");
+
 $(document).ready(function() {
   CheckLogin();
   setTimeout(function() {
@@ -42,6 +45,7 @@ function GetTags() {
       for (var i = 0; i < results.length; i++) {
         $("#Tag").append("<option value='" + results[i].TagID + "'>" + results[i].Name + "</option>")
         $("#Tag_More").append("<option value='" + results[i].TagID + "'>" + results[i].Name + "</option>")
+        usertaGs.set(results[i].TagID, results[i].Name);
       }
     }
   }
@@ -156,7 +160,7 @@ function getRecentLog() {
         content +=
           "<tr> \
               <th scope='row'>" + results[i].Event + "</th> \
-              <td>" + results[i].Tag + "</td> \
+              <td>" + usertaGs.get(results[i].Tag) + "</td> \
               <td>" + results[i].Date + "</td> \
               <td>" + results[i].timeInterval + "</td> \
               <td ><span class='red'>\
@@ -165,6 +169,7 @@ function getRecentLog() {
               </td> \
             </tr>";
         $("#recentLog").html(content);
+        $('#fullpage').fullpage.reBuild();
       }
     }
   }
@@ -281,4 +286,6 @@ function renderData() {
       }
     }
   });
+
+  $('#fullpage').fullpage.reBuild();
 }
