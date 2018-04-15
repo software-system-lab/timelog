@@ -1,4 +1,4 @@
-<script type=" text/javascript ">
+<script type=" text/javascript">
   $(document).ready(function() {
     $('#fullpage').fullpage({
       //导航
@@ -33,8 +33,8 @@
       resetSliders: false,
       fadingEffect: true,
       normalScrollElements: '#element1, .element2',
-      scrollOverflow: false,
-      scrollOverflowReset: false,
+      scrollOverflow: true,
+      scrollOverflowReset: true,
       scrollOverflowOptions: null,
       touchSensitivity: 15,
       normalScrollElementTouchThreshold: 5,
@@ -49,8 +49,8 @@
       controlArrows: true,
       verticalCentered: true,
       sectionsColor: ['#9CC69B', '#E8DAB2', '#93A8AC', 'whitesmoke', '#000'],
-      paddingTop: '0em',
-      paddingBottom: '10px',
+      paddingTop: '3em',
+      paddingBottom: '1em',
       fixedElements: '#header',
       responsiveWidth: 0,
       responsiveHeight: 0,
@@ -85,8 +85,10 @@
 
   #header {
     position: fixed;
+    background: #f2f2f2;
     top: 0px;
-    padding-left: 20px;
+    width: 100%;
+    /* padding-left: 20px; */
   }
 
   #header a {
@@ -109,25 +111,23 @@
   });
 </script>
 
-<div id="fullpage">
-  <div id="header">
-    <img src="./assets/timelog.png" alt="logo" style="width:8%;display: inline;">
-    <div style="display: inline;margin-left:20px;">
-      User :
-      <div id="user" style="display: inline;">unknown
-      </div>
-      --- My Project / Group :
-      <div id="team" style="display: inline;">unknown
-      </div>
+<div id="header">
+  <img src="./assets/timelog.png" alt="logo" style="width:5%;display: inline;margin-left:20px;">
+  <div style="display: inline;margin-left:20px;">
+    User :
+    <div id="user" style="display: inline;">unknown
     </div>
-    <div style="display: inline-block;">
-      <!-- <a href="#timelog ">TimeLog</a>
-            <a href="#toDoList ">To Do List</a> -->
+    --- My Project / Group :
+    <div id="team" style="display: inline;">unknown
     </div>
   </div>
+  <div style="display: inline-block;">
+    <!-- <a href="#timelog ">TimeLog</a>
+          <a href="#toDoList ">To Do List</a> -->
+  </div>
+</div>
 
-
-
+<div id="fullpage">
   <div id="Board" class="section">
     <div class="container">
       <div class="row">
@@ -205,26 +205,57 @@
   </div>
 
   <div id="Statistics" class="section">
-    1toDoList
+    <div class="container">
+      <div class="row">
+        <div class="form-group">
+          <h3>Statistics</h3>
+          <div class="form-row">
+            <div class="col-md-2">
+              >Duration:
+            </div>
+            <div class="col-md-4">
+              <input id="Duration_start " type="text " class="form-control " data-field="datetime " data-format="yyyy-MM-dd HH:mm " readonly>
+            </div>
+            <div class="col-md-0">~</div>
+            <div class="col-md-4">
+              <input id="Duration_end " type="text " class="form-control " data-field="date " data-format="yyyy-MM-dd HH:mm " readonly>
+            </div>
+            <div class="col-md-1">
+              <div id="Search" class="btn btn-success" onclick="">Search</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="chart-container" style="position: relative; height:25vh; width:50vw">
+          <canvas id="BarChart"></canvas>
+        </div>
+      </div>
+      <div class="row">
+        <div class="chart-container" style="position: relative; height:20vh; width:40vw">
+          <canvas id="PieChart"></canvas>
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="s" class="section">
+
+  <div id="s" class="section ">
     1toDoList
   </div>
 </div>
 
 
 <!-- Modal for more-->
-<div class="modal fade" id="ModalMore" tabindex="-1" role="dialog" aria-labelledby="ModalMoreLabel" aria-hidden="true">
+<div class="modal fade" id="ModalMore" tabindex="-1 " role="dialog " aria-labelledby="ModalMoreLabel " aria-hidden="true ">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="ModalMoreLabel">About this Log</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true ">&times;</span>
           </button>
       </div>
       <div class="modal-body">
-        <!-- <div id="dtBox_More"></div> -->
         <div class="form-row">
           <div class="col-md-12">
             Date:
@@ -245,15 +276,6 @@
           Time Interval :
           <div id="timeInterval"> </div>
         </div>
-        <!-- <script type="text/javascript">
-          $(document).ready(function() {
-            $("#dtBox_More").DateTimePicker({
-              dateFormat: "MM-dd-yyyy",
-              timeFormat: "HH:mm",
-              dateTimeFormat: "MM-dd-yyyy HH:mm:ss AA",
-            });
-          });
-        </script> -->
         <div class="form-row">
           <div class="form-group col-md-7">
             <label for="Event">Event</label>
