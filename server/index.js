@@ -77,7 +77,7 @@ module.exports = class {
       });
     });
 
-    this.router.post("/getStatisticsBar", function(req, res) {
+    this.router.post("/getStatistics", function(req, res) {
       var record = new Record();
       record.GetDurationData(req.body, function(err, results) {
         if (results == null) {

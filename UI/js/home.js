@@ -13,7 +13,7 @@ $(document).ready(function() {
     getRecentLog();
   }, 500);
   setTimeout(function() {
-    renderData();
+    renderStatisticsData();
   }, 800);
 });
 
@@ -259,8 +259,8 @@ function deleteALog() {
   Post(url, data, callback);
 }
 
-function renderData() {
-  var url = '/getStatisticsBar';
+function renderStatisticsData() {
+  var url = '/getStatistics';
   var data = {
     "user": useR,
     "start": $("#Duration_start").val(),
@@ -268,9 +268,75 @@ function renderData() {
   };
   var callback = function(results) {
     if (results != "failed") {
+      var resultToPieChart = computePieChartData(results);
       console.log(results);
-      var resultToBarChart = computeBarChartData(results);
-      console.log(resultToBarChart);
+
+      var content = "";
+      for (var i = 0; i < results.length; i++) {
+        content +=
+          "<tr> \
+              <th scope='row'>" + results[i].Event + "</th> \
+              <td>" + usertaGs.get(results[i].Tag).name + "</td> \
+              <td>" + results[i].Date + "</td> \
+              <td>" + results[i].timeInterval + "</td> \
+              <td ><span class='red'>\
+                  <i class='fa fa-times' onclick='getLogDetail(event)' style='cursor:pointer;' data-toggle='modal' data-target='#ModalMore' data-recordID ='" + results[i].RecordID + "'>🖊️</i> \
+                  </span> \
+              </td> \
+            </tr>";
+      }
+      $("#durationLog").html(content);
+
+      var config = {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 159, 64, 0.8)',
+              'rgba(121, 180, 169, 0.8)'
+            ],
+            label: ''
+          }],
+          labels: []
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 2000
+          }
+        }
+      };
+
+      var ctx = $("#PieChart");
+      var PieChart = new Chart(ctx, config);
+
+      var content = "";
+      var total = 0;
+
+      resultToPieChart.forEach((val) => {
+        if (val.h + val.m / 60) {
+          PieChart.data.labels.push(val.name);
+          PieChart.data.datasets[0].data.push((val.h + val.m / 60).toFixed(2));
+        }
+
+        total += (val.h + val.m / 60);
+      });
+      resultToPieChart.forEach((val) => {
+        content += "<tr> \
+            <th scope='row'>" + val.name + "</th> \
+            <td>" + (val.h + val.m / 60).toFixed(2) + "</td> \
+            <td>" + ((val.h + val.m / 60) / total * 100).toFixed(2) + " % </td> \
+          </tr>";
+      });
+
+      PieChart.update();
+      $("#summary").html(content);
 
       $('#fullpage').fullpage.reBuild();
     }
@@ -278,21 +344,16 @@ function renderData() {
   Post(url, data, callback);
 }
 
-function computeBarChartData(data) {
+function computePieChartData(data) {
   var tagGroup = usertaGs;
-
   tagGroup.forEach((val) => {
     val.h = 0;
     val.m = 0;
   })
-
   for (var i = 0; i < data.length; i++) {
     var IntervalStr = data[i].timeInterval.split(":")
     tagGroup.get(data[i].Tag).h += parseInt(IntervalStr[0]);
     tagGroup.get(data[i].Tag).m += parseInt(IntervalStr[1]);
-  }
-  var result = {
-
   }
   return tagGroup;
 }

@@ -207,34 +207,71 @@
   <div id="Statistics" class="section">
     <div class="container">
       <div class="row">
-        <div class="form-group">
-          <h3>Statistics</h3>
-          <div class="form-row">
-            <div class="col-md-2">
-              >Duration:
+        <div class="form-group col-md-12 col-lg-4">
+          <div class="form-group">
+            <h3>Statistics</h3>
+            <h5>Duration:</h5>
+            <div class="form-row">
+              <div class="col-md-5">
+                <label>From</label>
+                <input id="Duration_start" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+              </div>
+              <div class="col-md-5">
+                <label>To</label>
+                <input id="Duration_end" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+              </div>
             </div>
-            <div class="col-md-4">
-              <input id="Duration_start" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
+            <div class="form-row">
+              <div class="col-md-1">
+                <div id="Search" class="btn btn-success" style="margin:5px;" onclick="renderStatisticsData()">Search</div>
+              </div>
             </div>
-            <div class="col-md-0">~</div>
-            <div class="col-md-4">
-              <input id="Duration_end" type="text" class="form-control" data-field="date" data-format="yyyy-MM-dd" readonly>
-            </div>
-            <div class="col-md-1">
-              <div id="Search" class="btn btn-success" onclick="renderData()">Search</div>
-            </div>
+            <hr>
           </div>
+          <div class="chart-container" style="position: relative; ">
+            <canvas id="PieChart"></canvas>
+          </div>
+          <h6>SUMMARY</h6>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="col-xs-5">Tag</th>
+                <th class="col-xs-4">Time</th>
+                <th class="col-xs-3">Percentage</th>
+              </tr>
+            </thead>
+            <tbody id="summary">
+
+            </tbody>
+          </table>
+
+        </div>
+
+        <div class="form-group col-md-12 col-lg-8">
+          <h3>Duration Log</h3>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="col-xs-5">Event</th>
+                <th class="col-xs-4">Tag</th>
+                <th class="col-xs-1">Date</th>
+                <th class="col-xs-1">Interval</th>
+                <th class="col-xs-1">More</th>
+              </tr>
+            </thead>
+            <tbody id="durationLog">
+
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="chart-container" style="position: relative; height:25vh; width:50vw">
           <canvas id="BarChart"></canvas>
         </div>
-      </div>
+      </div> -->
       <div class="row">
-        <div class="chart-container" style="position: relative; height:20vh; width:40vw">
-          <canvas id="PieChart"></canvas>
-        </div>
+
       </div>
     </div>
   </div>
@@ -273,8 +310,10 @@
           </div>
         </div>
         <div class="form-row">
-          Time Interval :
-          <div id="timeInterval"> </div>
+          <div class="col-md-6">
+            Time Interval:
+            <input id="timeInterval_More" type="text" class="form-control" readonly>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-7">

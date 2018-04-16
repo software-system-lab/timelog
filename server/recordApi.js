@@ -69,9 +69,10 @@ VALUES (" + data.user + ",'" + data.Event + "'," + tag + ",'" + time_start + "',
   }
 
   GetDurationData(duration, callback) {
-    var cmd = "SELECT `RecordID`, `Tag`, DATE_FORMAT(TIMEDIFF(`Time_until`,`Time_start`),'%k:%i') AS timeInterval FROM `record` \
-     WHERE User ='" + duration.user + "'ORDER BY `Time_until` DESC LIMIT 8;";
-    //console.log(cmd);
+    var cmd = "SELECT `RecordID`,`Event`, `Tag`, DATE_FORMAT(Time_start,'%Y-%m-%d') AS `Date`, DATE_FORMAT(Time_start,'%k:%i') AS Start, DATE_FORMAT(Time_until,'%k:%i') AS End \
+      , DATE_FORMAT(TIMEDIFF(`Time_until`,`Time_start`),'%k:%i') AS timeInterval,`Comment` FROM `record` \
+     WHERE User ='" + duration.user + "' AND Time_start BETWEEN '" + duration.start + "' AND '" + duration.end + "' ORDER BY `Time_until` DESC";
+    // console.log(cmd);
     this.db.query(
       cmd,
       function(err, result, fields) {
