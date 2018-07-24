@@ -15,7 +15,7 @@ const LoginedRoutes = [
         name: 'Statistics',
         path: "Statistics",
         components: {
-        
+            header: Header,
         }
     },
 ];
