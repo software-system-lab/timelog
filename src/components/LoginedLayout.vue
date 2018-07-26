@@ -3,11 +3,11 @@
     <el-aside class="hidden-sm-and-down" width="200px">
       <router-view name="header"></router-view>
     </el-aside>
-    <el-popover placement="right" width="300" trigger="click" class="hidden-md-and-up">
-      <router-view name="header"></router-view>
-      <el-button slot="reference" class="el-icon-more-outline"></el-button>
-    </el-popover>
     <el-container>
+      <el-popover placement="right" width="300" trigger="click" class="hidden-md-and-up">
+        <router-view name="header"></router-view>
+        <el-button slot="reference" class="el-icon-more-outline"></el-button>
+      </el-popover>
       <el-main>
         <router-view/>
       </el-main>
@@ -19,9 +19,10 @@
   export default {
 
   }
+
 </script>
 
-<style>
+<style scoped>
   .el-button {
     position: fixed;
     top: 10px;

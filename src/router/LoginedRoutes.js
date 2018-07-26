@@ -1,6 +1,7 @@
-import Board from '../components/Board.vue'
-import HelloWorld from '../components/HelloWorld'
 import Header from '../components/_Header.vue'
+import Board from '../components/Board.vue'
+import History from '../components/History.vue'
+import HelloWorld from '../components/HelloWorld'
 
 const LoginedRoutes = [
     {
@@ -8,14 +9,23 @@ const LoginedRoutes = [
         path: "Board",
         components: {
             header: Header,
-            default: HelloWorld
+            default: Board
         }
     },
     {
-        name: 'Statistics',
-        path: "Statistics",
+        name: 'History',
+        path: "History",
         components: {
             header: Header,
+            default: History
+        }
+    },
+    {
+        name: 'Team',
+        path: "Team",
+        components: {
+            header: Header,
+            default: HelloWorld
         }
     },
 ];

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-      <img src="../static/assets/timelog.png" alt="logo" style="width: 20%; display: block; margin: auto;">
+      <img src="../../static/image/timelog.png" alt="logo" style="width: 20%; display: block; margin: auto;">
 
   </el-container>
 </template>
