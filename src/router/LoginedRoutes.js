@@ -1,6 +1,7 @@
 import Header from '../components/_Header.vue'
 import Board from '../components/Board.vue'
 import History from '../components/History.vue'
+import Team from '../components/Team.vue'
 import HelloWorld from '../components/HelloWorld'
 
 const LoginedRoutes = [
@@ -25,8 +26,27 @@ const LoginedRoutes = [
         path: "Team",
         components: {
             header: Header,
-            default: HelloWorld
-        }
+            default: Team
+        },
+        redirect: { name: "Team - Teammate" },
+        children:[
+            {
+                name: "Team - Teammate",
+                path: "Teammate",
+                component: HelloWorld,
+                meta: {
+                    tabIndex: '0'
+                }
+            },
+            {
+                name: "Team - Sprint",
+                path: "Sprint",
+                component: HelloWorld,
+                meta: {
+                    tabIndex: '1'
+                }
+            }
+        ]
     },
 ];
 
