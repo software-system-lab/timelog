@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, { locale });
 
 /* eslint-disable no-new */
-new Vue({
+window.vueRoot = new Vue({
   el: '#app',
   router,
   // components: { App },

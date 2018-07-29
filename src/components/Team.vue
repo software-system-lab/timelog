@@ -26,7 +26,7 @@
       }
     },
     methods: {
-      handleClick(tab, event) {
+      handleClick(tab) {
         router.push({ name: tab.name });
       },
     },

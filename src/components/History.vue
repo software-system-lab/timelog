@@ -11,8 +11,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="category" label="Category" width="180"  align="left"
-            :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+          <el-table-column prop="category" label="Category" width="180" align="left" :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
             :filter-method="filterTag">
             <template slot-scope="scope">
               {{scope.row.category}}
@@ -33,7 +32,7 @@
 
           <el-table-column label="" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-edit" circle></el-button>
+              <el-button type="primary" icon="el-icon-edit" circle @click="Edit(scope.row)"></el-button>
             </template>
           </el-table-column>
 
@@ -41,10 +40,13 @@
 
       </el-col>
     </el-row>
+    <ModifyHistoryModal :visible.sync="dialogFormVisible" :rowData="rowData"></ModifyHistoryModal>
   </div>
 </template>
 
 <script>
+  import ModifyHistoryModal from './History/ModifyModal'
+
   export default {
     data() {
       return {
@@ -60,13 +62,21 @@
             duration: "yyyy/mm/dd hh:mm ~ yyyy/mm/dd hh:mm"
           },
         ],
-
+        dialogFormVisible: false,
+        rowData: [],
       }
     },
     methods: {
       filterTag(value, row) {
         return row.tag === value;
       },
+      Edit(rowData) {
+        this.dialogFormVisible = true;
+        this.rowData = rowData
+      }
+    },
+    components: {
+      ModifyHistoryModal,
     }
   }
 
