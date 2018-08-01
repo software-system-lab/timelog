@@ -72,7 +72,7 @@
       },
       Edit(rowData) {
         this.dialogFormVisible = true;
-        this.rowData = rowData
+        this.rowData = rowData;
       }
     },
     components: {

@@ -2,53 +2,53 @@
   <div>
     <el-row>
       <el-col :md="6" :sm="12">
-        Team:{{userData.team}}
+        Team:{{userData.Team}}
       </el-col>
       <el-col :md="6" :sm="12">
-        Sprint:{{userData.sprint}}
+        Sprint:{{userData.Sprint}}
       </el-col>
       <el-col :md="6" :sm="12">
-        
+
       </el-col>
       <el-col :md="6" :sm="12">
-        
+
       </el-col>
     </el-row>
     <el-row>
       <el-col :md="12" :sm="24">
         <h2>Add a log</h2>
-        <el-form ref="form" :model="logForm" label-width="100px" :label-position="'right'">
+        <el-form ref="form" :model="LogForm" label-width="100px" :label-position="'right'">
           <el-form-item label="What you do?">
-            <el-input v-model="logForm.name"></el-input>
+            <el-input v-model="LogForm.Event"></el-input>
           </el-form-item>
           <el-form-item label="Category">
-            <el-select v-model="logForm.region" placeholder="Choose" multiple :span="11">
+            <el-select v-model="LogForm.Category" placeholder="Choose" multiple :span="11">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="What time?">
-            <el-col>
-              <el-date-picker v-model="logForm.date1" type="date" placeholder="Day" align="'center'"></el-date-picker>
-            </el-col>
+            <!-- <el-col> -->
+              <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" align="'center'"></el-date-picker>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item>
-            <el-col>
-              <el-time-picker v-model="logForm.date2" range-separator="to" start-placeholder="Start" end-placeholder="End" placeholder="选择时间范围"
-                format="HH:mm" is-range>
+            <!-- <el-col> -->
+              <el-time-picker v-model="LogForm.Duration" range-separator="to" start-placeholder="Start" end-placeholder="End" format="HH:mm"
+                value-format="HH:mm" is-range>
               </el-time-picker>
-            </el-col>
-            <br>
-            <el-col>
+            <!-- </el-col> -->
+            <!-- <br> -->
+            <!-- <el-col> -->
               <el-button type="success" icon="el-icon-time" pull-right>Now</el-button>
-            </el-col>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="Description">
-            <el-input type="textarea" v-model="logForm.desc" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
+            <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
           </el-form-item>
         </el-form>
-            <el-button type="primary" @click="onSubmit">Add</el-button>
-            <el-button type="danger" @click="Clear">Clear</el-button>
+        <el-button type="primary" @click="onSubmit">Add</el-button>
+        <el-button type="danger" @click="Clear">Clear</el-button>
       </el-col>
       <el-col :md="12" :sm="24">
         <h2>Recent</h2>
@@ -77,28 +77,30 @@
   export default {
     data() {
       return {
-        logForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+        LogForm: {
+          Event: '',
+          Category: '',
+          Date: '',
+          Duration: '',
+          Description: ''
         },
         userData: {
-
+          Team: '',
+          Sprint: ''
         }
       }
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
+        console.log(this.LogForm)
       },
 
       Clear() {
-
+        this.LogForm.Event = '';
+        this.LogForm.Category = '';
+        this.LogForm.Date = '';
+        this.LogForm.Duration = '';
+        this.LogForm.Description = '';
       },
 
       successMsg() {

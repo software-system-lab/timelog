@@ -2,6 +2,7 @@ import Header from '../components/_Header.vue'
 import Board from '../components/Board.vue'
 import History from '../components/History.vue'
 import Team from '../components/Team.vue'
+import Sprint from '../components/Team/Sprint.vue'
 import HelloWorld from '../components/HelloWorld'
 
 const LoginedRoutes = [
@@ -41,7 +42,7 @@ const LoginedRoutes = [
             {
                 name: "Team - Sprint",
                 path: "Sprint",
-                component: HelloWorld,
+                component: Sprint,
                 meta: {
                     tabIndex: '1'
                 }
