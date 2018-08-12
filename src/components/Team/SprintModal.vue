@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="Sprint" :visible.sync="visible" :before-close="closeModal">
+  <el-dialog title="Sprint" :visible.sync="visible" :before-close="closeModal" @open="openHandler">
     <el-form ref="form" :model="rowData" :rules="formRules" label-width="100px" :label-position="'right'">
       <el-form-item label="Name" prop="Name">
         <el-input v-model="rowData.Name"></el-input>
@@ -14,9 +14,10 @@
       </el-form-item>
     </el-form>
 
-
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="createOrUpdate()">confirm</el-button>
+      <el-button @click="closeModal()">Cancel</el-button>
+      <el-button type="primary" v-if="!isModifyMode" @click="Create()">Create</el-button>
+      <el-button type="primary" v-if="isModifyMode" @click="Update()">Update</el-button>
     </div>
 
   </el-dialog>
@@ -27,6 +28,7 @@
     props: ['rowData', 'visible'],
     data() {
       return {
+        isModifyMode: false,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -74,22 +76,33 @@
       };
     },
     methods: {
-      closeModal() {
-        this.$emit('update:visible', false);
+      openHandler() {
+        console.log(this.rowData);
+        if (this.rowData.ID == '') {
+          this.isModifyMode = false;
+        } else {
+          this.isModifyMode = true;
+        }
       },
-      createOrUpdate() {
+      closeModal() {
+        this.$emit('close-modal');
+      },
+      Create() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            if (!('ID' in this.rowData)) {
-              ////TODO insert service
-              this.rowData.ID = "temp";
-              this.$emit('add-sprint-row', this.rowData);
-            }
-            this.$emit('update:visible', false);
+            ////TODO insert service
+            this.rowData.ID = "temp";
+            this.$emit('add-sprint-row');
             this.$refs['form'].resetFields();
-          } else {
-            console.log('error submit!!');
-            return false;
+          }
+        });
+      },
+      Update() {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            ////TODO update service
+            this.$emit('update-sprint-row');
+            this.$refs['form'].resetFields();
           }
         });
       }
