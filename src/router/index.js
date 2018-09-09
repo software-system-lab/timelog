@@ -9,20 +9,23 @@ Vue.use(Router)
 
 const AppRoutes = [
   {
-    path: '/',
-    components: {
-      default: LoginedLayout
-    },
-    redirect: { name: "Board" },
-    children: LoginedRoutes,
-  },
-  {
     path: '/login',
     name: 'login',
     component: Login,
     meta: {
       requiresAuth: false // 不需驗證
     }, 
+  },
+  {
+    path: '/',
+    components: {
+      default: LoginedLayout
+    },
+    meta: {
+      requiresAuth: true // 需驗證
+    }, 
+    redirect: { name: "Board" },
+    children: LoginedRoutes,
   },
   // 當 url path 不符合 router 表的時候，預設轉址到
   {

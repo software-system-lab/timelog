@@ -1,8 +1,8 @@
 <template>
   <el-menu>
-    <img src="../../static/image/timelog.png" alt="logo" class="">
-    <img alt="用戶頭像照片" src="../../static/image/Hsin.png" class="img-circle" />
-
+    <img src="../../static/image/timelog.png" alt="logo">
+    <img alt="用戶頭像照片" :src="this.profilePicture" class="img-circle" />
+    <h4>{{this.profileName}}</h4>
     <router-link :to="{ name: 'Board'}">
       <el-menu-item index="1">
         <i class="el-icon-edit"></i>
@@ -27,14 +27,27 @@
         <span slot="title">导航四</span>
       </el-menu-item>
     </router-link>
-    
+
   </el-menu>
 </template>
 
 <script>
   export default {
+    data() {
+      return {
 
+      }
+    },
+    computed: {
+      profileName() {
+        return window.userProfile.name;
+      },
+      profilePicture() {
+        return `https://graph.facebook.com/${window.userProfile.id}/picture?width=300`;
+      }
+    },
   }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

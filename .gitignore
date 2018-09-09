@@ -17,3 +17,4 @@ backup/*
 *.ntvs*
 *.njsproj
 *.sln
+src/config.js

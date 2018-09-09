@@ -1,12 +1,66 @@
 <template>
-  <el-container>
-      <img src="../../static/image/timelog.png" alt="logo" style="width: 20%; display: block; margin: auto;">
-
-  </el-container>
+  <div>
+    <el-row>
+      <img src="../../static/image/timelog.png" alt="logo" style="display: block; margin: auto;">
+    </el-row>
+    <el-row>
+      <h2>Welcome!</h2>
+    </el-row>
+    <el-row>
+      <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false"
+        data-auto-logout-link="false" data-use-continue-as="true"></div>
+    </el-row>
+  </div>
 </template>
 
 <script>
-  export default {
+  import Config from "../config.js"
 
+  export default {
+    name: 'Login',
+    methods: {
+      login() {
+        let vm = this
+        FB.login(function (response) {
+          console.log('res', response)
+        }, {
+          scope: 'email, public_profile',
+          return_scopes: true
+        })
+      }
+    },
+    mounted() {
+      window.fbAsyncInit = function () {
+        FB.init(Config.FBLogin);
+
+        FB.AppEvents.logPageView();
+
+        // Get FB Login Status
+        FB.getLoginStatus(response => {
+          console.log('ini login status', response) // 這裡可以得到 fb 回傳的結果
+          if (response.status === 'connected') {
+            window.authorized = true;
+            FB.api('/me?fields=name,id,email', function (response) {
+              //vueRoot.$set(vueRoot, 'userProfile', response)
+              window.userProfile = response;
+            })
+            setTimeout(function () {
+              router.push({
+                path: window.tempNextPath
+              })
+            }, 1000)
+
+          } else if (response.status === 'not_authorized') {
+            window.authorized = false;
+          } else if (response.status === 'unknown') {
+            window.userProfile = {};
+            window.authorized = false;
+          } else {
+            window.authorized = false;
+          }
+        })
+      };
+    }
   }
+
 </script>
