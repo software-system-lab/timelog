@@ -73,6 +73,7 @@
 
 <script>
   import Chart from 'chart.js';
+  import _profileService from '../services/ProfileService.js'
 
   export default {
     data() {
@@ -89,6 +90,10 @@
           Sprint: ''
         }
       }
+    },
+    async created(){
+      let a = await _profileService.GetProfile();
+      console.log(a);
     },
     methods: {
       onSubmit() {
