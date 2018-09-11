@@ -6,13 +6,8 @@ module.exports = class {
   }
 
   async GetUserProfile() {
-    try {
-      var cmd = "SELECT * FROM `user`";
-      //console.log(cmd);
-      let profile = await DB.query(cmd);
-      return profile;
-    } catch (err) {
-      console.log(err)
-    }
+    var cmd = "SELECT * FROM `user`";
+    let profile = await DB.query(cmd);
+    return profile;
   }
 }

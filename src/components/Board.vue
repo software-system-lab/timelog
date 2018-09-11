@@ -92,12 +92,13 @@
       }
     },
     async created(){
-      let a = await _profileService.GetProfile();
-      console.log(a);
+
     },
     methods: {
-      onSubmit() {
-        console.log(this.LogForm)
+      async onSubmit() {
+        let a = await _profileService.GetProfile();
+      console.log(a);
+        //console.log(this.LogForm)
       },
 
       Clear() {

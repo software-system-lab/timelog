@@ -11,12 +11,13 @@ module.exports = class {
 
   SetAPI() {
     this.router.get("/GetProfile", async function (req, res) {
-      console.log(req)
+      //console.log(req)
       try {
         let result = await _profileService.GetUserProfile();
         res.send(result);
       } catch (err) {
         console.log(err);
+        res.send(400);
       }
 
       //     .addALog(req.body, function (err, results) {

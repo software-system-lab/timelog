@@ -5,6 +5,7 @@
     </el-row>
     <el-row>
       <h2>Welcome!</h2>
+      <i class="el-icon-loading"></i>
     </el-row>
     <el-row>
       <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false"
@@ -17,7 +18,12 @@
   import Config from "../config.js"
 
   export default {
-    name: 'Login',
+    // name: 'Login',
+    data() {
+      return {
+
+      }
+    },
     methods: {
       login() {
         let vm = this
@@ -32,30 +38,33 @@
     mounted() {
       window.fbAsyncInit = function () {
         FB.init(Config.FBLogin);
-
         FB.AppEvents.logPageView();
 
         // Get FB Login Status
         FB.getLoginStatus(response => {
           console.log('ini login status', response) // 這裡可以得到 fb 回傳的結果
           if (response.status === 'connected') {
+            $('.fb-login-button').hide();
             window.authorized = true;
-            FB.api('/me?fields=name,id,email', function (response) {
-              //vueRoot.$set(vueRoot, 'userProfile', response)
-              window.userProfile = response;
-            })
-            setTimeout(function () {
+            FB.api('/me?fields=name,id,email', async function (response) {
+              window.userProfile = await response;
+              $('.el-icon-loading').hide();
+              if (window.tempNextPath == undefined)
+                window.tempNextPath = "/Board";
               router.push({
                 path: window.tempNextPath
               })
-            }, 1000)
-
-          } else if (response.status === 'not_authorized') {
-            window.authorized = false;
-          } else if (response.status === 'unknown') {
+            });
+          } 
+          // else if (response.status === 'not_authorized') {
+          //   window.authorized = false;
+          // } else if (response.status === 'unknown') {
+          //   window.userProfile = {};
+          //   window.authorized = false;
+          // } 
+          else {
+            $('.el-icon-loading').hide();
             window.userProfile = {};
-            window.authorized = false;
-          } else {
             window.authorized = false;
           }
         })

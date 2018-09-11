@@ -1,11 +1,11 @@
-import axios from 'axios'
+import HTTP from './HttpRequest'
+
 /**
- * Profile API
+ * Profile APIs
  */
-export default{ 
-   async GetProfile(){
-    var response = await axios.get(`api/Profile/GetProfile`); 
-    return response.data;
+export default {
+  async GetProfile() {
+    return HTTP.get(`api/Profile/GetProfile`);
     // var response = await HTTP.get(`api/NurseExecutionDoctorOrders/InpatientList/queryPaitentInfo?inpatientEncounterId=${encodeURIComponent(inpatientEncounterId)}`, config); return response.data;
-   },
+  },
 }
