@@ -16,6 +16,7 @@
 
 <script>
   import Config from "../config.js"
+  import _profileService from '../services/ProfileService.js'
 
   export default {
     // name: 'Login',
@@ -28,6 +29,7 @@
       login() {
         let vm = this
         FB.login(function (response) {
+          //to del
           console.log('res', response)
         }, {
           scope: 'email, public_profile',
@@ -41,21 +43,36 @@
         FB.AppEvents.logPageView();
 
         // Get FB Login Status
-        FB.getLoginStatus(response => {
+        FB.getLoginStatus(async response => {
+          //to del
           console.log('ini login status', response) // 這裡可以得到 fb 回傳的結果
           if (response.status === 'connected') {
-            $('.fb-login-button').hide();
-            window.authorized = true;
-            FB.api('/me?fields=name,id,email', async function (response) {
-              window.userProfile = await response;
-              $('.el-icon-loading').hide();
-              if (window.tempNextPath == undefined)
-                window.tempNextPath = "/Board";
-              router.push({
-                path: window.tempNextPath
-              })
-            });
-          } 
+            var loginResult = await _profileService.Login(response.authResponse.userID, response.authResponse.accessToken);
+            if (loginResult == "logined") {
+              $('.fb-login-button').hide();
+              window.authorized = true;
+              await FB.api('/me?fields=name,id,email', async function (response) {
+                window.userProfile = await response;
+                $('.el-icon-loading').hide();
+                if (window.tempNextPath == undefined)
+                  window.tempNextPath = "/Board";
+                router.push({
+                  path: window.tempNextPath
+                })
+              });
+            } 
+            if (loginResult == "unregistered") {
+              // TODO
+            }
+            else {
+              vueRoot.$message({
+                showClose: true,
+                message: 'Cannot Login! Please Check Your FB status or internet connection (' + loginResult +
+                  ')',
+                type: 'error'
+              });
+            }
+          }
           // else if (response.status === 'not_authorized') {
           //   window.authorized = false;
           // } else if (response.status === 'unknown') {

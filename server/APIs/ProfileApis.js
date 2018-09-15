@@ -19,14 +19,16 @@ module.exports = class {
         console.log(err);
         res.send(400);
       }
+    });
 
-      //     .addALog(req.body, function (err, results) {
-      //     if (results == null) {
-      //       res.send("failed")
-      //     } else {
-      //       res.send("successed");
-      //     }
-      //   });
+    this.router.post("/Login", async function (req, res) {
+      try {
+        let result = await _profileService.Login(req.body);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
     });
   }
 }

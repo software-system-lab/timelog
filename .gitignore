@@ -18,3 +18,4 @@ backup/*
 *.njsproj
 *.sln
 src/config.js
+server/config.js

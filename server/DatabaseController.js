@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: '127.0.0.1',
   user: 'root',
   password: '1234',
-  database: 'timelog'
+  database: 'timelogdb'
 });
 
 let query = function (sql, values) {

@@ -37,8 +37,7 @@ export default {
   async post(api, data) {
     this.openLoading();
     try {
-      var response = await axios.get(api);
-
+      var response = await axios.post(api,data);
     } catch (err) {
       console.log(err);
       this.closeLoading();
