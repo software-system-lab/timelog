@@ -10,10 +10,9 @@ module.exports = class {
   }
 
   SetAPI() {
-    this.router.get("/GetProfile", async function (req, res) {
-      //console.log(req)
+    this.router.post("/GetProfile", async function (req, res) {
       try {
-        let result = await _profileService.GetUserProfile();
+        let result = await _profileService.GetUserProfile(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);

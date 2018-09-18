@@ -17,31 +17,23 @@
     <el-row>
       <el-col :md="12" :sm="24">
         <h2>Add a log</h2>
-        <el-form ref="form" :model="LogForm" label-width="100px" :label-position="'right'">
-          <el-form-item label="What you do?">
+        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="150px" :label-position="'right'">
+          <el-form-item label="What you do?" prop="Event">
             <el-input v-model="LogForm.Event"></el-input>
           </el-form-item>
-          <el-form-item label="Category">
+          <el-form-item label="Category" prop="Category">
             <el-select v-model="LogForm.Category" placeholder="Choose" multiple :span="11">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="What time?">
-            <!-- <el-col> -->
-              <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" align="'center'"></el-date-picker>
-            <!-- </el-col> -->
+          <el-form-item label="What time?" prop="Date">
+            <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" align="'center'"></el-date-picker>
           </el-form-item>
-          <el-form-item>
-            <!-- <el-col> -->
-              <el-time-picker v-model="LogForm.Duration" range-separator="to" start-placeholder="Start" end-placeholder="End" format="HH:mm"
-                value-format="HH:mm" is-range>
-              </el-time-picker>
-            <!-- </el-col> -->
-            <!-- <br> -->
-            <!-- <el-col> -->
-              <el-button type="success" icon="el-icon-time" pull-right>Now</el-button>
-            <!-- </el-col> -->
+          <el-form-item prop="Duration">
+            <el-time-picker v-model="LogForm.Duration" range-separator="to" start-placeholder="Start" end-placeholder="End"
+              format="HH:mm" value-format="HH:mm" is-range>
+            </el-time-picker>
           </el-form-item>
           <el-form-item label="Description">
             <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
@@ -74,13 +66,14 @@
 <script>
   import Chart from 'chart.js';
   import _profileService from '../services/ProfileService.js'
+  import _logService from '../services/LogService.js'
 
   export default {
     data() {
       return {
         LogForm: {
           Event: '',
-          Category: '',
+          Category: [],
           Date: '',
           Duration: '',
           Description: ''
@@ -88,43 +81,65 @@
         userData: {
           Team: '',
           Sprint: ''
+        },
+        formRules: {
+          Event: [{
+            required: true,
+            message: 'Check Here!',
+            trigger: 'blur'
+          }],
+          Category: [{
+            required: true,
+            message: 'Check Here!',
+            trigger: 'blur'
+          }],
+          Date: [{
+            required: true,
+            message: 'Check Here!',
+            trigger: 'blur'
+          }],
+          Duration: [{
+            required: true,
+            message: 'Check Here!',
+            trigger: 'blur'
+          }],
         }
       }
     },
-    async created(){
-
+    async created() {
+      let profile = await _profileService.GetProfile();
+      console.log(profile)
     },
     methods: {
       async onSubmit() {
-        let a = await _profileService.GetProfile();
-      console.log(a);
-        //console.log(this.LogForm)
+        this.$refs['form'].validate(async (valid) => {
+          if (valid) {
+            let result = await _logService.AddALog(this.LogForm);
+            if (result) {
+              this.successMsg();
+              this.Clear();
+            } else {
+              this.errorMsg();
+            }
+          }
+        });
       },
 
       Clear() {
         this.LogForm.Event = '';
-        this.LogForm.Category = '';
+        this.LogForm.Category = [];
         this.LogForm.Date = '';
         this.LogForm.Duration = '';
         this.LogForm.Description = '';
       },
-
       successMsg() {
         this.$message({
-          message: '恭喜你，这是一条成功消息',
+          message: 'Log Added!',
           type: 'success'
         });
       },
-
-      warningMsg() {
-        this.$message({
-          message: '警告哦，这是一条警告消息',
-          type: 'warning'
-        });
-      },
-
       errorMsg() {
-        this.$message.error('错了哦，这是一条错误消息');
+        this.$message.error('Log Added Fail!Please Retry');
       }
     },
     mounted() {

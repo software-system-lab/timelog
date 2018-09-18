@@ -1,6 +1,5 @@
 const axios = require('axios');
 const Config = require('../config.js');
-
 const DB = require('../DatabaseController.js');
 
 module.exports = class {
@@ -8,14 +7,16 @@ module.exports = class {
 
   }
 
-  async GetUserProfile() {
+  async GetUserProfile(userID) {
     var cmd = "SELECT `FBUserID`,`UserName`,`Team`,`Mail` FROM `user`";
-    let profile = await DB.query(cmd);
-    return profile;
+    let dbResult = await DB.query(cmd, [userID]);
+    if(dbResult.length != 0)
+      return dbResult;
+    return "no data";
   }
 
   async Login(data) {
-    var cmd = "SELECT `FBUserID`,`FBAccessToken` FROM `user` WHERE FBUserID = ?";
+    var cmd = "SELECT `FBUserID` FROM `user` WHERE FBUserID = ?";
     let dbResult = await DB.query(cmd, [data.userID]);
     if (dbResult.length == 0)
       return "unregistered";

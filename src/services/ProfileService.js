@@ -5,7 +5,7 @@ import HTTP from './HttpRequest'
  */
 export default {
   async GetProfile() {
-    return HTTP.get(`api/Profile/GetProfile`);
+    return HTTP.post(`api/Profile/GetProfile`,window.userProfile.id);
     // var response = await HTTP.get(`api/NurseExecutionDoctorOrders/InpatientList/queryPaitentInfo?inpatientEncounterId=${encodeURIComponent(inpatientEncounterId)}`, config); return response.data;
   },
   async Login(userID, userAccessToken){
