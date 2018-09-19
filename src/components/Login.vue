@@ -61,7 +61,7 @@
                 })
               });
             } 
-            if (loginResult == "unregistered") {
+            else if (loginResult == "unregistered") {
               // TODO
             }
             else {

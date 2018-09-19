@@ -8,7 +8,7 @@ module.exports = class {
   }
 
   async GetUserProfile(userID) {
-    var cmd = "SELECT `FBUserID`,`UserName`,`Team`,`Mail` FROM `user`";
+    var cmd = "SELECT `FBUserID`,`UserName`,`Team`,`Mail` FROM `user` WHERE FBUserID = ?";
     let dbResult = await DB.query(cmd, [userID]);
     if(dbResult.length != 0)
       return dbResult;

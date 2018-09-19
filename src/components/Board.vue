@@ -22,9 +22,9 @@
             <el-input v-model="LogForm.Event"></el-input>
           </el-form-item>
           <el-form-item label="Category" prop="Category">
-            <el-select v-model="LogForm.Category" placeholder="Choose" multiple :span="11">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="LogForm.Category" multiple filterable reserve-keyword placeholder="Choose">
+              <el-option v-for="item in TagList" :key="item.TagID" :label="item.Name" :value="item.TagID">
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="What time?" prop="Date">
@@ -35,7 +35,7 @@
               format="HH:mm" value-format="HH:mm" is-range>
             </el-time-picker>
           </el-form-item>
-          <el-form-item label="Description">
+          <el-form-item label="Description" prop="Description">
             <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
           </el-form-item>
         </el-form>
@@ -82,6 +82,7 @@
           Team: '',
           Sprint: ''
         },
+        TagList: [],
         formRules: {
           Event: [{
             required: true,
@@ -103,12 +104,36 @@
             message: 'Check Here!',
             trigger: 'blur'
           }],
+          Description: [{
+            required: false,
+            message: 'Check Here!',
+            trigger: 'blur'
+          }],
         }
       }
     },
     async created() {
       let profile = await _profileService.GetProfile();
-      console.log(profile)
+
+      //Get user tags
+      let taglist = await _logService.GetUserTags();
+      if (taglist == "no data")
+        this.$message({
+          message: 'Go setting page to add some tags!',
+          type: 'warning'
+        });
+      else {
+        this.TagList.push({
+          TagID: -1,
+          Name: 'else',
+        })
+        taglist.forEach(x => {
+          this.TagList.push({
+            TagID: x.TagID,
+            Name: x.TagName,
+          })
+        });
+      }
     },
     methods: {
       async onSubmit() {
@@ -124,13 +149,8 @@
           }
         });
       },
-
       Clear() {
-        this.LogForm.Event = '';
-        this.LogForm.Category = [];
-        this.LogForm.Date = '';
-        this.LogForm.Duration = '';
-        this.LogForm.Description = '';
+        this.$refs['form'].resetFields();
       },
       successMsg() {
         this.$message({

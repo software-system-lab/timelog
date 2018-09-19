@@ -3,6 +3,7 @@ import Board from '../components/Board.vue'
 import History from '../components/History.vue'
 import Team from '../components/Team.vue'
 import Sprint from '../components/Team/Sprint.vue'
+import Setting from '../components/Setting.vue'
 import HelloWorld from '../components/HelloWorld'
 
 const LoginedRoutes = [
@@ -48,6 +49,14 @@ const LoginedRoutes = [
                 }
             }
         ]
+    },
+    {
+        name: 'Setting',
+        path: "Setting",
+        components: {
+            header: Header,
+            default: Setting
+        }
     },
 ];
 

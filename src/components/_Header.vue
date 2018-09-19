@@ -21,10 +21,10 @@
         <span slot="title">Team</span>
       </el-menu-item>
     </router-link>
-    <router-link :to="{ name: ''}">
+    <router-link :to="{ name: 'Setting'}">
       <el-menu-item index="4">
         <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
+        <span slot="title">Setting</span>
       </el-menu-item>
     </router-link>
 

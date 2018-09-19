@@ -12,7 +12,7 @@ module.exports = class {
   SetAPI() {
     this.router.post("/GetProfile", async function (req, res) {
       try {
-        let result = await _profileService.GetUserProfile(req.body);
+        let result = await _profileService.GetUserProfile(req.body.userID);
         res.send(result);
       } catch (err) {
         console.log(err);

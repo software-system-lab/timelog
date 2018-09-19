@@ -3,6 +3,7 @@
     <el-row>
       <el-col :md="16" :sm="24">
         <h2>Recent Log</h2>
+        
         <el-table :data="recordList" style="width: 90%" sortable="true">
 
           <el-table-column type="expand">
