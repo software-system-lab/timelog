@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.1
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018-04-09 04:43:38
--- 伺服器版本: 10.1.30-MariaDB
--- PHP 版本： 7.2.2
+-- 產生時間： 2018 年 09 月 19 日 19:01
+-- 伺服器版本: 10.1.33-MariaDB
+-- PHP 版本： 7.2.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,35 +19,49 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 資料庫： `timelog`
+-- 資料庫： `timelogdb`
 --
 
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `record`
+-- 資料表結構 `log`
 --
 
-CREATE TABLE `record` (
-  `RecordID` int(11) NOT NULL,
-  `Event` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `User` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `Tag` int(11) DEFAULT NULL,
-  `Time_start` datetime NOT NULL,
-  `Time_until` datetime NOT NULL,
-  `Comment` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+CREATE TABLE `log` (
+  `LogID` int(11) NOT NULL,
+  `FBUserID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Tags` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `Date` date NOT NULL,
+  `StartTime` time NOT NULL,
+  `EndTime` time NOT NULL,
+  `Description` text COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `sessions`
+-- 資料表結構 `sprint`
 --
 
-CREATE TABLE `sessions` (
-  `session_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `expires` float NOT NULL,
-  `data` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+CREATE TABLE `sprint` (
+  `SprintID` int(11) NOT NULL,
+  `TeamID` int(11) NOT NULL,
+  `StartDate` date NOT NULL,
+  `EndDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `tag`
+--
+
+CREATE TABLE `tag` (
+  `TagID` int(11) NOT NULL,
+  `FBUserID` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `TagName` varchar(255) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -57,20 +71,10 @@ CREATE TABLE `sessions` (
 --
 
 CREATE TABLE `team` (
+  `TeamID` int(11) NOT NULL,
   `TeamName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `owner` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `typetag`
---
-
-CREATE TABLE `typetag` (
-  `TagID` int(11) NOT NULL,
-  `User` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `Name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `TeamPwd` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `NowSprint` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -80,12 +84,10 @@ CREATE TABLE `typetag` (
 --
 
 CREATE TABLE `user` (
-  `ID` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT '學號/員編',
-  `Name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `Mail` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `Password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `Team` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(1) NOT NULL DEFAULT '0' COMMENT '2為admin'
+  `FBUserID` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `UserName` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `Mail` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Team` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -93,78 +95,101 @@ CREATE TABLE `user` (
 --
 
 --
--- 資料表索引 `record`
+-- 資料表索引 `log`
 --
-ALTER TABLE `record`
-  ADD PRIMARY KEY (`RecordID`),
-  ADD KEY `user` (`User`),
-  ADD KEY `tag` (`Tag`);
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`LogID`),
+  ADD KEY `log_fbUserID` (`FBUserID`);
+
+--
+-- 資料表索引 `sprint`
+--
+ALTER TABLE `sprint`
+  ADD PRIMARY KEY (`SprintID`),
+  ADD KEY `sprint_teamID` (`TeamID`);
+
+--
+-- 資料表索引 `tag`
+--
+ALTER TABLE `tag`
+  ADD PRIMARY KEY (`TagID`),
+  ADD KEY `tag_fbUserID` (`FBUserID`);
 
 --
 -- 資料表索引 `team`
 --
 ALTER TABLE `team`
-  ADD PRIMARY KEY (`TeamName`),
-  ADD KEY `owner` (`owner`);
-
---
--- 資料表索引 `typetag`
---
-ALTER TABLE `typetag`
-  ADD PRIMARY KEY (`TagID`),
-  ADD KEY `userTag` (`User`);
+  ADD PRIMARY KEY (`TeamID`),
+  ADD KEY `team_nowSprint` (`NowSprint`);
 
 --
 -- 資料表索引 `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `project` (`Team`);
+  ADD PRIMARY KEY (`FBUserID`),
+  ADD KEY `user_TeamID` (`Team`);
 
 --
 -- 在匯出的資料表使用 AUTO_INCREMENT
 --
 
 --
--- 使用資料表 AUTO_INCREMENT `record`
+-- 使用資料表 AUTO_INCREMENT `log`
 --
-ALTER TABLE `record`
-  MODIFY `RecordID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+ALTER TABLE `log`
+  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- 使用資料表 AUTO_INCREMENT `typetag`
+-- 使用資料表 AUTO_INCREMENT `sprint`
 --
-ALTER TABLE `typetag`
-  MODIFY `TagID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `sprint`
+  MODIFY `SprintID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用資料表 AUTO_INCREMENT `tag`
+--
+ALTER TABLE `tag`
+  MODIFY `TagID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用資料表 AUTO_INCREMENT `team`
+--
+ALTER TABLE `team`
+  MODIFY `TeamID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 已匯出資料表的限制(Constraint)
 --
 
 --
--- 資料表的 Constraints `record`
+-- 資料表的 Constraints `log`
 --
-ALTER TABLE `record`
-  ADD CONSTRAINT `tag` FOREIGN KEY (`Tag`) REFERENCES `typetag` (`TagID`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `user` FOREIGN KEY (`User`) REFERENCES `user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `log`
+  ADD CONSTRAINT `log_fbUserID` FOREIGN KEY (`FBUserID`) REFERENCES `user` (`FBUserID`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- 資料表的 Constraints `sprint`
+--
+ALTER TABLE `sprint`
+  ADD CONSTRAINT `sprint_teamID` FOREIGN KEY (`TeamID`) REFERENCES `team` (`TeamID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- 資料表的 Constraints `tag`
+--
+ALTER TABLE `tag`
+  ADD CONSTRAINT `tag_fbUserID` FOREIGN KEY (`FBUserID`) REFERENCES `user` (`FBUserID`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- 資料表的 Constraints `team`
 --
 ALTER TABLE `team`
-  ADD CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `user` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- 資料表的 Constraints `typetag`
---
-ALTER TABLE `typetag`
-  ADD CONSTRAINT `userTag` FOREIGN KEY (`User`) REFERENCES `user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `team_nowSprint` FOREIGN KEY (`NowSprint`) REFERENCES `sprint` (`SprintID`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- 資料表的 Constraints `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `project` FOREIGN KEY (`Team`) REFERENCES `team` (`TeamName`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `user_TeamID` FOREIGN KEY (`Team`) REFERENCES `team` (`TeamID`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

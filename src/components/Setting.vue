@@ -63,7 +63,7 @@
             return;
           }
 
-          var DuplicatedTag = this.TagList.find(x => x.Name == tag.Name && x.TagID != null)
+          var DuplicatedTag = this.TagList.find(x => x.Name == tag.Name && x.TagID != null && x.TagID != tag.TagID)
           if (DuplicatedTag) {
             this.$message.error('Duplicate name!');
             return;
