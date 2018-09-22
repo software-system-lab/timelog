@@ -1,12 +1,8 @@
 const mysql = require('mysql');
+const Config = require('./config.js');
 
 // 與資料庫連線
-const pool = mysql.createPool({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '1234',
-  database: 'timelogdb'
-});
+const pool = mysql.createPool(Config.DBconnection);
 
 let query = function (sql, values) {
   return new Promise((resolve, reject) => {

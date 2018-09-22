@@ -1,12 +1,12 @@
 <template>
   <el-dialog title="Sprint" :visible.sync="visible" :before-close="closeModal" @open="openHandler">
     <el-form ref="form" :model="rowData" :rules="formRules" label-width="100px" :label-position="'right'">
-      <el-form-item label="Name" prop="Name">
-        <el-input v-model="rowData.Name"></el-input>
+      <el-form-item label="SprintName" prop="Sprint">
+        <el-input v-model="rowData.SprintName"></el-input>
       </el-form-item>
       <el-form-item label="Duration" prop="Duration">
-        <el-date-picker v-model="rowData.Duration" type="daterange" unlink-panels align="center" range-separator="to" start-placeholder="Start"
-          end-placeholder="End" :picker-options="pickerOptions" value-format="yyyy-MM-dd">
+        <el-date-picker v-model="rowData.Duration" type="daterange" unlink-panels align="center" range-separator="to"
+          start-placeholder="Start" end-placeholder="End" :picker-options="pickerOptions" value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="Content" prop="Content">
@@ -16,19 +16,20 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button @click="closeModal()">Cancel</el-button>
-      <el-button type="primary" v-if="!isModifyMode" @click="Create()">Create</el-button>
-      <el-button type="primary" v-if="isModifyMode" @click="Update()">Update</el-button>
+      <el-button type="primary" @click="Confirm()">Confirm</el-button>
     </div>
 
   </el-dialog>
 </template>
 
 <script>
+  import _profileService from '../../services/ProfileService.js'
+
   export default {
-    props: ['rowData', 'visible'],
+    props: ['rowDataID', 'visible'],
     data() {
       return {
-        isModifyMode: false,
+        rowData: {},
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -68,44 +69,39 @@
             trigger: 'blur'
           }],
           Content: [{
-            required: true,
+            required: false,
             message: 'Check Here!',
             trigger: 'blur'
           }]
         }
       };
     },
+    async mounted() {
+
+    },
     methods: {
-      openHandler() {
-        console.log(this.rowData);
-        if (this.rowData.ID == '') {
-          this.isModifyMode = false;
-        } else {
-          this.isModifyMode = true;
-        }
+      async openHandler() {
+        if (this.rowDataID != null)
+          this.rowData = await _profileService.GetSprint(this.rowDataID);
       },
       closeModal() {
+        this.$refs['form'].resetFields();
         this.$emit('close-modal');
       },
-      Create() {
-        this.$refs['form'].validate((valid) => {
+      async Confirm() {
+        this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            ////TODO insert service
-            this.rowData.ID = "temp";
-            this.$emit('add-sprint-row');
-            this.$refs['form'].resetFields();
+            let result = await _profileService.ModifyOrAddASprint(this.rowData);
+            if (result) {
+              this.$message({
+                message: 'Success!',
+                type: 'success'
+              });
+              this.closeModal();
+            }
           }
         });
       },
-      Update() {
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
-            ////TODO update service
-            this.$emit('update-sprint-row');
-            this.$refs['form'].resetFields();
-          }
-        });
-      }
     }
   }
 

@@ -7,7 +7,7 @@ export default {
   //log
   async AddALog(logData) {
     let postData = {
-      UserID: window.userProfile.id,
+      UserID: window.Profile.FBUserID,
       //TagsID,
       TagsString: JSON.stringify(logData.Category),
       Title: logData.Event,
@@ -22,13 +22,13 @@ export default {
   //tag
   async GetUserTags() {
     return HTTP.post(`api/Log/GetUserTags`, {
-      userID: window.userProfile.id
+      UserID: window.Profile.FBUserID
     });
   },
 
   async ModifyOrAddATag(tag) {
     let postData = {
-      UserID: window.userProfile.id,
+      UserID: window.Profile.FBUserID,
       TagID: tag.TagID,
       TagName: tag.Name,
     };
@@ -37,7 +37,7 @@ export default {
 
   async DeleteATag(tag) {
     let postData = {
-      UserID: window.userProfile.id,
+      UserID: window.Profile.FBUserID,
       TagID: tag.TagID,
       TagName: tag.Name,
     };

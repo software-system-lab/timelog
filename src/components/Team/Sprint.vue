@@ -10,12 +10,9 @@
       </el-col>
     </el-row>
     <el-row>
-      <h2>Setting</h2>
-      <el-col :md="12" :sm="24">
-        <el-button type="primary" @click="openModal()">Create</el-button>
-      </el-col>
       <el-col :md="24" :sm="24">
         <h3>Stack</h3>
+        <el-button type="primary" @click="openModal()">Create</el-button>
         <el-table :data="SprintList" style="width: 90%" sortable="true">
 
           <el-table-column type="expand">
@@ -24,13 +21,13 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="Name" label="Sprint" width="180" align="left">
+          <el-table-column prop="SprintName" label="Sprint" align="left">
             <template slot-scope="scope">
-              {{scope.row.Name}}
+              {{scope.row.SprintName}}
             </template>
           </el-table-column>
 
-          <el-table-column prop="Duration" label="Duration" width="180" align="left" sortable>
+          <el-table-column prop="Duration" label="Duration" align="left" sortable>
             <template slot-scope="scope">
               {{scope.row.Duration}}
             </template>
@@ -48,72 +45,39 @@
 
       </el-col>
     </el-row>
-    <SprintModal ref="sprintModal" :visible.sync="dialogFormVisible" :rowData="modifyRowData" @add-sprint-row="addSprintRow()"
-      @update-sprint-row="updateSprintRow()" @close-modal="closeModal()">
-    </SprintModal>
+    <SprintModal :visible.sync="dialogFormVisible" :rowDataID="rowIDtoModify" @close-modal="closeModal()"></SprintModal>
   </div>
 </template>
 
 <script>
   import SprintModal from './SprintModal'
+  import _profileService from '../../services/ProfileService.js'
 
   export default {
     data() {
       return {
-        SprintList: [{
-          ID: '1',
-          Name: 'sprint1',
-          Duration: ["2018-7-29", "2018-8-11"],
-          Content: 'xxxxxxxxxxxxxx'
-        }],
-        modifyRowData: {
-          row: {},
-          ID: '',
-          Name: '',
-          Duration: [],
-          Content: ''
-        },
+        SprintList: [],
+        rowIDtoModify: null,
         dialogFormVisible: false
       }
     },
+    async created() {
+      this.QuerySprintList();
+    },
     methods: {
-      openModal(row = null) {
+      openModal(row) {
         if (row != null) {
-          this.modifyRowData.row = row;
-          this.modifyRowData.ID = row.ID;
-          this.modifyRowData.Name = row.Name;
-          this.modifyRowData.Duration = row.Duration;
-          this.modifyRowData.Content = row.Content;
+          this.rowIDtoModify = row.SprintID;
         }
         this.dialogFormVisible = true;
       },
       closeModal() {
-        this.cleanModifyRowData();
+        this.rowIDtoModify = null;
+        this.QuerySprintList();
         this.dialogFormVisible = false;
       },
-      addSprintRow() {
-        let row = {
-          ID: this.modifyRowData.ID,
-          Name: this.modifyRowData.Name,
-          Duration: this.modifyRowData.Duration,
-          Content: this.modifyRowData.Content
-        }
-        this.SprintList.push(row);
-        this.closeModal();
-      },
-      updateSprintRow() {
-        this.modifyRowData.row.ID = this.modifyRowData.ID;
-        this.modifyRowData.row.Name = this.modifyRowData.Name;
-        this.modifyRowData.row.Duration = this.modifyRowData.Duration;
-        this.modifyRowData.row.Content = this.modifyRowData.Content;
-        this.closeModal();
-      },
-      cleanModifyRowData() {
-        this.modifyRowData.row = {};
-        this.modifyRowData.ID = '';
-        this.modifyRowData.Name = '';
-        this.modifyRowData.Duration = [];
-        this.modifyRowData.Content = '';
+      async QuerySprintList() {
+        this.SprintList = await _profileService.GetSprints();
       }
     },
     components: {

@@ -34,7 +34,7 @@ module.exports = class {
     //tag
     this.router.post("/GetUserTags", async function (req, res) {
       try {
-        let result = await _LogService.GetUserTags(req.body.userID);
+        let result = await _LogService.GetUserTags(req.body.UserID);
         res.send(result);
       } catch (err) {
         console.log(err);

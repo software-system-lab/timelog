@@ -40,10 +40,10 @@
     },
     computed: {
       profileName() {
-        return window.userProfile.name;
+        return window.FBProfile.name;
       },
       profilePicture() {
-        return `https://graph.facebook.com/${window.userProfile.id}/picture?width=300`;
+        return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`;
       }
     },
   }

@@ -113,8 +113,7 @@
       }
     },
     async created() {
-      let profile = await _profileService.GetProfile();
-
+      
       //Get user tags
       let taglist = await _logService.GetUserTags();
       if (taglist == "no data")

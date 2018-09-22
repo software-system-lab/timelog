@@ -52,7 +52,8 @@
               $('.fb-login-button').hide();
               window.authorized = true;
               await FB.api('/me?fields=name,id,email', async function (response) {
-                window.userProfile = await response;
+                window.FBProfile = await response;
+                window.Profile = await _profileService.GetProfile();
                 $('.el-icon-loading').hide();
                 if (window.tempNextPath == undefined)
                   window.tempNextPath = "/Board";
