@@ -3,8 +3,8 @@ const http = require('http');
 const bodyParser = require('body-parser');
 
 //route file declare
-const ProfileApis = require('./APIs/ProfileApis.js')
-const LogApis = require('./APIs/LogApis.js')
+const ProfileApis = require('./APIs/ProfileApiService.js')
+const LogApis = require('./APIs/LogApiService.js')
 
 //main framwork declare
 var app = express();

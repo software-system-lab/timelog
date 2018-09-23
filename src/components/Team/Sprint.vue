@@ -14,7 +14,7 @@
           <i class="el-icon-edit-outline"></i>
           Change</el-button>
         <div v-if="changeBoxVisible">
-          <el-select v-model="SprintIDToChange" placeholder="No Data">
+          <el-select v-model="SprintIDToChange" placeholder="Choose">
             <el-option v-for="item in SprintList" :key="item.SprintID" :label="item.SprintName" :value="item.SprintID">
             </el-option>
           </el-select>
@@ -102,7 +102,7 @@
           let result = await _profileService.ChangeSprint(this.SprintIDToChange);
           if (result) {
             this.$message({
-              message: 'Sprint of your Team have been Change!',
+              message: 'Sprint of your Team have been Changed!',
               type: 'success'
             });
             window.Profile.Sprint = result;
@@ -120,8 +120,13 @@
         this.changeBoxVisible = !this.changeBoxVisible;
       },
       async QuerySprintList() {
-        window.SprintList = await _profileService.GetSprints();
-        this.SprintList = window.SprintList;
+        let sprintList = await _profileService.GetSprints();
+        if (sprintList != "no data")
+          window.SprintList = sprintList;
+        else
+          window.SprintList = [];
+        window.SprintList = sprintList;
+        this.SprintList = sprintList;
       }
     },
     components: {

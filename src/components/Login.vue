@@ -57,7 +57,11 @@
                 //Get user Profile
                 window.Profile = await _profileService.GetProfile();
                 //Get Team Sprint
-                window.SprintList = await _profileService.GetSprints();
+                let sprintList = await _profileService.GetSprints();
+                if (sprintList != "no data")
+                  window.SprintList = sprintList;
+                else
+                  window.SprintList = [];
                 //Get User Tags
                 let taglist = await _logService.GetUserTags();
                 window.TagList = [];
@@ -84,7 +88,7 @@
                 //確認sprint日期
                 if (Date.parse(window.Profile.Sprint.StartDate) > Date.now() || Date.parse(window.Profile
                     .Sprint.EndDate) < Date.now()) {
-                  vueRoot.$alert('Now is not in the interval of sprint!',
+                  vueRoot.$alert('Now is not in the interval of current sprint!',
                     'Anyone in your team should change the sprint interval', {
                       confirmButtonText: 'ok',
                       type: 'warning'

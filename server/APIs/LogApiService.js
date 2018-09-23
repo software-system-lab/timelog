@@ -1,6 +1,6 @@
-const LogService = require('../services/LogService.js');
+const LogProvider = require('../providers/LogProvider.js');
 
-const _LogService = new LogService();
+const _LogProvider = new LogProvider();
 
 module.exports = class {
 
@@ -13,7 +13,7 @@ module.exports = class {
     ////log
     this.router.post("/AddALog", async function (req, res) {
       try {
-        let result = await _LogService.AddALog(req.body);
+        let result = await _LogProvider.AddALog(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -23,7 +23,7 @@ module.exports = class {
 
     this.router.post("/ModifyALog", async function (req, res) {
       try {
-        let result = await _LogService.ModifyALog(req.body);
+        let result = await _LogProvider.ModifyALog(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -33,7 +33,7 @@ module.exports = class {
 
     this.router.post("/DeleteALog", async function (req, res) {
       try {
-        let result = await _LogService.DeleteALog(req.body);
+        let result = await _LogProvider.DeleteALog(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -43,7 +43,7 @@ module.exports = class {
 
     this.router.post("/GetUserLogs", async function (req, res) {
       try {
-        let result = await _LogService.GetUserLogsInCurrentSprint(req.body);
+        let result = await _LogProvider.GetUserLogsInCurrentSprint(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -53,7 +53,7 @@ module.exports = class {
 
     this.router.post("/GetALog", async function (req, res) {
       try {
-        let result = await _LogService.GetALog(req.body.LogID);
+        let result = await _LogProvider.GetALog(req.body.LogID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -64,7 +64,7 @@ module.exports = class {
     ////tag
     this.router.post("/GetUserTags", async function (req, res) {
       try {
-        let result = await _LogService.GetUserTags(req.body.UserID);
+        let result = await _LogProvider.GetUserTags(req.body.UserID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -74,7 +74,7 @@ module.exports = class {
 
     this.router.post("/ModifyOrAddATag", async function (req, res) {
       try {
-        let result = await _LogService.ModifyOrAddATag(req.body);
+        let result = await _LogProvider.ModifyOrAddATag(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -84,7 +84,7 @@ module.exports = class {
 
     this.router.post("/DeleteATag", async function (req, res) {
       try {
-        let result = await _LogService.DeleteATag(req.body.TagID);
+        let result = await _LogProvider.DeleteATag(req.body.TagID);
         res.send(result);
       } catch (err) {
         console.log(err);

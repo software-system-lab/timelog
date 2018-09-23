@@ -11,7 +11,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="What time?" prop="Date">
-        <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" align="'center'"></el-date-picker>
+        <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" :picker-options="pickerOptions" align="'center'"></el-date-picker>
       </el-form-item>
       <el-form-item prop="Duration">
         <el-time-picker v-model="LogForm.Duration" range-separator="to" start-placeholder="Start" end-placeholder="End"
@@ -40,6 +40,11 @@
       return {
         LogForm: {},
         TagList: window.TagList,
+        pickerOptions: {
+          disabledDate(time) {
+            return true;//不設定限制範圍
+          },
+        },
         formRules: {
           Title: [{
             required: true,
@@ -72,7 +77,6 @@
     methods: {
       async openHandler() {
         this.LogForm = await _logService.GetAlog(this.rowDataID);
-        console.log(this.LogForm);
       },
       closeModal() {
         this.$refs['form'].resetFields();

@@ -66,7 +66,10 @@
       }
     },
     async mounted() {
-      this.logLsit = await _logService.GetUserLogs();
+      let result = await _logService.GetUserLogs();
+      if (result != "no data")
+        this.logLsit = result;
+
       //tagFilters
       //clear list
       this.tagFilters.length = 0;

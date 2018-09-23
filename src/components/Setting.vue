@@ -95,6 +95,7 @@
       },
       async QueryTags() {
         let taglist = await _logService.GetUserTags();
+        
         //clear list
         this.TagList.length = 0;
         window.TagList.length = 0;

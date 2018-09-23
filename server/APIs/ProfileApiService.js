@@ -1,6 +1,6 @@
-const ProfileService = require('../services/ProfileService.js');
+const ProfileProvider = require('../providers/ProfileServiceProvider.js');
 
-const _profileService = new ProfileService();
+const _profileProvider = new ProfileProvider();
 
 module.exports = class {
 
@@ -12,9 +12,9 @@ module.exports = class {
   SetAPI() {
     this.router.post("/GetProfile", async function (req, res) {
       try {
-        let result = await _profileService.GetUserProfile(req.body.userID);
-        let teamData = await _profileService.GetTeamData(result.Team);
-        let sprintData = await _profileService.GetSprintById(teamData.NowSprint);
+        let result = await _profileProvider.GetUserProfile(req.body.userID);
+        let teamData = await _profileProvider.GetTeamData(result.Team);
+        let sprintData = await _profileProvider.GetSprintById(teamData.NowSprint);
         result.Team = {
           TeamID: teamData.TeamID,
           TeamName: teamData.TeamName
@@ -34,7 +34,7 @@ module.exports = class {
 
     this.router.post("/Login", async function (req, res) {
       try {
-        let result = await _profileService.Login(req.body);
+        let result = await _profileProvider.Login(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -44,7 +44,7 @@ module.exports = class {
 
     this.router.post("/GetSprints", async function (req, res) {
       try {
-        let result = await _profileService.GetSprints(req.body.TeamID);
+        let result = await _profileProvider.GetSprints(req.body.TeamID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -54,7 +54,7 @@ module.exports = class {
 
     this.router.post("/GetSprint", async function (req, res) {
       try {
-        let result = await _profileService.GetSprintById(req.body.SprintID);
+        let result = await _profileProvider.GetSprintById(req.body.SprintID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -64,9 +64,9 @@ module.exports = class {
 
     this.router.post("/ChangeSprint", async function (req, res) {
       try {
-        let result = await _profileService.ChangeSprint(req.body);
+        let result = await _profileProvider.ChangeSprint(req.body);
         if (result) {
-          let sprintData = await _profileService.GetSprintById(req.body.SprintID);
+          let sprintData = await _profileProvider.GetSprintById(req.body.SprintID);
           let Sprint = {
             SprintID: sprintData.SprintID,
             StartDate:sprintData.StartDate,
@@ -85,7 +85,7 @@ module.exports = class {
 
     this.router.post("/ModifyOrAddASprint", async function (req, res) {
       try {
-        let result = await _profileService.ModifyOrAddASprint(req.body);
+        let result = await _profileProvider.ModifyOrAddASprint(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -95,7 +95,7 @@ module.exports = class {
 
     this.router.post("/DeleteASprint", async function (req, res) {
       try {
-        let result = await _profileService.DeleteASprint(req.body.SprintID);
+        let result = await _profileProvider.DeleteASprint(req.body.SprintID);
         res.send(result);
       } catch (err) {
         console.log(err);

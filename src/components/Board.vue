@@ -28,7 +28,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="What time?" prop="Date">
-            <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" align="'center'"></el-date-picker>
+            <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" :picker-options="pickerOptions" align="'center'"></el-date-picker>
           </el-form-item>
           <el-form-item prop="Duration">
             <el-time-picker v-model="LogForm.Duration" range-separator="to" start-placeholder="Start" end-placeholder="End"
@@ -79,6 +79,12 @@
           Description: ''
         },
         TagList: window.TagList,
+        pickerOptions: {
+          disabledDate(time) {
+            return Date.parse(window.Profile.Sprint.StartDate) > time.getTime() || Date.parse(window.Profile
+              .Sprint.EndDate) < time.getTime()
+          },
+        },
         formRules: {
           Event: [{
             required: true,
@@ -109,7 +115,7 @@
       }
     },
     async created() {
-      
+
     },
     computed: {
       TeamName() {
