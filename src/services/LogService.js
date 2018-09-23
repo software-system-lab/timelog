@@ -92,5 +92,14 @@ export default {
       TagName: tag.Name,
     };
     return HTTP.post(`api/Log/DeleteATag`, postData);
+  },
+
+  //analysis
+  async TagsAndLengthOfTime(tag) {
+    let postData = {
+      UserID: window.Profile.FBUserID,
+      SprintID: window.Profile.Sprint.SprintID,
+    };
+    return HTTP.post(`api/Log/TagsAndLengthOfTime`, postData);
   }
 }

@@ -91,5 +91,44 @@ module.exports = class {
         res.send(400);
       }
     });
+
+    //analysis
+    this.router.post("/TagsAndLengthOfTime", async function (req, res) {
+      try {
+        let tags = await _LogProvider.GetUserTags(req.body.UserID);
+        tags.push({
+          TagID: -1,
+          TagName: 'else',
+        });
+        tags.forEach(x => {
+          x.TimeLength = 0;
+          delete x.FBUserID;
+        });
+
+        let logs = await _LogProvider.GetUserLogsInCurrentSprint(req.body);
+        if (logs != "no data") {
+          logs.forEach(log => {
+            log.Tags = JSON.parse(log.Tags);
+            log.CountOfTag = log.Tags.length;
+            log.TotalTimeLength = (new Date(`13 June 2018 ${log.EndTime}`) - new Date(`13 June 2018 ${log.StartTime}`)) / (60 * 1000); //sec
+            log.EachTagTimeLength = log.TotalTimeLength / log.CountOfTag; //sec
+            log.Tags.forEach(x => {
+              let target = tags.find(y => y.TagID == x);
+              target.TimeLength += log.EachTagTimeLength;
+            })
+          });
+          
+          //sort by TimeLength DESC
+          tags.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1)
+
+          res.send(tags);
+        } else {
+          send("no data");
+        }
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
   }
 }

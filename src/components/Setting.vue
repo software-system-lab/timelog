@@ -3,11 +3,11 @@
     <el-collapse-item title="My Tags" name="1">
       <el-row>
         <el-col :md="18" :sm="24">
-          <el-table :data="TagList" style="width: 90%" sortable="true">
+          <el-table :data="TagList" sortable="true">
 
             <el-table-column prop="TagName" label="Name" align="left">
               <template slot-scope="scope">
-                <el-input v-if="scope.row.TagID == null" placeholder="Add a new tag" minlength=1 v-model="scope.row.TagName">
+                <el-input v-if="scope.row.TagID == null" placeholder="Add a new tag" minlength="1" v-model="scope.row.TagName">
                 </el-input>
                 <el-input v-else :disabled="scope.row.IsDisable" minlength="1" v-model="scope.row.TagName">
                 </el-input>

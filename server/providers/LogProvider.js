@@ -76,4 +76,7 @@ module.exports = class {
       return true;
     return false;
   }
+
+  //analysis
+
 }

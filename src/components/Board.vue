@@ -39,8 +39,8 @@
             <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="onSubmit">Add</el-button>
-        <el-button type="danger" @click="Clear">Clear</el-button>
+        <el-button type="danger" icon="el-icon-close" @click="Clear">Clear</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
       </el-col>
       <el-col :md="12" :sm="24">
         <h2>Recent</h2>
@@ -49,10 +49,33 @@
             <canvas id="Chart"></canvas>
           </div>
         </el-row>
+        <br>
         <el-row>
+          <el-col :md="24" :sm="24">
+            <el-table :data="PieListData" style="width: 90%" sortable="true">
+              <el-table-column prop="TagName" label="Name">
+                <template slot-scope="scope">
+                  {{scope.row.TagName}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="TimeLength" label="Time Length">
+                <template slot-scope="scope">
+                  {{scope.row.TimeLength}}
+                </template>
+              </el-table-column>
+              <el-table-column label="Percentage">
+                <template slot-scope="scope">
+                  {{(scope.row.TimeLength / PieData.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
+                </template>
+              </el-table-column>
+
+            </el-table>
+          </el-col>
+        </el-row>
+        <!-- <el-row>
           <h2>Progress</h2>
           <el-progress type="circle" :percentage="0"></el-progress>
-        </el-row>
+        </el-row> -->
       </el-col>
     </el-row>
     <el-row>
@@ -111,11 +134,33 @@
             message: 'Check Here!',
             trigger: 'blur'
           }],
+        },
+        PieListData: [],
+        PieData: {
+          labels: [],
+          datasets: [{
+            TimeLengthSum: 0,
+            data: [],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 145, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 145, 64, 1)'
+            ],
+            borderWidth: 2
+          }]
         }
       }
-    },
-    async created() {
-
     },
     computed: {
       TeamName() {
@@ -140,7 +185,14 @@
         });
       },
       Clear() {
-        this.$refs['form'].resetFields();
+        this.$refs['form'].clearValidate();
+        this.LogForm = {
+          Event: '',
+          Tag: [],
+          Date: '',
+          Duration: '',
+          Description: ''
+        }
       },
       successMsg() {
         this.$message({
@@ -152,43 +204,29 @@
         this.$message.error('Log Added Fail!Please Retry');
       }
     },
-    mounted() {
+    async mounted() {
+      let pieResult = await _logService.TagsAndLengthOfTime();
+      if (pieResult != "no data") {
+        this.PieListData = pieResult;
+        for (let i = 0; i < pieResult.length; i++) {
+          if (i < 5) {
+            this.PieData.labels.push(pieResult[i].TagName);
+            this.PieData.datasets[0].data.push(pieResult[i].TimeLength);
+          } else if (i == 5) {
+            this.PieData.labels.push("Other");
+            this.PieData.datasets[0].data.push(pieResult[i].TimeLength);
+          } else {
+            this.PieData.datasets[0].data[5] += pieResult[i].TimeLength;
+          }
+          this.PieData.datasets[0].TimeLengthSum += pieResult[i].TimeLength;
+        }
+      }
+
       var ctx = $("#Chart");
       var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple"],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 9, 3, 5, 2],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
+        type: 'polarArea',
+        data: this.PieData,
+        options: {}
       });
     }
   }
