@@ -20,7 +20,7 @@ module.exports = class {
     //   }
     // });
 
-    //log
+    ////log
     this.router.post("/AddALog", async function (req, res) {
       try {
         let result = await _LogService.AddALog(req.body);
@@ -31,7 +31,28 @@ module.exports = class {
       }
     });
 
-    //tag
+    this.router.post("/GetUserLogs", async function (req, res) {
+      try {
+        let result = await _LogService.GetUserLogsInCurrentSprint(req.body);
+        console.log(result)
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
+    this.router.post("/GetALog", async function (req, res) {
+      try {
+        //let result = await _LogService.AddALog(req.body);
+        //res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
+    ////tag
     this.router.post("/GetUserTags", async function (req, res) {
       try {
         let result = await _LogService.GetUserTags(req.body.UserID);

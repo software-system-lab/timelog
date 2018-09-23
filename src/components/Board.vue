@@ -21,8 +21,8 @@
           <el-form-item label="What you do?" prop="Event">
             <el-input v-model="LogForm.Event"></el-input>
           </el-form-item>
-          <el-form-item label="Category" prop="Category">
-            <el-select v-model="LogForm.Category" multiple filterable reserve-keyword placeholder="Choose">
+          <el-form-item label="Tag" prop="Tag">
+            <el-select v-model="LogForm.Tag" multiple filterable reserve-keyword placeholder="Choose">
               <el-option v-for="item in TagList" :key="item.TagID" :label="item.Name" :value="item.TagID">
               </el-option>
             </el-select>
@@ -73,7 +73,7 @@
       return {
         LogForm: {
           Event: '',
-          Category: [],
+          Tag: [],
           Date: '',
           Duration: '',
           Description: ''
@@ -85,7 +85,7 @@
             message: 'Check Here!',
             trigger: 'blur'
           }],
-          Category: [{
+          Tag: [{
             required: true,
             message: 'Check Here!',
             trigger: 'blur'

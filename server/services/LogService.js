@@ -5,7 +5,7 @@ module.exports = class {
 
   }
 
-  //tag
+  ////log
   async AddALog(data) {
     var cmd = "INSERT INTO `log` (`FBUserID`, `Tags`, `SprintID`, `Title`, `Date`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     let dbResult = await DB.query(cmd, [data.UserID, data.TagsString, data.SprintID, data.Title, data.Date, data.StartTime, data.EndTime, data.Description]);
@@ -14,7 +14,15 @@ module.exports = class {
     return false;
   }
 
-  //log
+  async GetUserLogsInCurrentSprint(data) {
+    var cmd = "SELECT * FROM `log` WHERE`FBUserID` = ? AND `SprintID` = ?;";
+    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
+    if (dbResult.length != 0)
+      return dbResult;
+    return "no data";
+  }
+
+  ////tag
   async GetUserTags(data) {
     var cmd = "SELECT * FROM `tag` WHERE `FBUserID` = ?";
     let dbResult = await DB.query(cmd, [data]);

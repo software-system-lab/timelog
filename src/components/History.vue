@@ -3,31 +3,33 @@
     <el-row>
       <el-col :md="16" :sm="24">
         <h2>Recent Log</h2>
-        
-        <el-table :data="recordList" style="width: 90%" sortable="true">
+
+        <el-table :data="logLsit" style="width: 90%" sortable="true">
 
           <el-table-column type="expand">
             <template slot-scope="scope">
-              {{scope.row.description}}
+              {{scope.row.Description}}
             </template>
           </el-table-column>
 
-          <el-table-column prop="category" label="Category" width="180" align="left" :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-            :filter-method="filterTag">
+          <el-table-column prop="Tag" label="Tag" align="left" :filters="tagFilters" :filter-method="filterTag">
             <template slot-scope="scope">
-              {{scope.row.category}}
+              <el-select v-model="scope.row.Tags" multiple disabled keyword placeholder="Choose">
+                <el-option v-for="item in TagList" :key="item.TagID" :label="item.Name" :value="item.TagID">
+                </el-option>
+              </el-select>
             </template>
           </el-table-column>
 
-          <el-table-column prop="event" label="Event" width="180" align="left" sortable>
+          <el-table-column prop="Title" label="Event" align="left" sortable>
             <template slot-scope="scope">
-              {{scope.row.event}}
+              {{scope.row.Title}}
             </template>
           </el-table-column>
 
-          <el-table-column prop="duration" label="Duration" width="180" align="left" sortable>
+          <el-table-column prop="Duration" label="Duration" align="left" sortable>
             <template slot-scope="scope">
-              {{scope.row.category}}
+              {{scope.row.Duration}}
             </template>
           </el-table-column>
 
@@ -41,39 +43,65 @@
 
       </el-col>
     </el-row>
-    <ModifyHistoryModal :visible.sync="dialogFormVisible" :rowData="rowData"></ModifyHistoryModal>
+    <ModifyHistoryModal :visible.sync="dialogFormVisible"></ModifyHistoryModal>
   </div>
 </template>
 
 <script>
   import ModifyHistoryModal from './History/ModifyModal'
+  import _logService from '../services/LogService.js'
 
   export default {
     data() {
       return {
-        recordList: [{
-            category: "123",
-            event: "456",
-            duration: "yyyy/mm/dd hh:mm ~ yyyy/mm/dd hh:mm",
-            description: "NIHOW"
-          },
-          {
-            category: "123",
-            event: "789",
-            duration: "yyyy/mm/dd hh:mm ~ yyyy/mm/dd hh:mm"
-          },
-        ],
+        logLsit: [],
+        TagList: [],
+        tagFilters: [{
+          text: 'else',
+          value: '-1'
+        }],
         dialogFormVisible: false,
         rowData: [],
       }
     },
+    async created() {
+      this.logLsit = await _logService.GetUserLogs();
+      //Get user tags
+      let taglist = await _logService.GetUserTags();
+      if (taglist == "no data")
+        this.$message({
+          message: 'Go setting page to add some tags!',
+          type: 'warning'
+        });
+      else {
+        this.TagList.push({
+          TagID: -1,
+          Name: 'else',
+        })
+        taglist.forEach(x => {
+          this.TagList.push({
+            TagID: x.TagID,
+            Name: x.TagName,
+          })
+          //tagFilters
+          this.tagFilters.push({
+            value: x.TagID.toString(),
+            text: x.TagName,
+          })
+        });
+      }
+    },
     methods: {
       filterTag(value, row) {
-        return row.tag === value;
+        var flag = false;
+        row.Tags.forEach(x => {
+          if (x == value)
+            flag = true;
+        });
+        return flag;
       },
       Edit(rowData) {
         this.dialogFormVisible = true;
-        this.rowData = rowData;
       }
     },
     components: {
