@@ -24,12 +24,24 @@ export default {
   //sprint
   async GetSprints() {
     let req = {
-      TeamID: window.Profile.TeamID
+      TeamID: window.Profile.Team.TeamID
     };
     let httpResult = await HTTP.post(`api/Profile/GetSprints`, req);
-    httpResult.forEach(x => {
-      x.Duration = `${x.StartDate.toString().slice(0,10)} ~ ${x.EndDate.toString().slice(0,10)}`;
-    });
+    if (httpResult != "no data")
+      httpResult.forEach(x => {
+        x.Duration = `${x.StartDate.toString().slice(0,10)} ~ ${x.EndDate.toString().slice(0,10)}`;
+      });
+    return httpResult;
+  },
+
+  async ChangeSprint(sprintID) {
+    let req = {
+      SprintID: sprintID,
+      TeamID: window.Profile.Team.TeamID
+    };
+    let httpResult = await HTTP.post(`api/Profile/ChangeSprint`, req);
+    if (httpResult != "no data")
+      httpResult.Duration = [httpResult.StartDate, httpResult.EndDate]
     return httpResult;
   },
 
@@ -38,7 +50,8 @@ export default {
       SprintID: sprintID
     };
     let httpResult = await HTTP.post(`api/Profile/GetSprint`, req);
-    httpResult.Duration = [httpResult.StartDate, httpResult.EndDate]
+    if (httpResult != "no data")
+      httpResult.Duration = [httpResult.StartDate, httpResult.EndDate]
     return httpResult;
   },
 
@@ -46,12 +59,18 @@ export default {
     let req = {
       SprintID: rowData.SprintID,
       SprintName: rowData.SprintName,
-      TeamID: window.Profile.TeamID,
+      TeamID: window.Profile.Team.TeamID,
       StartDate: rowData.Duration[0],
       EndDate: rowData.Duration[1],
       Content: rowData.Content
     };
-    let httpResult = await HTTP.post(`api/Profile/ModifyOrAddASprint`, req);
-    return httpResult;
+    return await HTTP.post(`api/Profile/ModifyOrAddASprint`, req);
+  },
+
+  async DeleteASprint(rowData) {
+    let req = {
+      SprintID: rowData.SprintID,
+    };
+    return await HTTP.post(`api/Profile/DeleteASprint`, req);
   }
 }

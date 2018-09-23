@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-tabs v-model="activeTab"  @tab-click="handleClick">
+    <el-tabs v-model="activeTab" @tab-click="handleClick">
       <template v-for="tab in tabList">
-        <el-tab-pane :label="tab.tabLabel" :name="tab.routeName"></el-tab-pane>
+        <el-tab-pane :label="tab.tabLabel" :key="tab.routeName" :name="tab.routeName"></el-tab-pane>
       </template>
-        <router-view></router-view>
+      <router-view></router-view>
     </el-tabs>
   </div>
 </template>
@@ -22,12 +22,15 @@
             routeName: 'Team - Sprint'
           }
         ],
-        activeTab: 'Team - Teammate',
+        activeTab:null,
       }
     },
     methods: {
       handleClick(tab) {
-        router.push({ name: tab.name });
+        console.log(tab)
+        router.push({
+          name: tab.name
+        });
       },
     },
   }

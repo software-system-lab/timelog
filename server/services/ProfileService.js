@@ -42,9 +42,17 @@ module.exports = class {
     return "no data";
   }
 
+  async ChangeSprint(data) {
+    var cmd = "UPDATE `team` SET `NowSprint` = ? WHERE `team`.`TeamID` = ?;";
+    var dbResult = await DB.query(cmd, [data.SprintID, data.TeamID]);
+    if (dbResult)
+      return true;
+    return false;
+  }
+
   //sprint
   async GetSprints(teamID) {
-    var cmd = "SELECT * FROM `sprint` WHERE `TeamID` = ? ORDER BY `EndDate` DESC";
+    var cmd = "SELECT * FROM `sprint` WHERE `TeamID` = ? ORDER BY `EndDate` DESC LIMIT 30";
     let dbResult = await DB.query(cmd, [teamID]);
     if (dbResult.length != 0)
       return dbResult;
@@ -68,6 +76,14 @@ module.exports = class {
       var cmd = "UPDATE `sprint` SET `SprintName` = ?, `StartDate` = ?, `EndDate` = ?, `Content` = ? WHERE `sprint`.`SprintID` = ?;";
       dbResult = await DB.query(cmd, [data.SprintName, data.StartDate, data.EndDate, data.Content, data.SprintID]);
     }
+    if (dbResult)
+      return true;
+    return false;
+  }
+
+  async DeleteASprint(sprintID) {
+    var cmd = "DELETE FROM `sprint` WHERE `sprint`.`SprintID` = ?;";
+    var dbResult = await DB.query(cmd, [sprintID]);
     if (dbResult)
       return true;
     return false;

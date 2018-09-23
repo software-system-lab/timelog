@@ -1,19 +1,31 @@
 <template>
   <div>
     <el-row>
-      <h2>Current</h2>
-      <el-col :md="12" :sm="24">
-
+      <el-col :md="8" :sm="12">
+        <h3>Current Sprint : {{this.NowSprint}}</h3>
+      </el-col>
+      <el-col :md="2" :sm="4">
+        <el-button type="primary" round @click="openModal()">
+          <i class="el-icon-plus"></i>
+          Create</el-button>
       </el-col>
       <el-col :md="6" :sm="12">
-
+        <el-button type="warning" round @click="openChangeBox()" v-if="!changeBoxVisible">
+          <i class="el-icon-edit-outline"></i>
+          Change</el-button>
+        <div v-if="changeBoxVisible">
+          <el-select v-model="SprintIDToChange" placeholder="请选择">
+            <el-option v-for="item in SprintList" :key="item.SprintID" :label="item.SprintName" :value="item.SprintID">
+            </el-option>
+          </el-select>
+          <el-button type="success" icon="el-icon-check" circle @click="confirmChangeBox()"></el-button>
+          <el-button type="danger" icon="el-icon-close" circle @click="cancelChangeBox()"></el-button>
+        </div>
       </el-col>
     </el-row>
     <el-row>
       <el-col :md="24" :sm="24">
-        <h3>Stack</h3>
-        <el-button type="primary" @click="openModal()">Create</el-button>
-        <el-table :data="SprintList" style="width: 90%" sortable="true">
+        <el-table :data="SprintList" style="width: 90%" height="600px" sortable="true">
 
           <el-table-column type="expand">
             <template slot-scope="scope">
@@ -58,7 +70,10 @@
       return {
         SprintList: [],
         rowIDtoModify: null,
-        dialogFormVisible: false
+        NowSprint: window.Profile.Sprint.SprintDisplayName,
+        dialogFormVisible: false,
+        changeBoxVisible: false,
+        SprintIDToChange: null
       }
     },
     async created() {
@@ -76,6 +91,37 @@
         this.QuerySprintList();
         this.dialogFormVisible = false;
       },
+      openChangeBox() {
+        this.changeBoxVisible = !this.changeBoxVisible;
+      },
+      async confirmChangeBox() {
+        if (this.SprintIDToChange == null)
+          return;
+        this.$confirm('This operation would affect to your whole team!!!', 'Are you sure?', {
+          confirmButtonText: 'ok',
+          cancelButtonText: 'cancel',
+          type: 'warning'
+        }).then(async () => {
+          let result = await _profileService.ChangeSprint(this.SprintIDToChange);
+          if (result) {
+            this.$message({
+              message: 'Sprint of your Team have been Change!',
+              type: 'success'
+            });
+            window.Profile.Sprint = result;
+            this.NowSprint = window.Profile.Sprint.SprintDisplayName
+            this.changeBoxVisible = !this.changeBoxVisible;
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'canceled'
+          });
+        });
+      },
+      cancelChangeBox() {
+        this.changeBoxVisible = !this.changeBoxVisible;
+      },
       async QuerySprintList() {
         this.SprintList = await _profileService.GetSprints();
       }
@@ -88,6 +134,8 @@
 </script>
 
 <style scoped>
-
+  .el-row {
+    text-align: left
+  }
 
 </style>

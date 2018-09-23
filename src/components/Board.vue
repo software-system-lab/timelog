@@ -2,10 +2,10 @@
   <div>
     <el-row>
       <el-col :md="6" :sm="12">
-        Team:{{userData.Team}}
+        Team: {{this.TeamName}}
       </el-col>
       <el-col :md="6" :sm="12">
-        Sprint:{{userData.Sprint}}
+        Sprint: {{this.NowSprint}}
       </el-col>
       <el-col :md="6" :sm="12">
 
@@ -78,10 +78,6 @@
           Duration: '',
           Description: ''
         },
-        userData: {
-          Team: '',
-          Sprint: ''
-        },
         TagList: [],
         formRules: {
           Event: [{
@@ -113,7 +109,6 @@
       }
     },
     async created() {
-      
       //Get user tags
       let taglist = await _logService.GetUserTags();
       if (taglist == "no data")
@@ -132,6 +127,14 @@
             Name: x.TagName,
           })
         });
+      }
+    },
+    computed: {
+      TeamName() {
+        return window.Profile.Team.TeamName;
+      },
+      NowSprint() {
+        return window.Profile.Sprint.SprintDisplayName;
       }
     },
     methods: {

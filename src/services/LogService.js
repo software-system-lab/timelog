@@ -8,7 +8,7 @@ export default {
   async AddALog(logData) {
     let postData = {
       UserID: window.Profile.FBUserID,
-      //TagsID,
+      SprintID:window.Profile.Sprint.SprintID,
       TagsString: JSON.stringify(logData.Category),
       Title: logData.Event,
       Date: logData.Date,

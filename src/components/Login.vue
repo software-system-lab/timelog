@@ -55,17 +55,25 @@
                 window.FBProfile = await response;
                 window.Profile = await _profileService.GetProfile();
                 $('.el-icon-loading').hide();
+
+                //確認sprint日期
+                if (Date.parse(window.Profile.Sprint.StartDate) > Date.now() || Date.parse(window.Profile
+                    .Sprint.EndDate) < Date.now()) {
+                  vueRoot.$alert('Now is not in the interval of sprint!', 'Anyone in your team should change the sprint interval', {
+                    confirmButtonText: 'ok',
+                    type: 'warning'
+                  })
+                }
+
                 if (window.tempNextPath == undefined)
                   window.tempNextPath = "/Board";
                 router.push({
                   path: window.tempNextPath
                 })
               });
-            } 
-            else if (loginResult == "unregistered") {
+            } else if (loginResult == "unregistered") {
               // TODO
-            }
-            else {
+            } else {
               vueRoot.$message({
                 showClose: true,
                 message: 'Cannot Login! Please Check Your FB status or internet connection (' + loginResult +

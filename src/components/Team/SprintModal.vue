@@ -15,6 +15,7 @@
     </el-form>
 
     <div slot="footer" class="dialog-footer">
+      <el-button type="danger" v-if="this.rowDataID != null" @click="Delete()">Delete</el-button>
       <el-button @click="closeModal()">Cancel</el-button>
       <el-button type="primary" @click="Confirm()">Confirm</el-button>
     </div>
@@ -100,6 +101,27 @@
               this.closeModal();
             }
           }
+        });
+      },
+      async Delete() {
+        this.$confirm('This operation would affect to your whole team', 'Are you sure?', {
+          confirmButtonText: 'ok',
+          cancelButtonText: 'cancel',
+          type: 'warning'
+        }).then(async () => {
+          let result = await _profileService.DeleteASprint(this.rowData);
+          if (result) {
+            this.$message({
+              message: 'Deleted!',
+              type: 'success'
+            });
+            this.closeModal();
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'canceled'
+          });
         });
       },
     }
