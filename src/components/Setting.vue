@@ -5,11 +5,11 @@
         <el-col :md="18" :sm="24">
           <el-table :data="TagList" style="width: 90%" sortable="true">
 
-            <el-table-column prop="Name" label="Name" align="left">
+            <el-table-column prop="TagName" label="Name" align="left">
               <template slot-scope="scope">
-                <el-input v-if="scope.row.TagID==null" placeholder="Add a new tag" minlength=1 v-model="scope.row.Name">
+                <el-input v-if="scope.row.TagID == null" placeholder="Add a new tag" minlength=1 v-model="scope.row.TagName">
                 </el-input>
-                <el-input v-else :disabled="scope.row.IsDisable" minlength="1" v-model="scope.row.Name">
+                <el-input v-else :disabled="scope.row.IsDisable" minlength="1" v-model="scope.row.TagName">
                 </el-input>
               </template>
             </el-table-column>
@@ -58,12 +58,12 @@
           if (tag.TagID) //not new tag
             tag.IsDisable = false;
         } else {
-          if (tag.Name.length < 1) {
+          if (tag.TagName.length < 1) {
             this.$message.error('Name of tag cannot be null!');
             return;
           }
 
-          var DuplicatedTag = this.TagList.find(x => x.Name == tag.Name && x.TagID != null && x.TagID != tag.TagID)
+          var DuplicatedTag = this.TagList.find(x => x.TagName == tag.TagName && x.TagID != null && x.TagID != tag.TagID)
           if (DuplicatedTag) {
             this.$message.error('Duplicate name!');
             return;
@@ -95,14 +95,21 @@
       },
       async QueryTags() {
         let taglist = await _logService.GetUserTags();
-            //clear list
-            this.TagList.length = 0;
-            // input to add tag
-            this.TagList.push({
-              TagID: null,
-              Name: '',
-              IsDisable: false
-            });
+        //clear list
+        this.TagList.length = 0;
+        window.TagList.length = 0;
+        // input to add tag
+        this.TagList.push({
+          TagID: null,
+          TagName: '',
+          IsDisable: false
+        });
+        //else to window data
+        window.TagList.push({
+          TagID: -1,
+          TagName: 'else',
+        })
+
         if (taglist == "no data")
           this.$message({
             message: 'no tag data!',
@@ -112,8 +119,12 @@
           taglist.forEach(x => {
             this.TagList.push({
               TagID: x.TagID,
-              Name: x.TagName,
+              TagName: x.TagName,
               IsDisable: true
+            });
+            window.TagList.push({
+              TagID: x.TagID,
+              TagName: x.TagName,
             })
           });
         }

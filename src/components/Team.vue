@@ -22,12 +22,11 @@
             routeName: 'Team - Sprint'
           }
         ],
-        activeTab:null,
+        activeTab: null,
       }
     },
     methods: {
       handleClick(tab) {
-        console.log(tab)
         router.push({
           name: tab.name
         });

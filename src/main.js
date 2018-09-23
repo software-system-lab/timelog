@@ -55,7 +55,7 @@ window.router.beforeEach(async (to, from, next) => {
     if (window.authorized) {
       // Get FB Login Status 向FB再次驗證
       FB.getLoginStatus(response => {
-        console.log('next login status', response) // 這裡可以得到 fb 回傳的結果
+        //console.log('next login status', response) 
         window.statusChangeCallback(response);
       })
       next();

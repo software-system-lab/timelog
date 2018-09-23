@@ -23,7 +23,7 @@
           </el-form-item>
           <el-form-item label="Tag" prop="Tag">
             <el-select v-model="LogForm.Tag" multiple filterable reserve-keyword placeholder="Choose">
-              <el-option v-for="item in TagList" :key="item.TagID" :label="item.Name" :value="item.TagID">
+              <el-option v-for="item in TagList" :key="item.TagID" :label="item.TagName" :value="item.TagID">
               </el-option>
             </el-select>
           </el-form-item>
@@ -78,7 +78,7 @@
           Duration: '',
           Description: ''
         },
-        TagList: [],
+        TagList: window.TagList,
         formRules: {
           Event: [{
             required: true,
@@ -109,25 +109,7 @@
       }
     },
     async created() {
-      //Get user tags
-      let taglist = await _logService.GetUserTags();
-      if (taglist == "no data")
-        this.$message({
-          message: 'Go setting page to add some tags!',
-          type: 'warning'
-        });
-      else {
-        this.TagList.push({
-          TagID: -1,
-          Name: 'else',
-        })
-        taglist.forEach(x => {
-          this.TagList.push({
-            TagID: x.TagID,
-            Name: x.TagName,
-          })
-        });
-      }
+      
     },
     computed: {
       TeamName() {

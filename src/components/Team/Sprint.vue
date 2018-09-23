@@ -14,7 +14,7 @@
           <i class="el-icon-edit-outline"></i>
           Change</el-button>
         <div v-if="changeBoxVisible">
-          <el-select v-model="SprintIDToChange" placeholder="请选择">
+          <el-select v-model="SprintIDToChange" placeholder="No Data">
             <el-option v-for="item in SprintList" :key="item.SprintID" :label="item.SprintName" :value="item.SprintID">
             </el-option>
           </el-select>
@@ -68,16 +68,13 @@
   export default {
     data() {
       return {
-        SprintList: [],
+        SprintList: window.SprintList,
         rowIDtoModify: null,
         NowSprint: window.Profile.Sprint.SprintDisplayName,
         dialogFormVisible: false,
         changeBoxVisible: false,
         SprintIDToChange: null
       }
-    },
-    async created() {
-      this.QuerySprintList();
     },
     methods: {
       openModal(row) {
@@ -123,7 +120,8 @@
         this.changeBoxVisible = !this.changeBoxVisible;
       },
       async QuerySprintList() {
-        this.SprintList = await _profileService.GetSprints();
+        window.SprintList = await _profileService.GetSprints();
+        this.SprintList = window.SprintList;
       }
     },
     components: {

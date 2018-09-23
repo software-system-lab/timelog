@@ -19,6 +19,29 @@ export default {
     return HTTP.post(`api/Log/AddALog`, postData);
   },
 
+  async ModifyALog(logData) {
+    let postData = {
+      LogID: logData.LogID,
+      UserID: window.Profile.FBUserID,
+      SprintID: logData.SprintID,
+      TagsString: JSON.stringify(logData.Tags),
+      Title: logData.Title,
+      Date: logData.Date,
+      StartTime: logData.Duration[0],
+      EndTime: logData.Duration[1],
+      Description: logData.Description
+    };
+    return HTTP.post(`api/Log/ModifyALog`, postData);
+  },
+
+  async DeleteALog(logData) {
+    let postData = {
+      LogID: logData.LogID,
+      UserID: window.Profile.FBUserID,
+    };
+    return HTTP.post(`api/Log/DeleteALog`, postData);
+  },
+
   async GetUserLogs() {
     let postData = {
       UserID: window.Profile.FBUserID,
@@ -33,6 +56,19 @@ export default {
     return httpResult;
   },
 
+  async GetAlog(logID) {
+    let req = {
+      LogID: logID
+    };
+    let httpResult = await HTTP.post(`api/Log/GetAlog`, req);
+    if (httpResult != 'no data'){
+      httpResult.Tags = JSON.parse(httpResult.Tags);
+      httpResult.Duration = [httpResult.StartTime, httpResult.EndTime]
+    }
+
+    return httpResult
+  },
+
   //tag
   async GetUserTags() {
     return HTTP.post(`api/Log/GetUserTags`, {
@@ -44,7 +80,7 @@ export default {
     let postData = {
       UserID: window.Profile.FBUserID,
       TagID: tag.TagID,
-      TagName: tag.Name,
+      TagName: tag.TagName,
     };
     return HTTP.post(`api/Log/ModifyOrAddATag`, postData);
   },

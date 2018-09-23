@@ -15,7 +15,7 @@
           <el-table-column prop="Tag" label="Tag" align="left" :filters="tagFilters" :filter-method="filterTag">
             <template slot-scope="scope">
               <el-select v-model="scope.row.Tags" multiple disabled keyword placeholder="Choose">
-                <el-option v-for="item in TagList" :key="item.TagID" :label="item.Name" :value="item.TagID">
+                <el-option v-for="item in TagList" :key="item.TagID" :label="item.TagName" :value="item.TagID">
                 </el-option>
               </el-select>
             </template>
@@ -43,7 +43,7 @@
 
       </el-col>
     </el-row>
-    <ModifyHistoryModal :visible.sync="dialogFormVisible"></ModifyHistoryModal>
+    <ModifyHistoryModal :visible.sync="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
   </div>
 </template>
 
@@ -55,41 +55,27 @@
     data() {
       return {
         logLsit: [],
-        TagList: [],
+        TagList: window.TagList,
         tagFilters: [{
           text: 'else',
           value: '-1'
         }],
+        logIDtoModify: null,
         dialogFormVisible: false,
         rowData: [],
       }
     },
-    async created() {
+    async mounted() {
       this.logLsit = await _logService.GetUserLogs();
-      //Get user tags
-      let taglist = await _logService.GetUserTags();
-      if (taglist == "no data")
-        this.$message({
-          message: 'Go setting page to add some tags!',
-          type: 'warning'
-        });
-      else {
-        this.TagList.push({
-          TagID: -1,
-          Name: 'else',
+      //tagFilters
+      //clear list
+      this.tagFilters.length = 0;
+      this.TagList.forEach(x => {
+        this.tagFilters.push({
+          value: x.TagID.toString(),
+          text: x.TagName,
         })
-        taglist.forEach(x => {
-          this.TagList.push({
-            TagID: x.TagID,
-            Name: x.TagName,
-          })
-          //tagFilters
-          this.tagFilters.push({
-            value: x.TagID.toString(),
-            text: x.TagName,
-          })
-        });
-      }
+      })
     },
     methods: {
       filterTag(value, row) {
@@ -101,7 +87,13 @@
         return flag;
       },
       Edit(rowData) {
+        this.logIDtoModify = rowData.LogID;
         this.dialogFormVisible = true;
+      },
+      async closeModal() {
+        this.logIDtoModify = null;
+        this.logLsit = await _logService.GetUserLogs();
+        this.dialogFormVisible = false;
       }
     },
     components: {

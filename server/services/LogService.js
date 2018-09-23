@@ -14,6 +14,30 @@ module.exports = class {
     return false;
   }
 
+  async ModifyALog(data) {
+    var cmd = "UPDATE `log` SET `Tags` = ?, `Title` = ?, `Date` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `log`.`LogID` = ?";
+    let dbResult = await DB.query(cmd, [data.TagsString, data.Title, data.Date, data.StartTime, data.EndTime, data.Description, data.LogID]);
+    if (dbResult)
+      return true;
+    return false;
+  }
+
+  async DeleteALog(data) {
+    var cmd = "DELETE FROM `log` WHERE `log`.`LogID` = ?;";
+    let dbResult = await DB.query(cmd, [data.LogID]);
+    if (dbResult)
+      return true;
+    return false;
+  }
+
+  async GetALog(logID) {
+    var cmd = "SELECT * FROM `log` WHERE `LogID` = ?;";
+    let dbResult = await DB.query(cmd, [logID]);
+    if (dbResult.length != 0)
+      return dbResult[0];
+    return "no data";;
+  }
+
   async GetUserLogsInCurrentSprint(data) {
     var cmd = "SELECT * FROM `log` WHERE`FBUserID` = ? AND `SprintID` = ?;";
     let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);

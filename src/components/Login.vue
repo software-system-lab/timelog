@@ -17,6 +17,7 @@
 <script>
   import Config from "../config.js"
   import _profileService from '../services/ProfileService.js'
+  import _logService from '../services/LogService.js'
 
   export default {
     // name: 'Login',
@@ -44,25 +45,50 @@
 
         // Get FB Login Status
         FB.getLoginStatus(async response => {
-          //to del
-          console.log('ini login status', response) // 這裡可以得到 fb 回傳的結果
+          //console.log('ini login status', response) // 這裡可以得到 fb 回傳的結果
           if (response.status === 'connected') {
             var loginResult = await _profileService.Login(response.authResponse.userID, response.authResponse.accessToken);
             if (loginResult == "logined") {
               $('.fb-login-button').hide();
               window.authorized = true;
               await FB.api('/me?fields=name,id,email', async function (response) {
+                //Get user Profile from FB
                 window.FBProfile = await response;
+                //Get user Profile
                 window.Profile = await _profileService.GetProfile();
+                //Get Team Sprint
+                window.SprintList = await _profileService.GetSprints();
+                //Get User Tags
+                let taglist = await _logService.GetUserTags();
+                window.TagList = [];
+                if (taglist == "no data")
+                  vueRoot.$message({
+                    message: 'Go setting page to add some tags!',
+                    type: 'warning'
+                  });
+                else {
+                  window.TagList.push({
+                    TagID: -1,
+                    TagName: 'else',
+                  });
+                  taglist.forEach(x => {
+                    window.TagList.push({
+                      TagID: x.TagID,
+                      TagName: x.TagName,
+                    });
+                  });
+                }
+
                 $('.el-icon-loading').hide();
 
                 //確認sprint日期
                 if (Date.parse(window.Profile.Sprint.StartDate) > Date.now() || Date.parse(window.Profile
                     .Sprint.EndDate) < Date.now()) {
-                  vueRoot.$alert('Now is not in the interval of sprint!', 'Anyone in your team should change the sprint interval', {
-                    confirmButtonText: 'ok',
-                    type: 'warning'
-                  })
+                  vueRoot.$alert('Now is not in the interval of sprint!',
+                    'Anyone in your team should change the sprint interval', {
+                      confirmButtonText: 'ok',
+                      type: 'warning'
+                    })
                 }
 
                 if (window.tempNextPath == undefined)

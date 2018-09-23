@@ -77,9 +77,6 @@
         }
       };
     },
-    async mounted() {
-
-    },
     methods: {
       async openHandler() {
         if (this.rowDataID != null)

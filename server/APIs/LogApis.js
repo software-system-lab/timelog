@@ -10,16 +10,6 @@ module.exports = class {
   }
 
   SetAPI() {
-    // this.router.get("/GetLog", async function (req, res) {
-    //   try {
-    //     let result = await _profileService.GetUserProfile();
-    //     res.send(result);
-    //   } catch (err) {
-    //     console.log(err);
-    //     res.send(400);
-    //   }
-    // });
-
     ////log
     this.router.post("/AddALog", async function (req, res) {
       try {
@@ -31,10 +21,29 @@ module.exports = class {
       }
     });
 
+    this.router.post("/ModifyALog", async function (req, res) {
+      try {
+        let result = await _LogService.ModifyALog(req.body);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
+    this.router.post("/DeleteALog", async function (req, res) {
+      try {
+        let result = await _LogService.DeleteALog(req.body);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
     this.router.post("/GetUserLogs", async function (req, res) {
       try {
         let result = await _LogService.GetUserLogsInCurrentSprint(req.body);
-        console.log(result)
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -44,8 +53,8 @@ module.exports = class {
 
     this.router.post("/GetALog", async function (req, res) {
       try {
-        //let result = await _LogService.AddALog(req.body);
-        //res.send(result);
+        let result = await _LogService.GetALog(req.body.LogID);
+        res.send(result);
       } catch (err) {
         console.log(err);
         res.send(400);
