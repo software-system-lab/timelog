@@ -77,6 +77,20 @@ module.exports = class {
     return false;
   }
 
-  //analysis
+  //target
+  async QueryTarget(data) {
+    var cmd = "SELECT * FROM `target` WHERE `UserID` = ? AND `SprintID` =?;";
+    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
+    if (dbResult.length != 0)
+      return dbResult;
+    return "no data";
+  }
 
+  async ModifyOrAddATarget(data) {
+    var cmd = "INSERT INTO `target` (`UserID`, `SprintID`, `TagID`, `TargetHour`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE `TargetHour` = ?;";
+    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID, data.TagID, data.TimeTarget, data.TimeTarget]);
+    if (dbResult)
+      return true;
+    return false;
+  }
 }

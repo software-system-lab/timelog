@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018 年 09 月 19 日 19:01
+-- 產生時間： 2018 年 09 月 24 日 09:56
 -- 伺服器版本: 10.1.33-MariaDB
 -- PHP 版本： 7.2.6
 
@@ -32,6 +32,7 @@ CREATE TABLE `log` (
   `LogID` int(11) NOT NULL,
   `FBUserID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `Tags` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `SprintID` int(11) DEFAULT NULL,
   `Title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `Date` date NOT NULL,
   `StartTime` time NOT NULL,
@@ -47,9 +48,11 @@ CREATE TABLE `log` (
 
 CREATE TABLE `sprint` (
   `SprintID` int(11) NOT NULL,
+  `SprintName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `TeamID` int(11) NOT NULL,
   `StartDate` date NOT NULL,
-  `EndDate` date NOT NULL
+  `EndDate` date NOT NULL,
+  `Content` text COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -62,6 +65,19 @@ CREATE TABLE `tag` (
   `TagID` int(11) NOT NULL,
   `FBUserID` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `TagName` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `target`
+--
+
+CREATE TABLE `target` (
+  `UserID` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `SprintID` int(11) NOT NULL,
+  `TagID` int(11) NOT NULL,
+  `TargetHour` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -114,6 +130,14 @@ ALTER TABLE `sprint`
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`TagID`),
   ADD KEY `tag_fbUserID` (`FBUserID`);
+
+--
+-- 資料表索引 `target`
+--
+ALTER TABLE `target`
+  ADD UNIQUE KEY `UserID` (`UserID`,`SprintID`,`TagID`) USING BTREE,
+  ADD KEY `target_SprintID` (`SprintID`),
+  ADD KEY `target_TagID` (`TagID`);
 
 --
 -- 資料表索引 `team`
@@ -178,6 +202,14 @@ ALTER TABLE `sprint`
 --
 ALTER TABLE `tag`
   ADD CONSTRAINT `tag_fbUserID` FOREIGN KEY (`FBUserID`) REFERENCES `user` (`FBUserID`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- 資料表的 Constraints `target`
+--
+ALTER TABLE `target`
+  ADD CONSTRAINT `target_SprintID` FOREIGN KEY (`SprintID`) REFERENCES `sprint` (`SprintID`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `target_TagID` FOREIGN KEY (`TagID`) REFERENCES `tag` (`TagID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `target_UserID` FOREIGN KEY (`UserID`) REFERENCES `user` (`FBUserID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 資料表的 Constraints `team`

@@ -1,21 +1,15 @@
 <template>
   <div>
-    <el-row>
-      <el-col :md="6" :sm="12">
-        Team: {{this.TeamName}}
-      </el-col>
-      <el-col :md="6" :sm="12">
-        Sprint: {{this.NowSprint}}
-      </el-col>
-      <el-col :md="6" :sm="12">
-
-      </el-col>
-      <el-col :md="6" :sm="12">
-
-      </el-col>
-    </el-row>
-    <el-row>
+    <el-row type="flex" justify="center">
       <el-col :md="12" :sm="24">
+        <el-row>
+          <el-col :md="6" :sm="6">
+            Team: {{this.TeamName}}
+          </el-col>
+          <el-col :md="18" :sm="18">
+            Sprint: {{this.NowSprint}}
+          </el-col>
+        </el-row>
         <h2>Add a log</h2>
         <el-form ref="form" :model="LogForm" :rules="formRules" label-width="150px" :label-position="'right'">
           <el-form-item label="What you do?" prop="Event">
@@ -43,44 +37,39 @@
         <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
       </el-col>
       <el-col :md="12" :sm="24">
-        <h2>Recent</h2>
-        <el-row>
-          <div class="chart-container" style="width:70%;margin: auto;">
-            <canvas id="Chart"></canvas>
-          </div>
-        </el-row>
-        <br>
-        <el-row>
-          <el-col :md="24" :sm="24">
-            <el-table :data="PieListData" style="width: 90%" sortable="true">
-              <el-table-column prop="TagName" label="Name">
-                <template slot-scope="scope">
-                  {{scope.row.TagName}}
-                </template>
-              </el-table-column>
-              <el-table-column prop="TimeLength" label="Time Length">
-                <template slot-scope="scope">
-                  {{scope.row.TimeLength}}
-                </template>
-              </el-table-column>
-              <el-table-column label="Percentage">
-                <template slot-scope="scope">
-                  {{(scope.row.TimeLength / PieData.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
-                </template>
-              </el-table-column>
-
-            </el-table>
-          </el-col>
-        </el-row>
-        <!-- <el-row>
-          <h2>Progress</h2>
-          <el-progress type="circle" :percentage="0"></el-progress>
-        </el-row> -->
+        <el-col :md="24" :sm="24">
+          <h2>My Sprint Target</h2>
+        </el-col>
+        <TargetBase v-for="tag in TagAnalysisList" :key="tag.TagID" :tag="tag"></TargetBase>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :md="24" :sm="24">
-        <h2>My Sprint Target</h2>
+    <br>
+    <el-row type="flex" justify="center">
+      <el-col :md="12" :sm="24">
+        <div class="chart-container" style="margin: auto;">
+          <canvas id="Chart"></canvas>
+        </div>
+        <h2>Tag / Spent Time</h2>
+      </el-col>
+      <el-col :md="12" :sm="24">
+        <el-table :data="TagAnalysisList" sortable="true">
+          <el-table-column prop="TagName" label="Tag">
+            <template slot-scope="scope">
+              {{scope.row.TagName}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="TimeLength" label="Time Length">
+            <template slot-scope="scope">
+              {{paddingLeft((scope.row.TimeLength / 60).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
+              60).toFixed(0),2)}}
+            </template>
+          </el-table-column>
+          <el-table-column label="Percentage">
+            <template slot-scope="scope">
+              {{(scope.row.TimeLength / PieData.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
+            </template>
+          </el-table-column>
+        </el-table>
       </el-col>
     </el-row>
   </div>
@@ -88,6 +77,7 @@
 
 <script>
   import Chart from 'chart.js';
+  import TargetBase from './Board/TargetBase'
   import _profileService from '../services/ProfileService.js'
   import _logService from '../services/LogService.js'
 
@@ -135,29 +125,20 @@
             trigger: 'blur'
           }],
         },
-        PieListData: [],
+        TagAnalysisList: [],
         PieData: {
           labels: [],
           datasets: [{
             TimeLengthSum: 0,
             data: [],
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 145, 64, 0.2)'
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(255, 145, 64, 0.7)'
             ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 145, 64, 1)'
-            ],
-            borderWidth: 2
           }]
         }
       }
@@ -178,6 +159,7 @@
             if (result) {
               this.successMsg();
               this.Clear();
+              await this.QueryPieData();
             } else {
               this.errorMsg();
             }
@@ -194,6 +176,33 @@
           Description: ''
         }
       },
+      async QueryPieData() {
+        let result = await _logService.TagsAndLengthOfTime();
+        if (result != "no data") {
+          this.TagAnalysisList = result;
+          //clear
+          this.PieData.labels.length = 0;
+          this.PieData.datasets[0].data.length = 0;
+          for (let i = 0; i < result.length; i++) {
+            if (i < 5) {
+              this.PieData.labels.push(result[i].TagName);
+              this.PieData.datasets[0].data.push(result[i].TimeLength);
+            } else if (i == 5) {
+              this.PieData.labels.push("Other");
+              this.PieData.datasets[0].data.push(result[i].TimeLength);
+            } else {
+              this.PieData.datasets[0].data[5] += result[i].TimeLength;
+            }
+            this.PieData.datasets[0].TimeLengthSum += result[i].TimeLength;
+          }
+        }
+      },
+      paddingLeft(str, len) {
+        if (str.toString().length >= len)
+          return str;
+        else
+          return this.paddingLeft('0' + str, len);
+      },
       successMsg() {
         this.$message({
           message: 'Log Added!',
@@ -205,35 +214,30 @@
       }
     },
     async mounted() {
-      let pieResult = await _logService.TagsAndLengthOfTime();
-      if (pieResult != "no data") {
-        this.PieListData = pieResult;
-        for (let i = 0; i < pieResult.length; i++) {
-          if (i < 5) {
-            this.PieData.labels.push(pieResult[i].TagName);
-            this.PieData.datasets[0].data.push(pieResult[i].TimeLength);
-          } else if (i == 5) {
-            this.PieData.labels.push("Other");
-            this.PieData.datasets[0].data.push(pieResult[i].TimeLength);
-          } else {
-            this.PieData.datasets[0].data[5] += pieResult[i].TimeLength;
-          }
-          this.PieData.datasets[0].TimeLengthSum += pieResult[i].TimeLength;
-        }
-      }
+      await this.QueryPieData();
 
       var ctx = $("#Chart");
       var myChart = new Chart(ctx, {
         type: 'polarArea',
         data: this.PieData,
-        options: {}
+        options: {
+          title: {
+            display: true,
+            text: '(min)'
+          }
+        }
       });
+    },
+    components: {
+      TargetBase,
     }
   }
 
 </script>
 
 <style scoped>
-
+  .el-form {
+    width: 90%
+  }
 
 </style>

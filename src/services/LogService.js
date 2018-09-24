@@ -49,10 +49,10 @@ export default {
     };
     let httpResult = await HTTP.post(`api/Log/GetUserLogs`, postData);
     if (httpResult != "no data")
-    httpResult.forEach(x => {
-      x.Tags = JSON.parse(x.Tags);
-      x.Duration = `${x.Date.toString()} ${x.StartTime.toString()} ~ ${x.EndTime.toString()}`;
-    });
+      httpResult.forEach(x => {
+        x.Tags = JSON.parse(x.Tags);
+        x.Duration = `${x.Date.toString()} ${x.StartTime.toString()} ~ ${x.EndTime.toString()}`;
+      });
     return httpResult;
   },
 
@@ -61,7 +61,7 @@ export default {
       LogID: logID
     };
     let httpResult = await HTTP.post(`api/Log/GetAlog`, req);
-    if (httpResult != 'no data'){
+    if (httpResult != 'no data') {
       httpResult.Tags = JSON.parse(httpResult.Tags);
       httpResult.Duration = [httpResult.StartTime, httpResult.EndTime]
     }
@@ -94,6 +94,17 @@ export default {
     return HTTP.post(`api/Log/DeleteATag`, postData);
   },
 
+  //target
+  async ModifyOrAddATarget(tag) {
+    let postData = {
+      UserID: window.Profile.FBUserID,
+      SprintID: window.Profile.Sprint.SprintID,
+      TagID: tag.TagID,
+      TimeTarget: tag.TimeTarget,
+    };
+    return HTTP.post(`api/Log/ModifyOrAddATarget`, postData);
+  },
+  
   //analysis
   async TagsAndLengthOfTime(tag) {
     let postData = {
