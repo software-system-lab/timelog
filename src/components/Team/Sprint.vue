@@ -1,15 +1,15 @@
 <template>
   <div>
     <el-row>
-      <el-col :md="8" :sm="12">
+      <el-col :md="12" :sm="12">
         <h3>Current Sprint : {{this.NowSprint}}</h3>
       </el-col>
-      <el-col :md="2" :sm="4">
+      <el-col :md="3" :sm="3">
         <el-button type="primary" round @click="openModal()">
           <i class="el-icon-plus"></i>
           Create</el-button>
       </el-col>
-      <el-col :md="6" :sm="12">
+      <el-col :md="9" :sm="9">
         <el-button type="warning" round @click="openChangeBox()" v-if="!changeBoxVisible">
           <i class="el-icon-edit-outline"></i>
           Change</el-button>

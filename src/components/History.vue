@@ -3,8 +3,12 @@
     <el-row>
       <el-col :md="16" :sm="24">
         <h2>Recent Log</h2>
-
-        <el-table :data="logLsit" style="width: 90%" sortable="true">
+        <el-select v-model="SprintIDToSearch" placeholder="Choose">
+          <el-option v-for="item in SprintList" :key="item.SprintID" :label="item.SprintName" :value="item.SprintID">
+          </el-option>
+        </el-select>
+        <el-button type="success" icon="el-icon-search" circle @click="confirmSearchBox()"></el-button>
+        <el-table :data="logList" sortable="true">
 
           <el-table-column type="expand">
             <template slot-scope="scope">
@@ -54,21 +58,21 @@
   export default {
     data() {
       return {
-        logLsit: [],
+        logList: [],
         TagList: window.TagList,
         tagFilters: [{
           text: 'else',
           value: '-1'
         }],
         logIDtoModify: null,
+        SprintIDToSearch: window.Profile.Sprint.SprintID,
+        SprintList: window.SprintList,
         dialogFormVisible: false,
         rowData: [],
       }
     },
     async mounted() {
-      let result = await _logService.GetUserLogs();
-      if (result != "no data")
-        this.logLsit = result;
+      this.QueryLogs();
 
       //tagFilters
       //clear list
@@ -95,8 +99,18 @@
       },
       async closeModal() {
         this.logIDtoModify = null;
-        this.logLsit = await _logService.GetUserLogs();
+        this.logList = await _logService.GetUserLogs();
         this.dialogFormVisible = false;
+      },
+      confirmSearchBox() {
+        this.QueryLogs(this.SprintIDToSearch);
+      },
+      async QueryLogs(sprintID) {
+        let result = await _logService.GetUserLogs(sprintID);
+        if (result != "no data")
+          this.logList = result;
+        else
+          this.logList = [];
       }
     },
     components: {

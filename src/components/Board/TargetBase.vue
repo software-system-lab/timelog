@@ -1,17 +1,21 @@
 <template>
   <el-col :md="6" :sm="6">
-    <h2>{{tag.TagName}}</h2>
+    <h4>{{tag.TagName}}</h4>
     <el-progress type="circle" :percentage="TagProgressPercentage" :color="TagProgressColor" :status="TagProgressStatus"></el-progress>
-    <el-input :disabled="!changeBoxEnable" size="mini" type="number" step="1" min="1" placeholder="Target (in Hour)"
-      suffix-icon="el-icon-edit-outline" v-model="tag.TimeTarget">
-    </el-input>
-    <div v-if="!changeBoxEnable">
-      <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="openChangeBox()"></el-button>
-    </div>
-    <div v-if="changeBoxEnable">
-      <el-button type="success" size="mini" icon="el-icon-check" circle @click="confirmChangeBox()"></el-button>
-      <el-button type="danger" size="mini" icon="el-icon-close" circle @click="cancelChangeBox()"></el-button>
-    </div>
+    <el-row>
+      <el-input :disabled="!changeBoxEnable" size="mini" type="number" step="1" min="1" placeholder="Target (in Hour)"
+        suffix-icon="el-icon-edit-outline" v-model="tag.TimeTarget">
+      </el-input>
+    </el-row>
+    <el-row>
+      <div v-if="!changeBoxEnable">
+        <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="openChangeBox()"></el-button>
+      </div>
+      <div v-if="changeBoxEnable">
+        <el-button type="success" size="mini" icon="el-icon-check" circle @click="confirmChangeBox()"></el-button>
+        <el-button type="danger" size="mini" icon="el-icon-close" circle @click="cancelChangeBox()"></el-button>
+      </div>
+    </el-row>
   </el-col>
 </template>
 
@@ -28,7 +32,7 @@
     computed: {
       TagProgressPercentage() {
         if (this.tag.TimeTarget != null)
-          return (this.tag.TimeLength / (this.tag.TimeTarget * 60) * 100).toFixed(2);
+          return Number((this.tag.TimeLength / (this.tag.TimeTarget * 60) * 100).toFixed(2));
         return 100;
       },
       TagProgressColor() {
@@ -77,7 +81,7 @@
 
 <style scoped>
   .el-input {
-    width: 80%
+    width: 150px
   }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row type="flex" justify="center">
+    <el-row>
       <el-col :md="12" :sm="24">
         <el-row>
           <el-col :md="6" :sm="6">
@@ -37,14 +37,12 @@
         <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
       </el-col>
       <el-col :md="12" :sm="24">
-        <el-col :md="24" :sm="24">
-          <h2>My Sprint Target</h2>
-        </el-col>
-        <TargetBase v-for="tag in TagAnalysisList" :key="tag.TagID" :tag="tag"></TargetBase>
+        <h2>My Sprint Target</h2>
+        <TargetBase v-for="tag in TagAnalysisList" :key="tag.TagID" v-if="tag.TagID != -1" :tag="tag"></TargetBase>
       </el-col>
     </el-row>
     <br>
-    <el-row type="flex" justify="center">
+    <el-row>
       <el-col :md="12" :sm="24">
         <div class="chart-container" style="margin: auto;">
           <canvas id="Chart"></canvas>

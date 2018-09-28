@@ -9,7 +9,7 @@
         <el-button slot="reference" class="el-icon-more-outline"></el-button>
       </el-popover>
       <el-main>
-        <router-view/>
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
@@ -27,6 +27,7 @@
     position: fixed;
     top: 10px;
     left: 10px;
+    z-index: 999;
   }
 
 </style>

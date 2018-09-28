@@ -42,10 +42,10 @@ export default {
     return HTTP.post(`api/Log/DeleteALog`, postData);
   },
 
-  async GetUserLogs() {
+  async GetUserLogs(sprintID = window.Profile.Sprint.SprintID) {
     let postData = {
       UserID: window.Profile.FBUserID,
-      SprintID: window.Profile.Sprint.SprintID,
+      SprintID: sprintID,
     };
     let httpResult = await HTTP.post(`api/Log/GetUserLogs`, postData);
     if (httpResult != "no data")
