@@ -19,8 +19,18 @@ export default {
     return HTTP.post(`api/Profile/Login`, req);
   },
 
+  async Register(userData,userAccessToken) {
+    let postData = userData;
+    postData.UserAccessToken = userAccessToken;
+    return HTTP.post(`api/Profile/Register`, postData);
+  },
+
 
   ////teams
+  async GetTeamList() {
+    return HTTP.get(`api/Profile/GetTeamList`);
+  },
+
   //sprint
   async GetSprints() {
     let req = {

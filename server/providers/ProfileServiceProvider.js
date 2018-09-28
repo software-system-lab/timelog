@@ -32,6 +32,23 @@ module.exports = class {
     }
   }
 
+  async Register(data) {
+    let access_token = await axios.get(`https://graph.facebook.com/oauth/access_token` +
+      `?client_id=${Config.FBAppAccessToken.appId}&client_secret=${Config.FBAppAccessToken.appSecrete}&grant_type=client_credentials`);
+
+    let FBVerifyResult = await axios.get(`https://graph.facebook.com/debug_token?input_token=` + data.UserAccessToken + `&access_token=` + access_token.data.access_token);
+
+    let TeamVerifyResult = await this.CheckTeamPwd(data.TeamID, data.TeamPwd);
+
+    if (FBVerifyResult.data.data.is_valid && TeamVerifyResult) {
+      var cmd = "INSERT INTO `user` (`FBUserID`, `UserName`, `Mail`, `Phone`, `Team`) VALUES (?, ?, ?, ?, ?);";
+      let dbResult = await DB.query(cmd, [data.UserID, data.UserName, data.Email, data.PhoneNumber, data.TeamID]);
+      if (dbResult)
+        return true;
+    }
+    return false;
+  }
+
 
   ////team
   async GetTeamData(teamID) {
@@ -39,6 +56,22 @@ module.exports = class {
     let dbResult = await DB.query(cmd, [teamID]);
     if (dbResult.length != 0)
       return dbResult[0];
+    return "no data";
+  }
+
+  async CheckTeamPwd(teamID, teamPwd) {
+    var cmd = "SELECT `TeamID` FROM `team` WHERE `TeamID` = ? AND `TeamPwd` = ?";
+    let dbResult = await DB.query(cmd, [teamID, teamPwd]);
+    if (dbResult.length != 0)
+      return true;
+    return false;
+  }
+
+  async GetAllTeam() {
+    var cmd = "SELECT `TeamID`,`TeamName` FROM `team`";
+    let dbResult = await DB.query(cmd, []);
+    if (dbResult.length != 0)
+      return dbResult;
     return "no data";
   }
 

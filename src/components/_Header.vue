@@ -1,7 +1,7 @@
 <template>
   <el-menu>
     <img src="../../static/image/timelog.png" alt="logo">
-    <img alt="用戶頭像照片" :src="this.profilePicture" class="img-circle" />
+    <img alt="profile img" :src="this.profilePicture" class="img-circle" />
     <h4>{{this.profileName}}</h4>
     <router-link :to="{ name: 'Board'}">
       <el-menu-item index="1">

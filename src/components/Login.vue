@@ -11,6 +11,9 @@
       <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false"
         data-auto-logout-link="false" data-use-continue-as="true"></div>
     </el-row>
+    <el-row>
+      by Software Systems Lab,Taipei Tech
+    </el-row>
   </div>
 </template>
 
@@ -99,10 +102,17 @@
                   window.tempNextPath = "/Board";
                 router.push({
                   path: window.tempNextPath
-                })
+                });
               });
             } else if (loginResult == "unregistered") {
-              // TODO
+              window.authorized = true;
+              await FB.api('/me?fields=name,id,email', async function (response) {
+                //Get user Profile from FB
+                window.FBProfile = await response;
+                router.push({
+                  name: "Register"
+                });
+              });
             } else {
               vueRoot.$message({
                 showClose: true,

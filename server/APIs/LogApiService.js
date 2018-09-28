@@ -106,7 +106,10 @@ module.exports = class {
     ////analysis
     this.router.post("/TagsAndLengthOfTime", async function (req, res) {
       try {
-        let tags = await _LogProvider.GetUserTags(req.body.UserID);
+        let dbTags = await _LogProvider.GetUserTags(req.body.UserID);
+        var tags = [];
+
+        if (dbTags != 'no data') tags = dbTags;
         tags.push({
           TagID: -1,
           TagName: 'else',
@@ -144,7 +147,7 @@ module.exports = class {
 
           res.send(tags);
         } else {
-          send("no data");
+          res.send("no data");
         }
       } catch (err) {
         console.log(err);
