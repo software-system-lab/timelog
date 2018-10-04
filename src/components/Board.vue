@@ -7,7 +7,7 @@
             Team: {{this.TeamName}}
           </el-col>
           <el-col :md="18" :sm="18">
-            Sprint: {{this.NowSprint}}
+            Iteration: {{this.NowSprint}}
           </el-col>
         </el-row>
         <h2>Add a log</h2>
@@ -37,7 +37,7 @@
         <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
       </el-col>
       <el-col :md="12" :sm="24">
-        <h2>My Sprint Target</h2>
+        <h2>My Iteration Target</h2>
         <TargetBase v-for="tag in TagAnalysisList" :key="tag.TagID" v-if="tag.TagID != -1" :tag="tag"></TargetBase>
       </el-col>
     </el-row>
@@ -184,12 +184,12 @@
           for (let i = 0; i < result.length; i++) {
             if (i < 5) {
               this.PieData.labels.push(result[i].TagName);
-              this.PieData.datasets[0].data.push(result[i].TimeLength);
+              this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
             } else if (i == 5) {
-              this.PieData.labels.push("Other");
-              this.PieData.datasets[0].data.push(result[i].TimeLength);
+              this.PieData.labels.push("Other Tags");
+              this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
             } else {
-              this.PieData.datasets[0].data[5] += result[i].TimeLength;
+              this.PieData.datasets[0].data[5] += result[i].TimeLength.toFixed(0);
             }
             this.PieData.datasets[0].TimeLengthSum += result[i].TimeLength;
           }

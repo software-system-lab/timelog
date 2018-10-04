@@ -106,9 +106,9 @@ export default {
   },
   
   //analysis
-  async TagsAndLengthOfTime(tag) {
+  async TagsAndLengthOfTime(teammateID = window.Profile.FBUserID) {
     let postData = {
-      UserID: window.Profile.FBUserID,
+      UserID: teammateID,
       SprintID: window.Profile.Sprint.SprintID,
     };
     return HTTP.post(`api/Log/TagsAndLengthOfTime`, postData);

@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="Sprint" :visible.sync="visible" :before-close="closeModal" @open="openHandler">
-    <el-form ref="form" :model="rowData" :rules="formRules" label-width="100px" :label-position="'right'">
-      <el-form-item label="SprintName" prop="SprintName">
+    <el-form ref="form" :model="rowData" :rules="formRules" label-width="150px" :label-position="'right'">
+      <el-form-item label="Iteration Name" prop="SprintName">
         <el-input v-model="rowData.SprintName"></el-input>
       </el-form-item>
       <el-form-item label="Duration" prop="Duration">

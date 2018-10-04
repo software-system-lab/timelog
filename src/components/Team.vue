@@ -18,7 +18,7 @@
             routeName: 'Team - Teammate'
           },
           {
-            tabLabel: 'Sprint',
+            tabLabel: 'Iteration',
             routeName: 'Team - Sprint'
           }
         ],

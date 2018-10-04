@@ -54,7 +54,7 @@ module.exports = class {
 
     this.router.get("/GetTeamList", async function (req, res) {
       try {
-        let result = await _profileProvider.GetAllTeam();
+        let result = await _profileProvider.GetTeamList();
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -72,6 +72,17 @@ module.exports = class {
       }
     });
 
+    this.router.post("/GetTeammates", async function (req, res) {
+      try {
+        let result = await _profileProvider.GetTeammatesByTeamID(req.body.TeamID);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
+    ////sprint
     this.router.post("/GetSprint", async function (req, res) {
       try {
         let result = await _profileProvider.GetSprintById(req.body.SprintID);

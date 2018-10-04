@@ -38,7 +38,7 @@ module.exports = class {
     return "no data";;
   }
 
-  async GetUserLogsInCurrentSprint(data) {
+  async GetUserLogsBySprint(data) {
     var cmd = "SELECT * FROM `log` WHERE`FBUserID` = ? AND `SprintID` = ?;";
     let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
     if (dbResult.length != 0)
@@ -78,7 +78,7 @@ module.exports = class {
   }
 
   //target
-  async QueryTarget(data) {
+  async QueryTargetBySprint(data) {
     var cmd = "SELECT * FROM `target` WHERE `UserID` = ? AND `SprintID` =?;";
     let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
     if (dbResult.length != 0)

@@ -8,7 +8,7 @@ module.exports = class {
   }
   ////personal
   async GetUserProfile(userID) {
-    var cmd = "SELECT `FBUserID`,`UserName`,`Team`,`Mail` FROM `user` WHERE FBUserID = ?";
+    var cmd = "SELECT `FBUserID`,`UserName`,`Team`,`Mail`,`Phone` FROM `user` WHERE FBUserID = ?";
     let dbResult = await DB.query(cmd, [userID]);
     if (dbResult.length != 0)
       return dbResult[0];
@@ -67,7 +67,7 @@ module.exports = class {
     return false;
   }
 
-  async GetAllTeam() {
+  async GetTeamList() {
     var cmd = "SELECT `TeamID`,`TeamName` FROM `team`";
     let dbResult = await DB.query(cmd, []);
     if (dbResult.length != 0)
@@ -81,6 +81,14 @@ module.exports = class {
     if (dbResult)
       return true;
     return false;
+  }
+
+  async GetTeammatesByTeamID(teamID){
+    var cmd = "SELECT * FROM `user` WHERE `Team` = ?";
+    let dbResult = await DB.query(cmd, [teamID]);
+    if (dbResult.length != 0)
+      return dbResult;
+    return "no data";
   }
 
   //sprint

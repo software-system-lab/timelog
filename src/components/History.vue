@@ -3,6 +3,7 @@
     <el-row>
       <el-col :md="16" :sm="24">
         <h2>Recent Log</h2>
+        <label>Search</label>
         <el-select v-model="SprintIDToSearch" placeholder="Choose">
           <el-option v-for="item in SprintList" :key="item.SprintID" :label="item.SprintName" :value="item.SprintID">
           </el-option>
@@ -61,7 +62,7 @@
         logList: [],
         TagList: window.TagList,
         tagFilters: [{
-          text: 'else',
+          text: 'other',
           value: '-1'
         }],
         logIDtoModify: null,

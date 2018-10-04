@@ -3,6 +3,7 @@ import Board from '../components/Board.vue'
 import History from '../components/History.vue'
 import Team from '../components/Team.vue'
 import Sprint from '../components/Team/Sprint.vue'
+import Teammate from '../components/Team/Teammate.vue'
 import Setting from '../components/Setting.vue'
 import HelloWorld from '../components/HelloWorld'
 
@@ -35,7 +36,7 @@ const LoginedRoutes = [
             {
                 name: "Team - Teammate",
                 path: "Teammate",
-                component: HelloWorld,
+                component: Teammate,
                 meta: {
                     tabIndex: '0'
                 }

@@ -19,19 +19,24 @@ export default {
     return HTTP.post(`api/Profile/Login`, req);
   },
 
-  async Register(userData,userAccessToken) {
+  async Register(userData, userAccessToken) {
     let postData = userData;
     postData.UserAccessToken = userAccessToken;
     return HTTP.post(`api/Profile/Register`, postData);
   },
 
-
-  ////teams
   async GetTeamList() {
     return HTTP.get(`api/Profile/GetTeamList`);
   },
 
-  //sprint
+  ////teams
+  async GetTeammates() {
+    let req = {
+      TeamID: window.Profile.Team.TeamID
+    };
+    return HTTP.post(`api/Profile/GetTeammates`,req);
+  },
+
   async GetSprints() {
     let req = {
       TeamID: window.Profile.Team.TeamID
@@ -44,6 +49,7 @@ export default {
     return httpResult;
   },
 
+  //sprint
   async ChangeSprint(sprintID) {
     let req = {
       SprintID: sprintID,

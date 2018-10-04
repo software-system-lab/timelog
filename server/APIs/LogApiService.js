@@ -43,7 +43,7 @@ module.exports = class {
 
     this.router.post("/GetUserLogs", async function (req, res) {
       try {
-        let result = await _LogProvider.GetUserLogsInCurrentSprint(req.body);
+        let result = await _LogProvider.GetUserLogsBySprint(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -112,7 +112,7 @@ module.exports = class {
         if (dbTags != 'no data') tags = dbTags;
         tags.push({
           TagID: -1,
-          TagName: 'else',
+          TagName: 'other',
         });
         tags.forEach(x => {
           x.TimeLength = 0;
@@ -120,8 +120,8 @@ module.exports = class {
           delete x.FBUserID;
         });
 
-        let logs = await _LogProvider.GetUserLogsInCurrentSprint(req.body);
-        let targets = _LogProvider.QueryTarget(req.body); //sync method
+        let logs = await _LogProvider.GetUserLogsBySprint(req.body);
+        let targets = _LogProvider.QueryTargetBySprint(req.body); //sync method
         if (logs != "no data") {
           logs.forEach(log => {
             log.Tags = JSON.parse(log.Tags);

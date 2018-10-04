@@ -76,7 +76,7 @@
                 else {
                   window.TagList.push({
                     TagID: -1,
-                    TagName: 'else',
+                    TagName: 'other',
                   });
                   taglist.forEach(x => {
                     window.TagList.push({

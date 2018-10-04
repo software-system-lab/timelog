@@ -28,11 +28,25 @@
       </el-row>
     </el-collapse-item>
     <el-collapse-item title="My Profile" name="2">
-
+      <el-form ref="form" :model="UserForm" label-width="150px" :inline="true" :label-position="'right'">
+        <el-form-item label="Your name" prop="UserName">
+          <el-input disabled v-model="UserForm.UserName"></el-input>
+        </el-form-item>
+        <el-form-item label="Team" prop="TeamName">
+          <el-input disabled v-model="UserForm.TeamName"></el-input>
+        </el-form-item>
+        <el-form-item label="Email Adress" prop="Email">
+          <el-input disabled v-model="UserForm.Email" type="email"></el-input>
+        </el-form-item>
+        <el-form-item label="Phone number" prop="PhoneNumber">
+          <el-input disabled v-model="UserForm.PhoneNumber"></el-input>
+        </el-form-item>
+      </el-form>
+      <span>If you want to change your profile.Please contact your administrator.</span>
     </el-collapse-item>
-    <el-collapse-item title="" name="3">
+    <!-- <el-collapse-item title="" name="3">
 
-    </el-collapse-item>
+    </el-collapse-item> -->
   </el-collapse>
 </template>
 
@@ -46,7 +60,14 @@
           TagID: null,
           Name: '',
           IsDisable: false
-        }, ]
+        }, ],
+        UserForm: {
+          UserName: window.Profile.UserName,
+          UserID: window.Profile.FBUserID,
+          TeamName: window.Profile.Team.TeamName,
+          Email: window.Profile.Mail,
+          PhoneNumber: window.Profile.Phone
+        },
       }
     },
     async created() {
@@ -95,7 +116,7 @@
       },
       async QueryTags() {
         let taglist = await _logService.GetUserTags();
-        
+
         //clear list
         this.TagList.length = 0;
         window.TagList.length = 0;
@@ -108,7 +129,7 @@
         //else to window data
         window.TagList.push({
           TagID: -1,
-          TagName: 'else',
+          TagName: 'other',
         })
 
         if (taglist == "no data")

@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :md="12" :sm="12">
-        <h3>Current Sprint : {{this.NowSprint}}</h3>
+        <h3>Current Iteration : {{this.NowSprint}}</h3>
       </el-col>
       <el-col :md="3" :sm="3">
         <el-button type="primary" round @click="openModal()">
