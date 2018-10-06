@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Config from "../../config/index.js"
+import Config from "../config"
 
 export default {
   openLoading() {
@@ -17,7 +17,7 @@ export default {
   async get(api) {
     this.openLoading();
     try {
-      var response = await axios.get(`http://${Config.dev.host}:${Config.dev.port}/${api}`);
+      var response = await axios.get(`http://${Config.apiDest.host}:${Config.apiDest.port}/${api}`);
     } catch (err) {
       console.log(err);
       this.closeLoading();
@@ -36,7 +36,7 @@ export default {
   async post(api, data) {
     this.openLoading();
     try {
-      var response = await axios.post(`http://${Config.dev.host}:${Config.dev.port}/${api}`, data);
+      var response = await axios.post(`http://${Config.apiDest.host}:${Config.apiDest.port}/${api}`, data);
     } catch (err) {
       console.log(err);
       this.closeLoading();

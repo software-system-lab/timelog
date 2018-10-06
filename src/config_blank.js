@@ -4,6 +4,10 @@ export default {
       cookie: true,
       xfbml: true,
       version: 'Choose a version (v3.1)'
+    },
+    apiDest: {
+      host: '',
+      port: ''
     }
   }
   
