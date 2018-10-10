@@ -11,7 +11,7 @@
           </el-col>
         </el-row>
         <h2>Add a log</h2>
-        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="150px" :label-position="'right'">
+        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="120px" :label-position="'right'">
           <el-form-item label="What you do?" prop="Event">
             <el-input v-model="LogForm.Event"></el-input>
           </el-form-item>
@@ -51,12 +51,12 @@
       </el-col>
       <el-col :md="12" :sm="24">
         <el-table :data="TagAnalysisList" sortable="true">
-          <el-table-column prop="TagName" label="Tag">
+          <el-table-column prop="Tag Name" label="Tag">
             <template slot-scope="scope">
               {{scope.row.TagName}}
             </template>
           </el-table-column>
-          <el-table-column prop="TimeLength" label="Time Length">
+          <el-table-column prop="Time Length" label="Time Length">
             <template slot-scope="scope">
               {{paddingLeft((scope.row.TimeLength / 60).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
               60).toFixed(0),2)}}
@@ -85,7 +85,7 @@
         LogForm: {
           Event: '',
           Tag: [],
-          Date: '',
+          Date: new Date().toISOString().slice(0,10),
           Duration: '',
           Description: ''
         },
@@ -169,7 +169,7 @@
         this.LogForm = {
           Event: '',
           Tag: [],
-          Date: '',
+          Date: new Date().toISOString().slice(0,10),
           Duration: '',
           Description: ''
         }

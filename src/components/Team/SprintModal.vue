@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="Sprint" :visible.sync="visible" :before-close="closeModal" @open="openHandler">
+  <el-dialog title="Sprint" :visible.sync="visible" :before-close="closeModal" @open="openHandler" :fullscreen="ModalFullScreen">
     <el-form ref="form" :model="rowData" :rules="formRules" label-width="150px" :label-position="'right'">
       <el-form-item label="Iteration Name" prop="SprintName">
         <el-input v-model="rowData.SprintName"></el-input>
@@ -75,6 +75,11 @@
           }]
         }
       };
+    },
+    computed: {
+      ModalFullScreen() {
+        return window.screen.width < 992 ? true : false;
+      },
     },
     methods: {
       async openHandler() {

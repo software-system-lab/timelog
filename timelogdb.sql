@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018 年 09 月 24 日 09:56
+-- 產生時間： 2018 年 10 月 07 日 10:03
 -- 伺服器版本: 10.1.33-MariaDB
 -- PHP 版本： 7.2.6
 
@@ -52,7 +52,7 @@ CREATE TABLE `sprint` (
   `TeamID` int(11) NOT NULL,
   `StartDate` date NOT NULL,
   `EndDate` date NOT NULL,
-  `Content` text COLLATE utf8_unicode_ci NOT NULL
+  `Content` text COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -103,6 +103,7 @@ CREATE TABLE `user` (
   `FBUserID` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `UserName` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `Mail` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Phone` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
   `Team` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

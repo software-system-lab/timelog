@@ -54,9 +54,9 @@
         this.changeBoxEnable = true;
       },
       async confirmChangeBox() {
-        if (this.tag.TimeTarget <= 0) {
+        if (this.tag.TimeTarget <= 0 || this.tag.TimeTarget % 1 != 0) {
           this.$message({
-            message: 'Target should > 0!',
+            message: 'Target should be an integer!',
             type: 'error'
           });
           return;

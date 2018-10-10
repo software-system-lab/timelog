@@ -130,7 +130,8 @@ module.exports = class {
             log.EachTagTimeLength = log.TotalTimeLength / log.CountOfTag; //sec
             log.Tags.forEach(x => {
               let xx = tags.find(y => y.TagID == x);
-              xx.TimeLength += log.EachTagTimeLength;
+              if (xx != undefined)
+                xx.TimeLength += log.EachTagTimeLength;
             })
           });
 
@@ -138,7 +139,8 @@ module.exports = class {
           if (targets != "no data") {
             targets.forEach(x => {
               let tag = tags.find(y => y.TagID == x.TagID);
-              tag.TimeTarget = x.TargetHour;
+              if (tag != undefined)
+                tag.TimeTarget = x.TargetHour;
             })
           }
 
