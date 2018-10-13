@@ -100,7 +100,7 @@
       },
       async closeModal() {
         this.logIDtoModify = null;
-        this.logList = await _logService.GetUserLogs();
+        this.QueryLogs();
         this.dialogFormVisible = false;
       },
       confirmSearchBox() {
