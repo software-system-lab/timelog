@@ -33,7 +33,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="SprintName" label="Sprint" align="left">
+          <el-table-column prop="SprintName" label="Iteration" align="left">
             <template slot-scope="scope">
               {{scope.row.SprintName}}
             </template>
@@ -138,7 +138,12 @@
 
 <style scoped>
   .el-row {
-    text-align: left
+    text-align: left;
+
+  }
+
+  .el-col {
+    padding-top: 5px;
   }
 
 </style>

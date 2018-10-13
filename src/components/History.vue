@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :md="16" :sm="24">
+      <el-col :md="24" :sm="24">
         <h2>Recent Log</h2>
         <label>Search</label>
         <el-select v-model="SprintIDToSearch" placeholder="Choose">

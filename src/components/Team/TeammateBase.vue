@@ -108,23 +108,22 @@
               this.Data.datasets[0].data.push(result[i].TimeLength.toFixed(0));
               this.Data.datasets[1].data.push(
                 result[i].TimeTarget != null ?
-                result[i].TimeTarget.toFixed(0) * 60 :
-                0
+                result[i].TimeTarget * 60 : 0
               );
             } else if (i == 5) {
               this.Data.labels.push("Other Tags");
               this.Data.datasets[0].data.push(result[i].TimeLength.toFixed(0));
               this.Data.datasets[1].data.push(
                 result[i].TimeTarget != null ?
-                result[i].TimeTarget.toFixed(0) * 60 :
-                0
+                result[i].TimeTarget * 60 : 0
               );
             } else {
-              this.Data.datasets[0].data[5] += result[i].TimeLength.toFixed(0);
+              this.Data.datasets[0].data[5] = (
+                parseInt(this.Data.datasets[0].data[5]) + result[i].TimeLength
+              ).toFixed(0);
               this.Data.datasets[1].data[5] +=
                 result[i].TimeTarget != null ?
-                result[i].TimeTarget.toFixed(0) * 60 :
-                0;
+                result[i].TimeTarget * 60 : 0;
             }
             this.Data.datasets[0].TimeLengthSum += result[i].TimeLength;
             this.Data.datasets[1].TargetTimeLengthSum +=

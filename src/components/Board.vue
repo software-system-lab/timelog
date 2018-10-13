@@ -11,7 +11,7 @@
           </el-col>
         </el-row>
         <h2>Add a log</h2>
-        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="120px" :label-position="'right'">
+        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="110px" :label-position="'right'">
           <el-form-item label="What you do?" prop="Event">
             <el-input v-model="LogForm.Event"></el-input>
           </el-form-item>
@@ -20,6 +20,9 @@
               <el-option v-for="item in TagList" :key="item.TagID" :label="item.TagName" :value="item.TagID">
               </el-option>
             </el-select>
+            <el-tooltip class="item" effect="dark" content="When you choose multiple tags,the time you spent would be equally divided into them!" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
           </el-form-item>
           <el-form-item label="What time?" prop="Date">
             <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" :picker-options="pickerOptions" align="'center'"></el-date-picker>
@@ -43,11 +46,11 @@
     </el-row>
     <br>
     <el-row>
+      <h2>Tag / Spent Time</h2>
       <el-col :md="12" :sm="24">
         <div class="chart-container" style="margin: auto;">
           <canvas id="Chart"></canvas>
         </div>
-        <h2>Tag / Spent Time</h2>
       </el-col>
       <el-col :md="12" :sm="24">
         <el-table :data="TagAnalysisList" sortable="true">
@@ -85,7 +88,7 @@
         LogForm: {
           Event: '',
           Tag: [],
-          Date: new Date().toISOString().slice(0,10),
+          Date: new Date().toISOString().slice(0, 10),
           Duration: '',
           Description: ''
         },
@@ -169,7 +172,7 @@
         this.LogForm = {
           Event: '',
           Tag: [],
-          Date: new Date().toISOString().slice(0,10),
+          Date: new Date().toISOString().slice(0, 10),
           Duration: '',
           Description: ''
         }
@@ -189,9 +192,15 @@
               this.PieData.labels.push("Other Tags");
               this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
             } else {
-              this.PieData.datasets[0].data[5] += result[i].TimeLength.toFixed(0);
+              this.PieData.datasets[0].data[5] = (parseInt(this.PieData.datasets[0].data[5]) + result[i].TimeLength).toFixed(
+                0);
             }
             this.PieData.datasets[0].TimeLengthSum += result[i].TimeLength;
+          }
+
+          //data to hour
+          for (let i = 0; i < this.PieData.datasets[0].data.length; i++) {
+            this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 60).toFixed(2);
           }
         }
       },
@@ -221,8 +230,8 @@
         options: {
           title: {
             display: true,
-            text: '(min)'
-          }
+            text: '(hour)',
+          },
         }
       });
     },

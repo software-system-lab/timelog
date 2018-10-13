@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="Modify Log" :visible.sync="visible" :before-close="closeModal" @open="openHandler" :fullscreen="ModalFullScreen">
-    <el-form ref="form" :model="LogForm" :rules="formRules" label-width="120px" :label-position="'right'">
+    <el-form ref="form" :model="LogForm" :rules="formRules" label-width="110px" :label-position="'right'">
       <el-form-item label="What you do?" prop="Title">
         <el-input v-model="LogForm.Title"></el-input>
       </el-form-item>

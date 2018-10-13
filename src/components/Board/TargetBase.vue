@@ -1,6 +1,6 @@
 <template>
   <el-col :md="6" :sm="6">
-    <h4>{{tag.TagName}}</h4>
+    <h5>{{tag.TagName}}</h5>
     <el-progress type="circle" :percentage="TagProgressPercentage" :color="TagProgressColor" :status="TagProgressStatus"></el-progress>
     <el-row>
       <el-input :disabled="!changeBoxEnable" size="mini" type="number" step="1" min="1" placeholder="Target (in Hour)"
@@ -80,8 +80,12 @@
 </script>
 
 <style scoped>
+  .el-col {
+    height: 260px;
+  }
+
   .el-input {
-    width: 150px
+    width: 80%;
   }
 
 </style>
