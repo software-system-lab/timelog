@@ -7,8 +7,8 @@ export default {
   //log
   async AddALog(logData) {
     let postData = {
-      UserID: window.Profile.FBUserID,
-      SprintID: window.Profile.Sprint.SprintID,
+      UserID: window.Profile.UserID,
+      IterationID: window.ProfilecurrentIterationID,
       TagsString: JSON.stringify(logData.Tag),
       Title: logData.Event,
       Date: logData.Date,
@@ -22,8 +22,8 @@ export default {
   async ModifyALog(logData) {
     let postData = {
       LogID: logData.LogID,
-      UserID: window.Profile.FBUserID,
-      SprintID: logData.SprintID,
+      UserID: window.Profile.UserID,
+      IterationID: logData.IterationID,
       TagsString: JSON.stringify(logData.Tags),
       Title: logData.Title,
       Date: logData.Date,
@@ -37,15 +37,17 @@ export default {
   async DeleteALog(logData) {
     let postData = {
       LogID: logData.LogID,
-      UserID: window.Profile.FBUserID,
+      UserID: window.Profile.UserID,
     };
     return HTTP.post(`api/Log/DeleteALog`, postData);
   },
 
-  async GetUserLogs(sprintID = window.Profile.Sprint.SprintID) {
+  async GetUserLogs(description, startTime, endTime) {
     let postData = {
-      UserID: window.Profile.FBUserID,
-      SprintID: sprintID,
+      UserID: window.Profile.UserID,
+      Description: description,
+      StartTime: startTime,
+      EndTime: endTime
     };
     let httpResult = await HTTP.post(`api/Log/GetUserLogs`, postData);
     if (httpResult != "no data")
@@ -69,25 +71,27 @@ export default {
     return httpResult
   },
 
-  //tag
-  async GetUserTags() {
-    return HTTP.post(`api/Log/GetUserTags`, {
-      UserID: window.Profile.FBUserID
+  //Project
+  async GetUserProjects() {
+    return HTTP.post(`api/Log/GetUserProjects`, {
+      UserID: window.Profile.UserID
     });
   },
 
-  async ModifyOrAddATag(tag) {
+  async ModifyOrAddAProject(project) {
     let postData = {
-      UserID: window.Profile.FBUserID,
-      TagID: tag.TagID,
-      TagName: tag.TagName,
+      UserID: window.Profile.UserID,
+      ProjectID: project.ProjectID,
+      ProjectName: project.ProjectName,
+      IsPrivate: project.IsPrivate,
+      IsEnable: project.IsEnable
     };
-    return HTTP.post(`api/Log/ModifyOrAddATag`, postData);
+    return HTTP.post(`api/Log/ModifyOrAddAProject`, postData);
   },
 
   async DeleteATag(tag) {
     let postData = {
-      UserID: window.Profile.FBUserID,
+      UserID: window.Profile.UserID,
       TagID: tag.TagID,
       TagName: tag.Name,
     };
@@ -97,19 +101,19 @@ export default {
   //target
   async ModifyOrAddATarget(tag) {
     let postData = {
-      UserID: window.Profile.FBUserID,
-      SprintID: window.Profile.Sprint.SprintID,
+      UserID: window.Profile.UserID,
+      IterationID: window.ProfilecurrentIterationID,
       TagID: tag.TagID,
       TimeTarget: tag.TimeTarget,
     };
     return HTTP.post(`api/Log/ModifyOrAddATarget`, postData);
   },
-  
+
   //analysis
-  async TagsAndLengthOfTime(teammateID = window.Profile.FBUserID) {
+  async TagsAndLengthOfTime(teammateID = window.Profile.UserID) {
     let postData = {
       UserID: teammateID,
-      SprintID: window.Profile.Sprint.SprintID,
+      IterationID: window.Profile.currentIterationID,
     };
     return HTTP.post(`api/Log/TagsAndLengthOfTime`, postData);
   }

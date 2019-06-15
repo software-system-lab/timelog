@@ -38,18 +38,18 @@ module.exports = class {
     return "no data";;
   }
 
-  async GetUserLogsBySprint(data) {
-    var cmd = "SELECT * FROM `log` WHERE`FBUserID` = ? AND `SprintID` = ?;";
-    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
+  async GetUserLogsByIterationID(iterationID) {
+    var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ?";
+    let dbResult = await DB.query(cmd, [iterationID]);
     if (dbResult.length != 0)
       return dbResult;
     return "no data";
   }
 
-  ////tag
-  async GetUserTags(data) {
-    var cmd = "SELECT * FROM `tag` WHERE `FBUserID` = ?";
-    let dbResult = await DB.query(cmd, [data]);
+  ////projects
+  async GetUserProjects(data) {
+    var cmd = "SELECT `ProjectID`, `ProjectName`, `IsPrivate`, `IsEnable` FROM `project` WHERE `UserID` = ? AND `IsDeleted` = ? ";
+    let dbResult = await DB.query(cmd, [data, 0]);
     if (dbResult.length != 0)
       return dbResult;
     return "no data";
@@ -92,5 +92,14 @@ module.exports = class {
     if (dbResult)
       return true;
     return false;
+  }
+
+  //// Iteration
+  async CurrentIterationByIterationID(iterationID) {
+    var cmd = "SELECT * FROM `iteration` WHERE iterationID = ?";
+    let dbResult = await DB.query(cmd, [iterationID]);
+    if (dbResult.length != 0)
+      return dbResult;
+    return "no data"
   }
 }

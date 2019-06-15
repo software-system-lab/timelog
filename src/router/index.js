@@ -47,5 +47,6 @@ const AppRoutes = [{
 ];
 
 export default new Router({
+  mode: 'history',
   routes: AppRoutes,
 })

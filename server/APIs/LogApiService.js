@@ -11,7 +11,7 @@ module.exports = class {
 
   SetAPI() {
     ////log
-    this.router.post("/AddALog", async function (req, res) {
+    this.router.post("/AddALog", async function(req, res) {
       try {
         let result = await _LogProvider.AddALog(req.body);
         res.send(result);
@@ -21,7 +21,7 @@ module.exports = class {
       }
     });
 
-    this.router.post("/ModifyALog", async function (req, res) {
+    this.router.post("/ModifyALog", async function(req, res) {
       try {
         let result = await _LogProvider.ModifyALog(req.body);
         res.send(result);
@@ -31,7 +31,7 @@ module.exports = class {
       }
     });
 
-    this.router.post("/DeleteALog", async function (req, res) {
+    this.router.post("/DeleteALog", async function(req, res) {
       try {
         let result = await _LogProvider.DeleteALog(req.body);
         res.send(result);
@@ -41,9 +41,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/GetUserLogs", async function (req, res) {
+    this.router.post("/GetUserLogs", async function(req, res) {
       try {
-        let result = await _LogProvider.GetUserLogsBySprint(req.body);
+        let result = await _LogProvider.GetUserLogsBySearch(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -51,7 +51,7 @@ module.exports = class {
       }
     });
 
-    this.router.post("/GetALog", async function (req, res) {
+    this.router.post("/GetALog", async function(req, res) {
       try {
         let result = await _LogProvider.GetALog(req.body.LogID);
         res.send(result);
@@ -62,9 +62,9 @@ module.exports = class {
     });
 
     ////tag
-    this.router.post("/GetUserTags", async function (req, res) {
+    this.router.post("/GetUserProjects", async function(req, res) {
       try {
-        let result = await _LogProvider.GetUserTags(req.body.UserID);
+        let result = await _LogProvider.GetUserProjects(req.body.UserID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -72,9 +72,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/ModifyOrAddATag", async function (req, res) {
+    this.router.post("/ModifyOrAddAProject", async function(req, res) {
       try {
-        let result = await _LogProvider.ModifyOrAddATag(req.body);
+        let result = await _LogProvider.ModifyOrAddAProject(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -82,7 +82,7 @@ module.exports = class {
       }
     });
 
-    this.router.post("/DeleteATag", async function (req, res) {
+    this.router.post("/DeleteATag", async function(req, res) {
       try {
         let result = await _LogProvider.DeleteATag(req.body.TagID);
         res.send(result);
@@ -93,7 +93,7 @@ module.exports = class {
     });
 
     ////target
-    this.router.post("/ModifyOrAddATarget", async function (req, res) {
+    this.router.post("/ModifyOrAddATarget", async function(req, res) {
       try {
         let result = await _LogProvider.ModifyOrAddATarget(req.body);
         res.send(result);
@@ -104,23 +104,23 @@ module.exports = class {
     });
 
     ////analysis
-    this.router.post("/TagsAndLengthOfTime", async function (req, res) {
+    this.router.post("/TagsAndLengthOfTime", async function(req, res) {
       try {
-        let dbTags = await _LogProvider.GetUserTags(req.body.UserID);
-        var tags = [];
+        let dbProjects = await _LogProvider.GetUserProjects(req.body.UserID);
+        var projects = [];
 
-        if (dbTags != 'no data') tags = dbTags;
-        tags.push({
-          TagID: -1,
-          TagName: 'other',
+        if (dbProjects != 'no data')
+          projects = dbProjects;
+        projects.push({
+          ProjectID: null,
+          ProjectName: 'other',
         });
-        tags.forEach(x => {
-          x.TimeLength = 0;
-          x.TimeTarget = null;
-          delete x.FBUserID;
+        projects.forEach(project => {
+          project.TimeLength = 0;
+          project.TimeTarget = null;
         });
 
-        let logs = await _LogProvider.GetUserLogsBySprint(req.body);
+        let logs = await _LogProvider.GetUserLogsByIterationID(req.body.IterationID);
         let targets = _LogProvider.QueryTargetBySprint(req.body); //sync method
         if (logs != "no data") {
           logs.forEach(log => {
@@ -129,7 +129,7 @@ module.exports = class {
             log.TotalTimeLength = (new Date(`13 June 2018 ${log.EndTime}`) - new Date(`13 June 2018 ${log.StartTime}`)) / (60 * 1000); //sec
             log.EachTagTimeLength = log.TotalTimeLength / log.CountOfTag; //sec
             log.Tags.forEach(x => {
-              let xx = tags.find(y => y.TagID == x);
+              let xx = projects.find(y => y.TagID == x);
               if (xx != undefined)
                 xx.TimeLength += log.EachTagTimeLength;
             })
@@ -138,16 +138,16 @@ module.exports = class {
           targets = await targets;
           if (targets != "no data") {
             targets.forEach(x => {
-              let tag = tags.find(y => y.TagID == x.TagID);
+              let tag = projects.find(y => y.TagID == x.TagID);
               if (tag != undefined)
                 tag.TimeTarget = x.TargetHour;
             })
           }
 
           //sort by TimeLength DESC
-          tags.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1)
+          projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1)
 
-          res.send(tags);
+          res.send(projects);
         } else {
           res.send("no data");
         }

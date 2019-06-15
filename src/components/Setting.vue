@@ -1,164 +1,175 @@
 <template>
-  <el-collapse accordion>
-    <el-collapse-item title="My Tags" name="1">
-      <el-row>
-        <el-col :md="18" :sm="24">
-          <el-table :data="TagList" sortable="true">
+<el-row :gutter="20">
+  <el-col :md="12" :sm="24">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>My Projects</span>
+      </div>
+      <el-table :data="projectList" sortable="true">
 
-            <el-table-column prop="TagName" label="Name" align="left">
-              <template slot-scope="scope">
-                <el-input v-if="scope.row.TagID == null" placeholder="Add a new tag" minlength="1" v-model="scope.row.TagName">
-                </el-input>
-                <el-input v-else :disabled="scope.row.IsDisable" minlength="1" v-model="scope.row.TagName">
-                </el-input>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="" align="left">
-              <template slot-scope="scope">
-                <el-button v-if="scope.row.TagID==null" type="primary" icon="el-icon-plus" circle @click="ModifyOrAdd(scope.row)"></el-button>
-                <el-button v-else type="primary" icon="el-icon-edit" circle @click="ModifyOrAdd(scope.row)"></el-button>
-                <el-button v-if="(!scope.row.IsDisable)&&(scope.row.TagID!=null)" type="danger" icon="el-icon-delete"
-                  circle @click="Delete(scope.row)"></el-button>
-              </template>
-            </el-table-column>
-
-          </el-table>
-        </el-col>
-      </el-row>
-    </el-collapse-item>
-    <el-collapse-item title="My Profile" name="2">
+        <el-table-column prop="ProjectName" label="Name" align="left">
+          <template slot-scope="scope">
+            <el-input v-if="scope.row.ProjectID == null" placeholder="Add a new project" minlength="1" v-model="scope.row.ProjectName">
+            </el-input>
+            <el-input v-else :disabled="scope.row.InputDisabled" minlength="1" v-model="scope.row.ProjectName">
+            </el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label='enable' align="left">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.IsEnable" :disabled="scope.row.InputDisabled">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label='private' align="left">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.IsPrivate" :disabled="scope.row.InputDisabled">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="" align="left">
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.ProjectID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button type="primary" icon="el-icon-edit" v-else circle @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.ProjectID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </el-col>
+  <el-col :md="12" :sm="24">
+    <el-card>
+      <div slot="header" class="clearfix">
+        <span>My Profile</span>
+      </div>
       <el-form ref="form" :model="UserForm" label-width="150px" :inline="true" :label-position="'right'">
         <el-form-item label="Your name" prop="UserName">
-          <el-input disabled v-model="UserForm.UserName"></el-input>
+          <el-input :disabled="!IsProfileEdit" v-model="UserForm.UserName"></el-input>
         </el-form-item>
-        <el-form-item label="Team" prop="TeamName">
-          <el-input disabled v-model="UserForm.TeamName"></el-input>
+        <el-form-item label="Account ID" prop="AccountID">
+          <el-input :disabled="!IsProfileEdit" v-model="UserForm.AccountID"></el-input>
         </el-form-item>
-        <el-form-item label="Email Adress" prop="Email">
-          <el-input disabled v-model="UserForm.Email" type="email"></el-input>
+        <el-form-item label="Mail Adress" prop="Mail">
+          <el-input :disabled="!IsProfileEdit" v-model="UserForm.Mail" type="email"></el-input>
         </el-form-item>
-        <el-form-item label="Phone number" prop="PhoneNumber">
-          <el-input disabled v-model="UserForm.PhoneNumber"></el-input>
+        <el-form-item label="Phone" prop="Phone">
+          <el-input :disabled="!IsProfileEdit" v-model="UserForm.Phone"></el-input>
         </el-form-item>
       </el-form>
-      <span>If you want to change your profile.Please contact your administrator.</span>
-    </el-collapse-item>
-    <!-- <el-collapse-item title="" name="3">
-
-    </el-collapse-item> -->
-  </el-collapse>
+      <el-button v-if="!IsProfileEdit" type="primary" icon="el-icon-edit" @click="()=>{this.IsProfileEdit = true;}">Edit</el-button>
+      <el-button v-if="IsProfileEdit" type="primary" icon="el-icon-edit" @click="EditUserProfile">Save</el-button>
+      <el-button v-if="IsProfileEdit" @click="QueryUserProfile">Cancel</el-button>
+    </el-card>
+  </el-col>
+</el-row>
 </template>
 
 <script>
-  import _logService from '../services/LogService.js'
+import _logService from '../services/LogService.js'
+import _profileService from '../services/ProfileService.js'
 
-  export default {
-    data() {
-      return {
-        TagList: [{
-          TagID: null,
-          Name: '',
-          IsDisable: false
-        }, ],
-        UserForm: {
-          UserName: window.Profile.UserName,
-          UserID: window.Profile.FBUserID,
-          TeamName: window.Profile.Team.TeamName,
-          Email: window.Profile.Mail,
-          PhoneNumber: window.Profile.Phone
-        },
+export default {
+  data() {
+    return {
+      projectList: [],
+      UserForm: {},
+      IsProfileEdit: false
+    }
+  },
+  async created() {
+    this.QueryProjects();
+    this.QueryUserProfile();
+  },
+  methods: {
+    async QueryProjects() {
+      let projectList = await _logService.GetUserProjects();
+
+      //clear list
+      this.projectList.length = 0;
+      window.ProjectList.length = 0;
+      // input to add project
+      this.projectList.push({
+        ProjectID: null,
+        ProjectName: '',
+        InputDisabled: false,
+        IsPrivate: false,
+        IsEnable: false
+      });
+
+      if (projectList == "no data")
+        this.$message({
+          message: 'no Project data!',
+          type: 'warning'
+        });
+      else {
+        projectList.forEach(x => {
+          this.projectList.push({
+            ProjectID: x.ProjectID,
+            ProjectName: x.ProjectName,
+            IsPrivate: x.IsPrivate ? true : false,
+            IsEnable: x.IsEnable ? true : false,
+            InputDisabled: true
+          });
+          window.ProjectList.push({
+            ProjectID: x.ProjectID,
+            ProjectName: x.ProjectName,
+            IsPrivate: x.IsPrivate ? true : false,
+            IsEnable: x.IsEnable ? true : false
+          })
+        });
       }
     },
-    async created() {
-      this.QueryTags();
-    },
-    methods: {
-      async ModifyOrAdd(tag) {
-        if (tag.IsDisable == true) {
-          if (tag.TagID) //not new tag
-            tag.IsDisable = false;
-        } else {
-          if (tag.TagName.length < 1) {
-            this.$message.error('Name of tag cannot be null!');
-            return;
-          }
-
-          var DuplicatedTag = this.TagList.find(x => x.TagName == tag.TagName && x.TagID != null && x.TagID != tag.TagID)
-          if (DuplicatedTag) {
-            this.$message.error('Duplicate name!');
-            return;
-          }
-
-          let result = await _logService.ModifyOrAddATag(tag);
-          if (result) {
-            this.$message({
-              message: 'successed!',
-              type: 'success'
-            });
-            this.QueryTags();
-          } else {
-            this.$message.error('Tag Added Fail!Please Retry');
-          }
+    async ModifyOrAdd(project) {
+      if (project.InputDisabled == true) {
+        if (project.ProjectID) //not new project
+          project.InputDisabled = false;
+      } else {
+        if (project.ProjectName.length < 1) {
+          this.$message.error('Name of project cannot be null!');
+          return;
         }
-      },
-      async Delete(tag) {
-        let result = await _logService.DeleteATag(tag);
+
+        var DuplicatedProject = this.projectList.find(x => x.ProjectName == project.ProjectName && x.ProjectID != null && x.ProjectID != project.ProjectID)
+        if (DuplicatedProject) {
+          this.$message.error('Duplicate name!');
+          return;
+        }
+
+        let result = await _logService.ModifyOrAddAProject(project);
         if (result) {
           this.$message({
             message: 'successed!',
             type: 'success'
           });
-          this.QueryTags();
+          this.QueryProjects();
         } else {
-          this.$message.error('Delete Tag Fail!Please Retry');
+          this.$message.error('Fail to add/modify the project! Please Retry');
         }
-      },
-      async QueryTags() {
-        let taglist = await _logService.GetUserTags();
-
-        //clear list
-        this.TagList.length = 0;
-        window.TagList.length = 0;
-        // input to add tag
-        this.TagList.push({
-          TagID: null,
-          TagName: '',
-          IsDisable: false
+      }
+    },
+    async QueryUserProfile() {
+      window.Profile = await _profileService.GetProfile();
+      this.UserForm = {
+        UserID: window.Profile.UserID,
+        UserName: window.Profile.UserName,
+        AccountID: window.Profile.AccountID,
+        Mail: window.Profile.Mail,
+        Phone: window.Profile.Phone
+      }
+    },
+    async EditUserProfile() {
+      let result = await _profileService.EditUserProfile(this.UserForm);
+      if (result) {
+        this.$message({
+          message: 'successed!',
+          type: 'success'
         });
-        //else to window data
-        window.TagList.push({
-          TagID: -1,
-          TagName: 'other',
-        })
-
-        if (taglist == "no data")
-          this.$message({
-            message: 'no tag data!',
-            type: 'warning'
-          });
-        else {
-          taglist.forEach(x => {
-            this.TagList.push({
-              TagID: x.TagID,
-              TagName: x.TagName,
-              IsDisable: true
-            });
-            window.TagList.push({
-              TagID: x.TagID,
-              TagName: x.TagName,
-            })
-          });
-        }
+        this.IsProfileEdit = false;
+        this.QueryUserProfile();
+      } else {
+        this.$message.error('Fail to modify your personal profile! Please Retry');
       }
     }
   }
-
+}
 </script>
-
-<style scoped>
-  .el-collapse {
-    text-align: left;
-  }
-
-</style>

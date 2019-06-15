@@ -7,13 +7,13 @@ export default {
   ////personal
   async GetProfile() {
     return HTTP.post(`api/Profile/GetProfile`, {
-      userID: window.FBProfile.id
+      FBID: window.FBProfile.id
     });
   },
 
-  async Login(userID, userAccessToken) {
+  async Login(FBID, userAccessToken) {
     let req = {
-      userID,
+      FBID,
       userAccessToken
     };
     return HTTP.post(`api/Profile/Login`, req);
@@ -25,6 +25,10 @@ export default {
     return HTTP.post(`api/Profile/Register`, postData);
   },
 
+  async EditUserProfile(data) {
+    return HTTP.post(`api/Profile/EditUserProfile`, data);
+  },
+
   async GetTeamList() {
     return HTTP.get(`api/Profile/GetTeamList`);
   },
@@ -34,7 +38,7 @@ export default {
     let req = {
       TeamID: window.Profile.Team.TeamID
     };
-    return HTTP.post(`api/Profile/GetTeammates`,req);
+    return HTTP.post(`api/Profile/GetTeammates`, req);
   },
 
   async GetSprints() {
