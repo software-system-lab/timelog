@@ -18,15 +18,15 @@ app.use(bodyParser.urlencoded({
 //router-sub directory separation
 var ProfileRouter = express.Router();
 new ProfileApis(ProfileRouter);
-app.use('/Profile', ProfileRouter);
+app.use('/api/Profile', ProfileRouter);
 
 var LogRouter = express.Router();
 new LogApis(LogRouter);
-app.use('/Log', LogRouter);
+app.use('/api/Log', LogRouter);
 
-app.use('/',express.static('dist_release'))
+app.use('/',express.static('dist'))
 
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const port = 5000;
 
 app.listen(port, hostname, () => {
