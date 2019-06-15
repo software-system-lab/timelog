@@ -100,7 +100,7 @@
       },
       async closeModal() {
         this.logIDtoModify = null;
-        this.QueryLogs();
+        this.QueryLogs(this.SprintIDToSearch);
         this.dialogFormVisible = false;
       },
       confirmSearchBox() {

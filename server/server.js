@@ -24,6 +24,8 @@ var LogRouter = express.Router();
 new LogApis(LogRouter);
 app.use('/Log', LogRouter);
 
+app.use('/',express.static('dist_release'))
+
 const hostname = '127.0.0.1';
 const port = 5000;
 
