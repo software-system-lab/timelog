@@ -42,14 +42,13 @@ export default {
     let postData = {
       UserID: window.Profile.UserID,
       Description: description,
-      StartTime: startTime,
-      EndTime: endTime
+      StartTime: startTime.format('YYYY-MM-DD'),
+      EndTime: endTime.format('YYYY-MM-DD')
     };
     let httpResult = await HTTP.post(`api/Log/GetUserLogs`, postData);
     if (httpResult != "no data")
       httpResult.forEach(x => {
-        x.Tags = JSON.parse(x.Tags);
-        x.Duration = `${x.Date.toString()} ${x.StartTime.toString()} ~ ${x.EndTime.toString()}`;
+        x.Duration = `${x.StartTime} ~ ${x.EndTime}`;
       });
     return httpResult;
   },
@@ -60,8 +59,12 @@ export default {
     };
     let httpResult = await HTTP.post(`api/Log/GetAlog`, req);
     if (httpResult != 'no data') {
-      httpResult.Tags = JSON.parse(httpResult.Tags);
-      httpResult.Duration = [httpResult.StartTime, httpResult.EndTime]
+      let start = new moment(httpResult.startTime);
+      let end = new moment(httpResult.endTime);
+      httpResult.StartDate = start.format('YYYY-MM-DD');
+      httpResult.StartTime = start.format('HH:mm');
+      httpResult.EndDate = start.format('YYYY-MM-DD');
+      httpResult.EndTime = start.format('HH:mm');
     }
 
     return httpResult

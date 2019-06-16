@@ -14,7 +14,7 @@
           <el-date-picker v-model="EndSearchDate" type="date" placeholder="End Date"></el-date-picker>
         </el-col>
         <el-col :md="4" :sm="24">
-          <el-button type="success" icon="el-icon-search" @click="confirmSearchBox()">Search</el-button>
+          <el-button type="success" icon="el-icon-search" @click="QueryLogs()">Search</el-button>
         </el-col>
         <br />
         <br />
@@ -28,10 +28,7 @@
 
           <el-table-column prop="Project" label="Project" align="left" :filters="projectFilters" :filter-method="filterProject">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.Projects" multiple disabled keyword placeholder="Choose">
-                <el-option v-for="item in projectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
-                </el-option>
-              </el-select>
+              {{scope.row.ProjectName}}
             </template>
           </el-table-column>
 
@@ -81,8 +78,8 @@ export default {
       dialogFormVisible: false,
       rowData: [],
       KeywordToSearch: '',
-      StartSearchDate: new moment(),
-      EndSearchDate: new moment().add(7, 'days')
+      StartSearchDate: new moment().format('YYYY-MM-DD'),
+      EndSearchDate: new moment().add(7, 'days').format('YYYY-MM-DD')
     }
   },
   async mounted() {
@@ -113,14 +110,11 @@ export default {
     },
     async closeModal() {
       this.logIDtoModify = null;
-      this.QueryLogs(this.IterationIDToSearch);
+      this.QueryLogs();
       this.dialogFormVisible = false;
     },
-    confirmSearchBox() {
-      this.QueryLogs(this.IterationIDToSearch);
-    },
-    async QueryLogs(sprintID) {
-      let result = await _logService.GetUserLogs(sprintID);
+    async QueryLogs() {
+      let result = await _logService.GetUserLogs(this.KeywordToSearch, new moment(this.StartSearchDate), new moment(this.EndSearchDate));
       if (result != "no data")
         this.logList = result;
       else

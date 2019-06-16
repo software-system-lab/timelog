@@ -15,16 +15,16 @@ module.exports = class {
   }
 
   async ModifyALog(data) {
-    var cmd = "UPDATE `log` SET `Tags` = ?, `Title` = ?, `Date` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `log`.`LogID` = ?";
-    let dbResult = await DB.query(cmd, [data.TagsString, data.Title, data.Date, data.StartTime, data.EndTime, data.Description, data.LogID]);
+    var cmd = "UPDATE `log` SET `ProjectID` = ?, `Title` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `LogID` = ?";
+    let dbResult = await DB.query(cmd, [data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description, data.LogID]);
     if (dbResult)
       return true;
     return false;
   }
 
   async DeleteALog(data) {
-    var cmd = "DELETE FROM `log` WHERE `log`.`LogID` = ?;";
-    let dbResult = await DB.query(cmd, [data.LogID]);
+    var cmd = "UPDATE `log` SET `IsDeleted` = ? WHERE `LogID` = ?;";
+    let dbResult = await DB.query(cmd, [true, data.LogID]);
     if (dbResult)
       return true;
     return false;
@@ -47,13 +47,16 @@ module.exports = class {
   }
 
   async GetUserLogsBySearch(data) {
-    var param = [];
-    var cmd = "SELECT * FROM `log` WHERE (`Title` LIKE '%?%' OR `Description` LIKE '%?%') ";
-    param.push(data.Description, data.Description);
+    console.log(data)
+    var params = [];
+    var cmd = "SELECT `log`.*, `project`.`ProjectName` FROM `log`, `project` WHERE `log`.`ProjectID` = `project`.`ProjectID` AND `log`.`IsDeleted` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?) ";
+    params.push(false);
+    params.push("%" + data.Description + "%", "%" + data.Description + "%");
     if (data.StartTime && data.EndTime) {
-      cmd += "AND (`StartTime` >= ? AND `EndTime` <= ?)";
-      param.push(data.StartTime, data.EndTime);
+      cmd += " AND (`log`.`StartTime` >= ? AND `log`.`EndTime` <= ?)";
+      params.push(data.StartTime, data.EndTime);
     }
+    let dbResult = await DB.query(cmd, params);
     if (dbResult.length != 0)
       return dbResult;
     return "no data";
@@ -68,23 +71,23 @@ module.exports = class {
     return "no data";
   }
 
-  async ModifyOrAddATag(data) {
+  async ModifyOrAddAProject(data) {
     var dbResult;
-    if (data.TagID == null) {
-      var cmd = "INSERT INTO `tag` (`FBUserID`, `TagName`) VALUES (?, ?);";
-      dbResult = await DB.query(cmd, [data.UserID, data.TagName]);
+    if (data.ProjectID == null) {
+      var cmd = "INSERT INTO `project` (`UserID`, `ProjectName`, `IsPrivate`, `IsEnable`) VALUES (?, ?, ?, ?);";
+      dbResult = await DB.query(cmd, [data.UserID, data.ProjectName, data.IsPrivate, data.IsEnable]);
     } else {
-      var cmd = "UPDATE `tag` SET `TagName` = ? WHERE `tag`.`TagID` = ?;";
-      dbResult = await DB.query(cmd, [data.TagName, data.TagID]);
+      var cmd = "UPDATE `project` SET `ProjectName` = ?, `IsPrivate` = ?, `IsEnable` = ? WHERE `ProjectID` = ?;";
+      dbResult = await DB.query(cmd, [data.ProjectName, data.IsPrivate, data.IsEnable, data.ProjectID]);
     }
     if (dbResult)
       return true;
     return false;
   }
 
-  async DeleteATag(TagID) {
-    var cmd = "DELETE FROM `tag` WHERE `tag`.`TagID` = ?";
-    let dbResult = await DB.query(cmd, [TagID]);
+  async DeleteATag(projectID) {
+    var cmd = "UPDATE `project` SET `IsDeleted` = ? WHERE `ProjectID` = ?;";
+    let dbResult = await DB.query(cmd, [true, projectID]);
     if (dbResult)
       return true;
     return false;
