@@ -62,7 +62,7 @@
   </el-row>
   <br>
   <el-row>
-    <h2>Tag / Spent Time</h2>
+    <h2>Project / Spent Time</h2>
     <el-col :md="12" :sm="24">
       <div class="chart-container" style="margin: auto;">
         <canvas id="Chart"></canvas>
@@ -70,15 +70,15 @@
     </el-col>
     <el-col :md="12" :sm="24">
       <el-table :data="ProjectAnalysisList" sortable="true">
-        <el-table-column prop="Tag Name" label="Tag">
+        <el-table-column prop="ProjectName" label="Project">
           <template slot-scope="scope">
-            {{scope.row.TagName}}
+            {{scope.row.ProjectName}}
           </template>
         </el-table-column>
         <el-table-column prop="Time Length" label="Time Length">
           <template slot-scope="scope">
-            {{paddingLeft((scope.row.TimeLength / 60).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
-              60).toFixed(0),2)}}
+            {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
+              3600000).toFixed(0),2)}}
           </template>
         </el-table-column>
         <el-table-column label="Percentage">
@@ -224,10 +224,10 @@ export default {
         this.PieData.datasets[0].data.length = 0;
         for (let i = 0; i < result.length; i++) {
           if (i < 5) {
-            this.PieData.labels.push(result[i].TagName);
+            this.PieData.labels.push(result[i].ProjectName);
             this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
           } else if (i == 5) {
-            this.PieData.labels.push("Other Tags");
+            this.PieData.labels.push("Other Projects");
             this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
           } else {
             this.PieData.datasets[0].data[5] = (parseInt(this.PieData.datasets[0].data[5]) + result[i].TimeLength).toFixed(
@@ -238,7 +238,7 @@ export default {
 
         //data to hour
         for (let i = 0; i < this.PieData.datasets[0].data.length; i++) {
-          this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 60).toFixed(2);
+          this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 3600000).toFixed(2);
         }
       }
     },

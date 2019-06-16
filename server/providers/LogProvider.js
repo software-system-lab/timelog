@@ -89,10 +89,10 @@ module.exports = class {
   }
 
   //target
-  async QueryTargetBySprint(data) {
+  async QueryGoalByIteration(data) {
     var cmd = "SELECT * FROM `goal` WHERE `IterationID` =? ;";
     let dbResult = await DB.query(cmd, [data.IterationID]);
-    if (dbResult.length != 0)
+    if (dbResult.length > 0)
       return dbResult;
     return "no data";
   }
@@ -106,7 +106,7 @@ module.exports = class {
   }
 
   //// Iteration
-  async CurrentIterationByIterationID(iterationID) {
+  async QueryIterationByIterationID(iterationID) {
     var cmd = "SELECT * FROM `iteration` WHERE iterationID = ?";
     let dbResult = await DB.query(cmd, [iterationID]);
     if (dbResult.length != 0)

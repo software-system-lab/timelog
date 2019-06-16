@@ -1,6 +1,7 @@
 const LogProvider = require('../providers/LogProvider.js');
 
 const _LogProvider = new LogProvider();
+const moment = require('moment')
 
 module.exports = class {
 
@@ -125,10 +126,10 @@ module.exports = class {
         });
         projects.forEach(project => {
           project.TimeLength = 0;
-          project.TimeTarget = null;
+          project.GoalHour = null;
           project.IsEdit = false;
         });
-        let targets = await _LogProvider.QueryTargetBySprint(req.body); //sync method
+        let targets = await _LogProvider.QueryGoalByIteration(req.body); //sync method
 
         if (targets != "no data") {
           targets.forEach(x => {
@@ -144,7 +145,7 @@ module.exports = class {
           log.ProjectID
           let xx = projects.find(y => y.ProjectID == log.ProjectID);
           if (xx != undefined)
-            xx.TimeLength += log.EachTagTimeLength;
+            xx.TimeLength += moment(log.EndTime) - moment(log.StartTime);
         });
         //sort by TimeLength DESC
         projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);

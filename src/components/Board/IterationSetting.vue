@@ -100,6 +100,7 @@ export default {
   methods: {
     async Query() {
       let result = await _logService.ProjectsAndLengthOfTime();
+      console.log(result)
       if (result != "no data") {
         this.GoalList = result;
       }
@@ -143,6 +144,7 @@ export default {
       let response = await _profileService.ChangeIteration(this.iterationID);
       if (response != 'no data') {
         window.Profile.currentIterationID = this.iterationID;
+        this.Query();
         this.$message({
           message: 'successed!',
           type: 'success'
