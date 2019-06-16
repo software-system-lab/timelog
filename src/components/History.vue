@@ -32,7 +32,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="Title" label="Event" align="left" sortable>
+          <el-table-column prop="Title" label="Title" align="left" sortable>
             <template slot-scope="scope">
               {{scope.row.Title}}
             </template>
@@ -54,7 +54,7 @@
       </el-card>
     </el-col>
   </el-row>
-  <ModifyHistoryModal :visible.sync="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
+  <ModifyHistoryModal :visible="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
 </div>
 </template>
 

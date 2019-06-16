@@ -88,32 +88,30 @@ export default {
     return HTTP.post(`api/Log/ModifyOrAddAProject`, postData);
   },
 
-  async DeleteATag(tag) {
+  async DeleteAProject(projectID) {
     let postData = {
-      UserID: window.Profile.UserID,
-      TagID: tag.TagID,
-      TagName: tag.Name,
+      ProjectID: projectID
     };
-    return HTTP.post(`api/Log/DeleteATag`, postData);
+    return HTTP.post(`api/Log/DeleteAProject`, postData);
   },
 
   //target
-  async ModifyOrAddATarget(tag) {
+  async ModifyOrAddAGoal(project) {
     let postData = {
       UserID: window.Profile.UserID,
-      IterationID: window.ProfilecurrentIterationID,
-      TagID: tag.TagID,
-      TimeTarget: tag.TimeTarget,
+      IterationID: window.Profile.CurrentIterationID,
+      ProjectID: project.ProjectID,
+      GoalHour: project.GoalHour,
     };
-    return HTTP.post(`api/Log/ModifyOrAddATarget`, postData);
+    return HTTP.post(`api/Log/ModifyOrAddAGoal`, postData);
   },
 
   //analysis
-  async TagsAndLengthOfTime(teammateID = window.Profile.UserID) {
+  async ProjectsAndLengthOfTime(userID = window.Profile.UserID) {
     let postData = {
-      UserID: teammateID,
-      IterationID: window.Profile.currentIterationID,
+      UserID: userID,
+      IterationID: window.Profile.CurrentIterationID,
     };
-    return HTTP.post(`api/Log/TagsAndLengthOfTime`, postData);
+    return HTTP.post(`api/Log/ProjectsAndLengthOfTime`, postData);
   }
 }

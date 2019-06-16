@@ -53,31 +53,32 @@
     <el-col :md="12" :sm="24">
       <el-card>
         <div slot="header" class="clearfix">
+          <el-button type="primary" id='iteration-setting' icon="el-icon-setting" @click='openIterationSetting'></el-button>
           <h2>My Iteration Target</h2>
         </div>
-        <TargetBase v-for="project in TagAnalysisList" :key="project.ProjectID" v-if="project.ProjectID != null" :project="project"></TargetBase>
+        <TargetBase v-for="project in ProjectAnalysisList" :key="project.ProjectID" v-if="project.ProjectID != null" :project="project"></TargetBase>
       </el-card>
     </el-col>
   </el-row>
   <br>
   <el-row>
-    <h2>Tag / Spent Time</h2>
+    <h2>Project / Spent Time</h2>
     <el-col :md="12" :sm="24">
       <div class="chart-container" style="margin: auto;">
         <canvas id="Chart"></canvas>
       </div>
     </el-col>
     <el-col :md="12" :sm="24">
-      <el-table :data="TagAnalysisList" sortable="true">
-        <el-table-column prop="Tag Name" label="Tag">
+      <el-table :data="ProjectAnalysisList" sortable="true">
+        <el-table-column prop="ProjectName" label="Project">
           <template slot-scope="scope">
-            {{scope.row.TagName}}
+            {{scope.row.ProjectName}}
           </template>
         </el-table-column>
         <el-table-column prop="Time Length" label="Time Length">
           <template slot-scope="scope">
-            {{paddingLeft((scope.row.TimeLength / 60).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
-              60).toFixed(0),2)}}
+            {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
+              3600000).toFixed(0),2)}}
           </template>
         </el-table-column>
         <el-table-column label="Percentage">
@@ -88,6 +89,7 @@
       </el-table>
     </el-col>
   </el-row>
+  <IterationSetting :visible='iterationSetting' @close='closeIterationSetting' />
 </div>
 </template>
 
@@ -96,6 +98,7 @@ import Chart from 'chart.js';
 import TargetBase from './Board/TargetBase'
 import _profileService from '../services/ProfileService.js'
 import _logService from '../services/LogService.js'
+import IterationSetting from '@/components/Board/IterationSetting.vue'
 import moment from 'moment'
 
 export default {
@@ -103,11 +106,11 @@ export default {
     return {
       LogForm: {
         Title: '',
-        ProjectID: '',
+        ProjectID: null,
         StartTime: new moment().format('HH:mm'),
-        EndTime: new moment().format('HH:mm'),
+        EndTime: new moment().add(1, 'hours').format('HH:mm'),
         StartDate: new moment().format('YYYY-MM-DD'),
-        EndDate: new moment().format('YYYY-MM-DD'),
+        EndDate: new moment().add(1, 'hours').format('YYYY-MM-DD'),
         Description: ''
       },
       ProjectList: window.ProjectList,
@@ -149,7 +152,8 @@ export default {
           trigger: 'blur'
         }],
       },
-      TagAnalysisList: [],
+      ProjectAnalysisList: [],
+      iterationSetting: false,
       PieData: {
         labels: [],
         datasets: [{
@@ -203,27 +207,27 @@ export default {
       this.$refs['form'].clearValidate();
       this.LogForm = {
         Title: '',
-        ProjectID: '',
+        ProjectID: null,
         StartTime: new moment().format('HH:mm'),
-        EndTime: new moment().format('HH:mm'),
+        EndTime: new moment().add(1, 'hours').format('HH:mm'),
         StartDate: new moment().format('YYYY-MM-DD'),
-        EndDate: new moment().format('YYYY-MM-DD'),
+        EndDate: new moment().add(1, 'hours').format('YYYY-MM-DD'),
         Description: ''
       }
     },
     async QueryPieData() {
-      let result = await _logService.TagsAndLengthOfTime();
+      let result = await _logService.ProjectsAndLengthOfTime();
       if (result != "no data") {
-        this.TagAnalysisList = result;
+        this.ProjectAnalysisList = result;
         //clear
         this.PieData.labels.length = 0;
         this.PieData.datasets[0].data.length = 0;
         for (let i = 0; i < result.length; i++) {
           if (i < 5) {
-            this.PieData.labels.push(result[i].TagName);
+            this.PieData.labels.push(result[i].ProjectName);
             this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
           } else if (i == 5) {
-            this.PieData.labels.push("Other Tags");
+            this.PieData.labels.push("Other Projects");
             this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
           } else {
             this.PieData.datasets[0].data[5] = (parseInt(this.PieData.datasets[0].data[5]) + result[i].TimeLength).toFixed(
@@ -234,7 +238,7 @@ export default {
 
         //data to hour
         for (let i = 0; i < this.PieData.datasets[0].data.length; i++) {
-          this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 60).toFixed(2);
+          this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 3600000).toFixed(2);
         }
       }
     },
@@ -252,6 +256,12 @@ export default {
     },
     errorMsg() {
       this.$message.error('Log Added Fail!Please Retry');
+    },
+    openIterationSetting() {
+      this.iterationSetting = true
+    },
+    closeIterationSetting() {
+      this.iterationSetting = false
     }
   },
   async mounted() {
@@ -271,6 +281,7 @@ export default {
   },
   components: {
     TargetBase,
+    IterationSetting
   }
 }
 </script>
@@ -278,5 +289,11 @@ export default {
 <style scoped>
 .el-form {
   width: 90%
+}
+
+#iteration-setting {
+  position: relative;
+  right: -45%;
+  top: 20px
 }
 </style>

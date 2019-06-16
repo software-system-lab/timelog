@@ -7,8 +7,8 @@ module.exports = class {
 
   ////log
   async AddALog(data) {
-    var cmd = "INSERT INTO `log` (`FBUserID`, `Tags`, `SprintID`, `Title`, `Date`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    let dbResult = await DB.query(cmd, [data.UserID, data.TagsString, data.SprintID, data.Title, data.Date, data.StartTime, data.EndTime, data.Description]);
+    var cmd = "INSERT INTO `log` (`UserID`, `ProjectID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
+    let dbResult = await DB.query(cmd, [data.UserID, data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description]);
     if (dbResult)
       return true;
     return false;
@@ -41,15 +41,12 @@ module.exports = class {
   async GetUserLogsByIterationID(iterationID) {
     var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ?";
     let dbResult = await DB.query(cmd, [iterationID]);
-    if (dbResult.length != 0)
-      return dbResult;
-    return "no data";
+    return dbResult;
   }
 
   async GetUserLogsBySearch(data) {
-    console.log(data)
     var params = [];
-    var cmd = "SELECT `log`.*, `project`.`ProjectName` FROM `log`, `project` WHERE `log`.`ProjectID` = `project`.`ProjectID` AND `log`.`IsDeleted` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?) ";
+    var cmd = "SELECT `log`.* FROM `log` WHERE `log`.`IsDeleted` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?) ";
     params.push(false);
     params.push("%" + data.Description + "%", "%" + data.Description + "%");
     if (data.StartTime && data.EndTime) {
@@ -63,12 +60,10 @@ module.exports = class {
   }
 
   ////projects
-  async GetUserProjects(data) {
-    var cmd = "SELECT `ProjectID`, `ProjectName`, `IsPrivate`, `IsEnable` FROM `project` WHERE `UserID` = ? AND `IsDeleted` = ? ";
-    let dbResult = await DB.query(cmd, [data, 0]);
-    if (dbResult.length != 0)
-      return dbResult;
-    return "no data";
+  async GetUserProjects(userID) {
+    var cmd = "SELECT * FROM `project` WHERE `UserID` = ?";
+    let dbResult = await DB.query(cmd, [userID]);
+    return dbResult;
   }
 
   async ModifyOrAddAProject(data) {
@@ -85,7 +80,7 @@ module.exports = class {
     return false;
   }
 
-  async DeleteATag(projectID) {
+  async DeleteAProject(projectID) {
     var cmd = "UPDATE `project` SET `IsDeleted` = ? WHERE `ProjectID` = ?;";
     let dbResult = await DB.query(cmd, [true, projectID]);
     if (dbResult)
@@ -94,24 +89,24 @@ module.exports = class {
   }
 
   //target
-  async QueryTargetBySprint(data) {
-    var cmd = "SELECT * FROM `target` WHERE `UserID` = ? AND `SprintID` =?;";
-    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
-    if (dbResult.length != 0)
+  async QueryGoalByIteration(data) {
+    var cmd = "SELECT * FROM `goal` WHERE `IterationID` =? ;";
+    let dbResult = await DB.query(cmd, [data.IterationID]);
+    if (dbResult.length > 0)
       return dbResult;
     return "no data";
   }
 
-  async ModifyOrAddATarget(data) {
-    var cmd = "INSERT INTO `target` (`UserID`, `SprintID`, `TagID`, `TargetHour`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE `TargetHour` = ?;";
-    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID, data.TagID, data.TimeTarget, data.TimeTarget]);
+  async ModifyOrAddAGoal(data) {
+    var cmd = "INSERT INTO `goal` (`IterationID`, `ProjectID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
+    let dbResult = await DB.query(cmd, [data.IterationID, data.ProjectID, data.GoalHour, data.GoalHour]);
     if (dbResult)
       return true;
     return false;
   }
 
   //// Iteration
-  async CurrentIterationByIterationID(iterationID) {
+  async QueryIterationByIterationID(iterationID) {
     var cmd = "SELECT * FROM `iteration` WHERE iterationID = ?";
     let dbResult = await DB.query(cmd, [iterationID]);
     if (dbResult.length != 0)
