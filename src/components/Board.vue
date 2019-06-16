@@ -61,34 +61,36 @@
     </el-col>
   </el-row>
   <br>
-  <el-row>
-    <h2>Project / Spent Time</h2>
-    <el-col :md="12" :sm="24">
-      <div class="chart-container" style="margin: auto;">
-        <canvas id="Chart"></canvas>
-      </div>
-    </el-col>
-    <el-col :md="12" :sm="24">
-      <el-table :data="ProjectAnalysisList" sortable="true">
-        <el-table-column prop="ProjectName" label="Project">
-          <template slot-scope="scope">
-            {{scope.row.ProjectName}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="Time Length" label="Time Length">
-          <template slot-scope="scope">
-            {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
+  <el-card>
+    <el-row>
+      <h2>Project / Spent Time</h2>
+      <el-col :md="12" :sm="24">
+        <div class="chart-container" style="margin: auto;">
+          <canvas id="Chart"></canvas>
+        </div>
+      </el-col>
+      <el-col :md="12" :sm="24">
+        <el-table :data="ProjectAnalysisList" sortable="true">
+          <el-table-column prop="ProjectName" label="Project">
+            <template slot-scope="scope">
+              {{scope.row.ProjectName}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="Time Length" label="Time Length">
+            <template slot-scope="scope">
+              {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
               3600000).toFixed(0),2)}}
-          </template>
-        </el-table-column>
-        <el-table-column label="Percentage">
-          <template slot-scope="scope">
-            {{(scope.row.TimeLength / PieData.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-col>
-  </el-row>
+            </template>
+          </el-table-column>
+          <el-table-column label="Percentage">
+            <template slot-scope="scope">
+              {{(scope.row.TimeLength / PieData.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+  </el-card>
   <IterationSetting :visible='iterationSetting' @close='closeIterationSetting' />
 </div>
 </template>

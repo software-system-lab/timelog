@@ -14,9 +14,15 @@ export default {
   data() {
     return {
       tabList: [{
-        tabLabel: 'Teammate',
-        routeName: 'Team - Teammate'
-      }],
+          tabLabel: 'Teammate',
+          routeName: 'Team - Teammate'
+        },
+        {
+          tabLabel: 'Join a team',
+          routeName: 'Team - Join a team'
+        }
+      ],
+
       activeTab: null,
     }
   },
