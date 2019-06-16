@@ -54,7 +54,7 @@
       </el-card>
     </el-col>
   </el-row>
-  <ModifyHistoryModal :visible.sync="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
+  <ModifyHistoryModal :visible="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
 </div>
 </template>
 

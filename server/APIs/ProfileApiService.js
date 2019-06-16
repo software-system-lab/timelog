@@ -63,16 +63,6 @@ module.exports = class {
       }
     });
 
-    this.router.post("/GetSprints", async function(req, res) {
-      try {
-        let result = await _profileProvider.GetSprints(req.body.TeamID);
-        res.send(result);
-      } catch (err) {
-        console.log(err);
-        res.send(400);
-      }
-    });
-
     this.router.post("/GetTeammates", async function(req, res) {
       try {
         let result = await _profileProvider.GetTeammatesByTeamID(req.body.TeamID);
@@ -83,7 +73,17 @@ module.exports = class {
       }
     });
 
-    ////sprint
+    ////iteration
+    this.router.post("/GetIterations", async function(req, res) {
+      try {
+        let result = await _profileProvider.GetIterations(req.body.UserID);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
     this.router.post("/EditIteration", async function(req, res) {
       try {
         let result = await _profileProvider.EditIteration(req.body);

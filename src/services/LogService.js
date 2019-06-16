@@ -107,11 +107,11 @@ export default {
   },
 
   //analysis
-  async TagsAndLengthOfTime(teammateID = window.Profile.UserID) {
+  async ProjectsAndLengthOfTime(userID = window.Profile.UserID) {
     let postData = {
-      UserID: teammateID,
+      UserID: userID,
       IterationID: window.Profile.currentIterationID,
     };
-    return HTTP.post(`api/Log/TagsAndLengthOfTime`, postData);
+    return HTTP.post(`api/Log/ProjectsAndLengthOfTime`, postData);
   }
 }

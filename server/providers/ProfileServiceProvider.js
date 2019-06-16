@@ -81,4 +81,10 @@ module.exports = class {
       return dbResult;
     return "no data";
   }
+
+  async GetIterations(userID) {
+    var cmd = "SELECT * FROM `iteration` WHERE `UserID` = ?";
+    let dbResult = await DB.query(cmd, [userID])
+    return dbResult;
+  }
 }

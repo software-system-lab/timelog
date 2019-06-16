@@ -72,7 +72,8 @@ module.exports = class {
     this.router.post("/GetUserProjects", async function(req, res) {
       try {
         let result = await _LogProvider.GetUserProjects(req.body.UserID);
-        result = result.filter(x => x.IsDeleted == false);
+        console.log(result)
+        result = result.filter(x => x.IsDeleted == 0);
         res.send(result);
       } catch (err) {
         console.log(err);

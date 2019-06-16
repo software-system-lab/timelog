@@ -65,14 +65,11 @@ export default {
     return httpResult;
   },
 
-  async GetSprint(sprintID) {
+  async GetIteration() {
     let req = {
-      SprintID: sprintID
+      UserID: window.Profile.UserID
     };
-    let httpResult = await HTTP.post(`api/Profile/GetSprint`, req);
-    if (httpResult != "no data")
-      httpResult.Duration = [httpResult.StartDate, httpResult.EndDate]
-    return httpResult;
+    return await HTTP.post(`api/Profile/GetIterations`, req);
   },
 
   async ModifyOrAddASprint(rowData) {

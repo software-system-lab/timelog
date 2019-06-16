@@ -53,9 +53,10 @@
     <el-col :md="12" :sm="24">
       <el-card>
         <div slot="header" class="clearfix">
+          <el-button type="primary" id='iteration-setting' icon="el-icon-setting" @click='openIterationSetting'></el-button>
           <h2>My Iteration Target</h2>
         </div>
-        <TargetBase v-for="project in TagAnalysisList" :key="project.ProjectID" v-if="project.ProjectID != null" :project="project"></TargetBase>
+        <TargetBase v-for="project in ProjectAnalysisList" :key="project.ProjectID" v-if="project.ProjectID != null" :project="project"></TargetBase>
       </el-card>
     </el-col>
   </el-row>
@@ -68,7 +69,7 @@
       </div>
     </el-col>
     <el-col :md="12" :sm="24">
-      <el-table :data="TagAnalysisList" sortable="true">
+      <el-table :data="ProjectAnalysisList" sortable="true">
         <el-table-column prop="Tag Name" label="Tag">
           <template slot-scope="scope">
             {{scope.row.TagName}}
@@ -88,6 +89,7 @@
       </el-table>
     </el-col>
   </el-row>
+  <IterationSetting :visible='iterationSetting' @close='closeIterationSetting' />
 </div>
 </template>
 
@@ -96,6 +98,7 @@ import Chart from 'chart.js';
 import TargetBase from './Board/TargetBase'
 import _profileService from '../services/ProfileService.js'
 import _logService from '../services/LogService.js'
+import IterationSetting from '@/components/Board/IterationSetting.vue'
 import moment from 'moment'
 
 export default {
@@ -149,7 +152,8 @@ export default {
           trigger: 'blur'
         }],
       },
-      TagAnalysisList: [],
+      ProjectAnalysisList: [],
+      iterationSetting: false,
       PieData: {
         labels: [],
         datasets: [{
@@ -212,9 +216,9 @@ export default {
       }
     },
     async QueryPieData() {
-      let result = await _logService.TagsAndLengthOfTime();
+      let result = await _logService.ProjectsAndLengthOfTime();
       if (result != "no data") {
-        this.TagAnalysisList = result;
+        this.ProjectAnalysisList = result;
         //clear
         this.PieData.labels.length = 0;
         this.PieData.datasets[0].data.length = 0;
@@ -252,6 +256,12 @@ export default {
     },
     errorMsg() {
       this.$message.error('Log Added Fail!Please Retry');
+    },
+    openIterationSetting() {
+      this.iterationSetting = true
+    },
+    closeIterationSetting() {
+      this.iterationSetting = false
     }
   },
   async mounted() {
@@ -271,6 +281,7 @@ export default {
   },
   components: {
     TargetBase,
+    IterationSetting
   }
 }
 </script>
@@ -278,5 +289,11 @@ export default {
 <style scoped>
 .el-form {
   width: 90%
+}
+
+#iteration-setting {
+  position: absolute;
+  right: 50px;
+  top: 40px
 }
 </style>

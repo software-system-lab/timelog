@@ -63,7 +63,7 @@ module.exports = class {
 
   ////projects
   async GetUserProjects(userID) {
-    var cmd = "SELECT `ProjectID`, `ProjectName`, `IsPrivate`, `IsEnable` FROM `project` WHERE `UserID` = ?";
+    var cmd = "SELECT * FROM `project` WHERE `UserID` = ?";
     let dbResult = await DB.query(cmd, [userID]);
     if (dbResult.length != 0)
       return dbResult;
