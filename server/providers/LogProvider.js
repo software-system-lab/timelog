@@ -7,23 +7,23 @@ module.exports = class {
 
   ////log
   async AddALog(data) {
-    var cmd = "INSERT INTO `log` (`UserID`, `ProjectID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
-    let dbResult = await DB.query(cmd, [data.UserID, data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description]);
+    var cmd = "INSERT INTO `log` (`FBUserID`, `Tags`, `SprintID`, `Title`, `Date`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    let dbResult = await DB.query(cmd, [data.UserID, data.TagsString, data.SprintID, data.Title, data.Date, data.StartTime, data.EndTime, data.Description]);
     if (dbResult)
       return true;
     return false;
   }
 
   async ModifyALog(data) {
-    var cmd = "UPDATE `log` SET `ProjectID` = ?, `Title` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `log`.`LogID` = ?";
-    let dbResult = await DB.query(cmd, [data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description, data.LogID]);
+    var cmd = "UPDATE `log` SET `Tags` = ?, `Title` = ?, `Date` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `log`.`LogID` = ?";
+    let dbResult = await DB.query(cmd, [data.TagsString, data.Title, data.Date, data.StartTime, data.EndTime, data.Description, data.LogID]);
     if (dbResult)
       return true;
     return false;
   }
 
   async DeleteALog(data) {
-    var cmd = "UPDATE `log` SET `IsDeleted` = ? WHERE `log`.`LogID` = ?";
+    var cmd = "DELETE FROM `log` WHERE `log`.`LogID` = ?;";
     let dbResult = await DB.query(cmd, [data.LogID]);
     if (dbResult)
       return true;
@@ -41,6 +41,19 @@ module.exports = class {
   async GetUserLogsByIterationID(iterationID) {
     var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ?";
     let dbResult = await DB.query(cmd, [iterationID]);
+    if (dbResult.length != 0)
+      return dbResult;
+    return "no data";
+  }
+
+  async GetUserLogsBySearch(data) {
+    var param = [];
+    var cmd = "SELECT * FROM `log` WHERE (`Title` LIKE '%?%' OR `Description` LIKE '%?%') ";
+    param.push(data.Description, data.Description);
+    if (data.StartTime && data.EndTime) {
+      cmd += "AND (`StartTime` >= ? AND `EndTime` <= ?)";
+      param.push(data.StartTime, data.EndTime);
+    }
     if (dbResult.length != 0)
       return dbResult;
     return "no data";

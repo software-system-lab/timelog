@@ -19,7 +19,7 @@
           <el-form-item label="Start Time">
             <el-col :md="12" :sm="24">
               <el-form-item prop="StartDate">
-                <el-date-picker v-model="LogForm.StartDate" type="date" placeholder="Day" align="'center'"></el-date-picker>
+                <el-date-picker v-model="LogForm.StartDate" type="date" placeholder="Start Date" align="'center'"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :md="12" :sm="24">
@@ -32,7 +32,7 @@
           <el-form-item label="End Time">
             <el-col :md="12" :sm="24">
               <el-form-item prop="EndDate">
-                <el-date-picker v-model="LogForm.EndDate" type="date" placeholder="Day" :picker-options="endDateOption" align="'center'"></el-date-picker>
+                <el-date-picker v-model="LogForm.EndDate" type="date" placeholder="End Date" :picker-options="endDateOption" align="'center'"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :md="12" :sm="24">

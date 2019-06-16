@@ -2,50 +2,59 @@
 <div>
   <el-row>
     <el-col :md="24" :sm="24">
-      <h2>Recent Log</h2>
-      <label>Search</label>
-      <el-select v-model="IterationIDToSearch" placeholder="Choose">
-        <el-option v-for="item in IterationList" :key="item.IterationID" :label="item.IterationName" :value="item.IterationID">
-        </el-option>
-      </el-select>
-      <el-button type="success" icon="el-icon-search" circle @click="confirmSearchBox()"></el-button>
-      <el-table :data="logList" sortable="true">
+      <el-card>
+        <div slot="header" class="clearfix">
+          <h2>Recent Log</h2>
+        </div>
+        <el-col :md="12" :sm="24">
+          <el-input size="medium" placeholder="By Keyword" v-model="KeywordToSearch"></el-input>
+        </el-col>
+        <el-col :md="8" :sm="24">
+          <el-date-picker v-model="StartSearchDate" type="date" placeholder="Start Date"></el-date-picker>
+          <el-date-picker v-model="EndSearchDate" type="date" placeholder="End Date"></el-date-picker>
+        </el-col>
+        <el-col :md="4" :sm="24">
+          <el-button type="success" icon="el-icon-search" @click="confirmSearchBox()">Search</el-button>
+        </el-col>
+        <br />
+        <br />
+        <el-divider />
+        <el-table :data="logList" sortable="true">
+          <el-table-column type="expand">
+            <template slot-scope="scope">
+              {{scope.row.Description}}
+            </template>
+          </el-table-column>
 
-        <el-table-column type="expand">
-          <template slot-scope="scope">
-            {{scope.row.Description}}
-          </template>
-        </el-table-column>
+          <el-table-column prop="Project" label="Project" align="left" :filters="projectFilters" :filter-method="filterProject">
+            <template slot-scope="scope">
+              <el-select v-model="scope.row.Projects" multiple disabled keyword placeholder="Choose">
+                <el-option v-for="item in projectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
 
-        <el-table-column prop="Project" label="Project" align="left" :filters="projectFilters" :filter-method="filterProject">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.Projects" multiple disabled keyword placeholder="Choose">
-              <el-option v-for="item in projectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
-              </el-option>
-            </el-select>
-          </template>
-        </el-table-column>
+          <el-table-column prop="Title" label="Event" align="left" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Title}}
+            </template>
+          </el-table-column>
 
-        <el-table-column prop="Title" label="Event" align="left" sortable>
-          <template slot-scope="scope">
-            {{scope.row.Title}}
-          </template>
-        </el-table-column>
+          <el-table-column prop="Duration" label="Duration" align="left" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Duration}}
+            </template>
+          </el-table-column>
 
-        <el-table-column prop="Duration" label="Duration" align="left" sortable>
-          <template slot-scope="scope">
-            {{scope.row.Duration}}
-          </template>
-        </el-table-column>
+          <el-table-column label="" align="left">
+            <template slot-scope="scope">
+              <el-button type="primary" icon="el-icon-edit" circle @click="Edit(scope.row)"></el-button>
+            </template>
+          </el-table-column>
 
-        <el-table-column label="" align="left">
-          <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" circle @click="Edit(scope.row)"></el-button>
-          </template>
-        </el-table-column>
-
-      </el-table>
-
+        </el-table>
+      </el-card>
     </el-col>
   </el-row>
   <ModifyHistoryModal :visible.sync="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
@@ -55,6 +64,7 @@
 <script>
 import ModifyHistoryModal from './History/ModifyModal'
 import _logService from '../services/LogService.js'
+import moment from 'moment'
 
 export default {
   data() {
@@ -70,6 +80,9 @@ export default {
       IterationList: window.SprintList,
       dialogFormVisible: false,
       rowData: [],
+      KeywordToSearch: '',
+      StartSearchDate: new moment(),
+      EndSearchDate: new moment().add(7, 'days')
     }
   },
   async mounted() {
