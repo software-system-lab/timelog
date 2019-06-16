@@ -72,7 +72,6 @@ module.exports = class {
     this.router.post("/GetUserProjects", async function(req, res) {
       try {
         let result = await _LogProvider.GetUserProjects(req.body.UserID);
-        console.log(result)
         result = result.filter(x => x.IsDeleted == 0);
         res.send(result);
       } catch (err) {
@@ -129,8 +128,17 @@ module.exports = class {
           project.TimeTarget = null;
         });
 
+        let targets = await _LogProvider.QueryTargetBySprint(req.body); //sync method
+
+        if (targets != "no data") {
+          targets.forEach(x => {
+            let proj = projects.find(y => y.ProjectID == x.ProjectID);
+            if (proj != undefined)
+              proj.GoalHour = x.GoalHour;
+          })
+        }
+
         let logs = await _LogProvider.GetUserLogsByIterationID(req.body.IterationID);
-        let targets = _LogProvider.QueryTargetBySprint(req.body); //sync method
         if (logs != "no data") {
           logs.forEach(log => {
             log.Tags = JSON.parse(log.Tags);
@@ -145,13 +153,6 @@ module.exports = class {
           });
 
           targets = await targets;
-          if (targets != "no data") {
-            targets.forEach(x => {
-              let tag = projects.find(y => y.TagID == x.TagID);
-              if (tag != undefined)
-                tag.TimeTarget = x.TargetHour;
-            })
-          }
 
           //sort by TimeLength DESC
           projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1)

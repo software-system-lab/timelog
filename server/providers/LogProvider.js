@@ -94,8 +94,8 @@ module.exports = class {
 
   //target
   async QueryTargetBySprint(data) {
-    var cmd = "SELECT * FROM `target` WHERE `UserID` = ? AND `SprintID` =?;";
-    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID]);
+    var cmd = "SELECT * FROM `goal` WHERE `IterationID` =? ;";
+    let dbResult = await DB.query(cmd, [data.IterationID]);
     if (dbResult.length != 0)
       return dbResult;
     return "no data";
