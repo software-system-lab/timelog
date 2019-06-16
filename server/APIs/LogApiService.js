@@ -127,7 +127,6 @@ module.exports = class {
           project.TimeLength = 0;
           project.TimeTarget = null;
         });
-
         let targets = await _LogProvider.QueryTargetBySprint(req.body); //sync method
 
         if (targets != "no data") {
@@ -139,28 +138,17 @@ module.exports = class {
         }
 
         let logs = await _LogProvider.GetUserLogsByIterationID(req.body.IterationID);
-        if (logs != "no data") {
-          logs.forEach(log => {
-            log.Tags = JSON.parse(log.Tags);
-            log.CountOfTag = log.Tags.length;
-            log.TotalTimeLength = (new Date(`13 June 2018 ${log.EndTime}`) - new Date(`13 June 2018 ${log.StartTime}`)) / (60 * 1000); //sec
-            log.EachTagTimeLength = log.TotalTimeLength / log.CountOfTag; //sec
-            log.Tags.forEach(x => {
-              let xx = projects.find(y => y.TagID == x);
-              if (xx != undefined)
-                xx.TimeLength += log.EachTagTimeLength;
-            })
-          });
 
-          targets = await targets;
+        logs.forEach(log => {
+          log.ProjectID
+          let xx = projects.find(y => y.ProjectID == log.ProjectID);
+          if (xx != undefined)
+            xx.TimeLength += log.EachTagTimeLength;
+        });
+        //sort by TimeLength DESC
+        projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
 
-          //sort by TimeLength DESC
-          projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1)
-
-          res.send(projects);
-        } else {
-          res.send("no data");
-        }
+        res.send(projects);
       } catch (err) {
         console.log(err);
         res.send(400);

@@ -1,5 +1,5 @@
 import HTTP from './HttpRequest'
-
+import moment from 'moment'
 /**
  * Profile APIs
  */
@@ -41,53 +41,47 @@ export default {
     return HTTP.post(`api/Profile/GetTeammates`, req);
   },
 
-  async GetSprints() {
-    let req = {
-      TeamID: window.Profile.Team.TeamID
-    };
-    let httpResult = await HTTP.post(`api/Profile/GetSprints`, req);
-    if (httpResult != "no data")
-      httpResult.forEach(x => {
-        x.Duration = `${x.StartDate.toString().slice(0,10)} ~ ${x.EndDate.toString().slice(0,10)}`;
-      });
-    return httpResult;
-  },
-
   //sprint
-  async ChangeSprint(sprintID) {
+  async ChangeIteration(iterationID) {
     let req = {
-      SprintID: sprintID,
-      TeamID: window.Profile.Team.TeamID
+      IterationID: iterationID,
+      UserID: window.Profile.UserID
     };
-    let httpResult = await HTTP.post(`api/Profile/ChangeSprint`, req);
-    if (httpResult != "no data")
-      httpResult.Duration = [httpResult.StartDate, httpResult.EndDate]
-    return httpResult;
+
+    console.log(HELLO)
+    return await HTTP.post(`api/Profile/ChangeIteration`, req);
   },
 
-  async GetIteration() {
+  async GetIterations() {
     let req = {
       UserID: window.Profile.UserID
     };
     return await HTTP.post(`api/Profile/GetIterations`, req);
   },
 
-  async ModifyOrAddASprint(rowData) {
+  async GetIterationById(id) {
     let req = {
-      SprintID: rowData.SprintID,
-      SprintName: rowData.SprintName,
-      TeamID: window.Profile.Team.TeamID,
-      StartDate: rowData.Duration[0],
-      EndDate: rowData.Duration[1],
-      Content: rowData.Content
+      IterationID: id
     };
-    return await HTTP.post(`api/Profile/ModifyOrAddASprint`, req);
+    return await HTTP.post(`api/Profile/GetIterationById`, req);
   },
 
-  async DeleteASprint(rowData) {
+  async ModifyOrAddAIteration(rowData) {
     let req = {
-      SprintID: rowData.SprintID,
+      IterationID: rowData.IterationID,
+      IterationName: rowData.IterationName,
+      UserID: window.Profile.UserID,
+      StartDate: moment(rowData.StartDate).format('YYYY-MM-DD'),
+      EndDate: moment(rowData.EndDate).format('YYYY-MM-DD'),
+      Content: rowData.Content
     };
-    return await HTTP.post(`api/Profile/DeleteASprint`, req);
+    return await HTTP.post(`api/Profile/EditIteration`, req);
+  },
+
+  async DeleteAIteration(rowData) {
+    let req = {
+      IterationID: rowData.IterationID,
+    };
+    return await HTTP.post(`api/Profile/DeleteAIteration`, req);
   }
 }

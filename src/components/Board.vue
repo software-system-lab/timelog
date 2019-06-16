@@ -292,8 +292,8 @@ export default {
 }
 
 #iteration-setting {
-  position: absolute;
-  right: 50px;
-  top: 40px
+  position: relative;
+  right: -45%;
+  top: 20px
 }
 </style>

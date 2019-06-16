@@ -41,9 +41,7 @@ module.exports = class {
   async GetUserLogsByIterationID(iterationID) {
     var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ?";
     let dbResult = await DB.query(cmd, [iterationID]);
-    if (dbResult.length != 0)
-      return dbResult;
-    return "no data";
+    return dbResult;
   }
 
   async GetUserLogsBySearch(data) {

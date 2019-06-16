@@ -84,6 +84,16 @@ module.exports = class {
       }
     });
 
+    this.router.post("/GetIterationByID", async function(req, res) {
+      try {
+        let result = await _profileProvider.GetIterationByID(req.body.IterationID);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    });
+
     this.router.post("/EditIteration", async function(req, res) {
       try {
         let result = await _profileProvider.EditIteration(req.body);
@@ -103,5 +113,15 @@ module.exports = class {
         res.send(400);
       }
     });
+
+    this.router.post("/ChangeIteration", async function(req, res) {
+      try {
+        let result = await _profileProvider.ChangeIteration(req.body);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(400);
+      }
+    })
   }
 }

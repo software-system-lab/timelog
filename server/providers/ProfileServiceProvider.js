@@ -87,4 +87,37 @@ module.exports = class {
     let dbResult = await DB.query(cmd, [userID])
     return dbResult;
   }
+
+  async GetIterationByID(iterationID) {
+    let cmd = "SELECT * FROM `iteration` WHERE `IterationID` = ?";
+    let dbResult = await DB.query(cmd, [iterationID]);
+    if (dbResult.length > 0) {
+      return dbResult[0];
+    }
+    return "no data";
+  }
+
+  async EditIteration(data) {
+    var cmd;
+    var params = [];
+    if (data.IterationID === null) {
+      cmd = "INSERT INTO `iteration` (`UserID`, `IterationName`, `StartDate`, `EndDate`, `Content`) VALUES (?, ?, ?, ?, ?); ";
+      params.push(data.UserID, data.IterationName, data.StartDate, data.EndDate, data.Content);
+    } else {
+      cmd = "UPDATE `iteration` SET `IterationName` = ?, `StartDate` = ?, `EndDate` = ?, `Content` = ? WHERE `IterationID` = ?";
+      params.push(data.IterationName, data.StartDate, data.EndDate, data.Content, data.IterationID);
+    }
+    let dbResult = await DB.query(cmd, params);
+    if (dbResult)
+      return true;
+    return false;
+  }
+
+  async ChangeIteration(data) {
+    let cmd = "UPDATE `user` SET `CurrentIterationID` = ? WHERE `UserID` = ?";
+    let dbResult = await DB.query(cmd, [data.IterationID, data.UserID]);
+    if (dbResult.length > 0)
+      return true;
+    return false;
+  }
 }
