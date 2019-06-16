@@ -44,6 +44,13 @@ module.exports = class {
     this.router.post("/GetUserLogs", async function(req, res) {
       try {
         let result = await _LogProvider.GetUserLogsBySearch(req.body);
+        let dbProjectList = await _LogProvider.GetUserProjects(req.body.UserID);
+        console.log(dbProjectList)
+        if (result !== 'no data' && dbProjectList !== 'no data')
+          result.forEach(x => {
+            let project = dbProjectList.find(y => x.ProjectID == y.ProjectID)
+            x.ProjectName = project !== undefined ? project.ProjectName : '';
+          })
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -65,6 +72,7 @@ module.exports = class {
     this.router.post("/GetUserProjects", async function(req, res) {
       try {
         let result = await _LogProvider.GetUserProjects(req.body.UserID);
+        result = result.filter(x => x.IsDeleted == false);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -104,7 +112,7 @@ module.exports = class {
     });
 
     ////analysis
-    this.router.post("/TagsAndLengthOfTime", async function(req, res) {
+    this.router.post("/ProjectsAndLengthOfTime", async function(req, res) {
       try {
         let dbProjects = await _LogProvider.GetUserProjects(req.body.UserID);
         var projects = [];

@@ -47,9 +47,8 @@ module.exports = class {
   }
 
   async GetUserLogsBySearch(data) {
-    console.log(data)
     var params = [];
-    var cmd = "SELECT `log`.*, `project`.`ProjectName` FROM `log`, `project` WHERE `log`.`ProjectID` = `project`.`ProjectID` AND `log`.`IsDeleted` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?) ";
+    var cmd = "SELECT `log`.* FROM `log` WHERE `log`.`IsDeleted` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?) ";
     params.push(false);
     params.push("%" + data.Description + "%", "%" + data.Description + "%");
     if (data.StartTime && data.EndTime) {
@@ -63,9 +62,9 @@ module.exports = class {
   }
 
   ////projects
-  async GetUserProjects(data) {
-    var cmd = "SELECT `ProjectID`, `ProjectName`, `IsPrivate`, `IsEnable` FROM `project` WHERE `UserID` = ? AND `IsDeleted` = ? ";
-    let dbResult = await DB.query(cmd, [data, 0]);
+  async GetUserProjects(userID) {
+    var cmd = "SELECT `ProjectID`, `ProjectName`, `IsPrivate`, `IsEnable` FROM `project` WHERE `UserID` = ?";
+    let dbResult = await DB.query(cmd, [userID]);
     if (dbResult.length != 0)
       return dbResult;
     return "no data";
@@ -86,7 +85,6 @@ module.exports = class {
   }
 
   async DeleteAProject(projectID) {
-    console.log(projectID)
     var cmd = "UPDATE `project` SET `IsDeleted` = ? WHERE `ProjectID` = ?;";
     let dbResult = await DB.query(cmd, [true, projectID]);
     if (dbResult)
