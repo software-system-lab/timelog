@@ -101,9 +101,9 @@ module.exports = class {
     });
 
     ////target
-    this.router.post("/ModifyOrAddATarget", async function(req, res) {
+    this.router.post("/ModifyOrAddAGoal", async function(req, res) {
       try {
-        let result = await _LogProvider.ModifyOrAddATarget(req.body);
+        let result = await _LogProvider.ModifyOrAddAGoal(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -126,6 +126,7 @@ module.exports = class {
         projects.forEach(project => {
           project.TimeLength = 0;
           project.TimeTarget = null;
+          project.IsEdit = false;
         });
         let targets = await _LogProvider.QueryTargetBySprint(req.body); //sync method
 

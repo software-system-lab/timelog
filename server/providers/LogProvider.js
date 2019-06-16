@@ -97,9 +97,9 @@ module.exports = class {
     return "no data";
   }
 
-  async ModifyOrAddATarget(data) {
-    var cmd = "INSERT INTO `target` (`UserID`, `SprintID`, `TagID`, `TargetHour`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE `TargetHour` = ?;";
-    let dbResult = await DB.query(cmd, [data.UserID, data.SprintID, data.TagID, data.TimeTarget, data.TimeTarget]);
+  async ModifyOrAddAGoal(data) {
+    var cmd = "INSERT INTO `goal` (`IterationID`, `ProjectID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
+    let dbResult = await DB.query(cmd, [data.IterationID, data.ProjectID, data.GoalHour, data.GoalHour]);
     if (dbResult)
       return true;
     return false;

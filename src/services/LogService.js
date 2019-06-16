@@ -96,14 +96,14 @@ export default {
   },
 
   //target
-  async ModifyOrAddATarget(tag) {
+  async ModifyOrAddAGoal(project) {
     let postData = {
       UserID: window.Profile.UserID,
-      IterationID: window.ProfilecurrentIterationID,
-      TagID: tag.TagID,
-      TimeTarget: tag.TimeTarget,
+      IterationID: window.Profile.CurrentIterationID,
+      ProjectID: project.ProjectID,
+      GoalHour: project.GoalHour,
     };
-    return HTTP.post(`api/Log/ModifyOrAddATarget`, postData);
+    return HTTP.post(`api/Log/ModifyOrAddAGoal`, postData);
   },
 
   //analysis

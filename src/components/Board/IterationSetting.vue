@@ -46,13 +46,14 @@
       </el-table-column>
       <el-table-column prop="GoalHour" label="Goal(Hour)">
         <template slot-scope="scope">
-          <el-input :disabled="scope.row.InputDisabled" v-model="scope.row.GoalHour"></el-input>
+          <el-input type='number' step="1" min="1" :disabled="!scope.row.IsEdit" v-model="scope.row.GoalHour"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" circle @click="ModifyOrAdd(scope.row)"></el-button>
-          <el-button type="danger" icon="el-icon-close" circle @click="() => {scope.row.InputDisabled=true}"></el-button>
+          <el-button type="primary" v-if="!scope.row.IsEdit" icon="el-icon-edit" circle @click="() => {scope.row.IsEdit=true}"></el-button>
+          <el-button type="success" v-if="scope.row.IsEdit" icon="el-icon-check" circle @click="ModifyOrAdd(scope.row)"></el-button>
+          <el-button type="danger" v-if="scope.row.IsEdit" icon="el-icon-close" circle @click="cancelGoal(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,7 +75,7 @@ export default {
   },
   data() {
     return {
-      iterationID: window.Profile.currentIterationID,
+      iterationID: window.Profile.CurrentIterationID,
       IterationList: [],
       GoalList: window.ProjectList,
       IterationForm: {},
@@ -139,7 +140,7 @@ export default {
     async onSelect() {
       this.editing = false;
       this.IterationForm = await _profileService.GetIterationById(this.iterationID);
-      let response = await _profileService.GetIterations(this.iterationID);
+      let response = await _profileService.ChangeIteration(this.iterationID);
       if (response != 'no data') {
         window.Profile.currentIterationID = this.iterationID;
         this.$message({
@@ -147,6 +148,13 @@ export default {
           type: 'success'
         });
       }
+    },
+    ModifyOrAdd(data) {
+      data.IsEdit = false;
+      _logService.ModifyOrAddAGoal(data)
+    },
+    cancelGoal() {
+      this.Query();
     }
   }
 }

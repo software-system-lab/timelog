@@ -41,14 +41,12 @@ export default {
     return HTTP.post(`api/Profile/GetTeammates`, req);
   },
 
-  //sprint
+  //Iteration
   async ChangeIteration(iterationID) {
     let req = {
       IterationID: iterationID,
       UserID: window.Profile.UserID
     };
-
-    console.log(HELLO)
     return await HTTP.post(`api/Profile/ChangeIteration`, req);
   },
 
