@@ -82,9 +82,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/DeleteATag", async function(req, res) {
+    this.router.post("/DeleteAProject", async function(req, res) {
       try {
-        let result = await _LogProvider.DeleteATag(req.body.TagID);
+        let result = await _LogProvider.DeleteAProject(req.body.ProjectID);
         res.send(result);
       } catch (err) {
         console.log(err);

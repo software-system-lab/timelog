@@ -7,8 +7,8 @@ module.exports = class {
 
   ////log
   async AddALog(data) {
-    var cmd = "INSERT INTO `log` (`FBUserID`, `Tags`, `SprintID`, `Title`, `Date`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    let dbResult = await DB.query(cmd, [data.UserID, data.TagsString, data.SprintID, data.Title, data.Date, data.StartTime, data.EndTime, data.Description]);
+    var cmd = "INSERT INTO `log` (`UserID`, `ProjectID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
+    let dbResult = await DB.query(cmd, [data.UserID, data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description]);
     if (dbResult)
       return true;
     return false;
@@ -85,7 +85,8 @@ module.exports = class {
     return false;
   }
 
-  async DeleteATag(projectID) {
+  async DeleteAProject(projectID) {
+    console.log(projectID)
     var cmd = "UPDATE `project` SET `IsDeleted` = ? WHERE `ProjectID` = ?;";
     let dbResult = await DB.query(cmd, [true, projectID]);
     if (dbResult)

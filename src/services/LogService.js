@@ -88,13 +88,11 @@ export default {
     return HTTP.post(`api/Log/ModifyOrAddAProject`, postData);
   },
 
-  async DeleteATag(tag) {
+  async DeleteAProject(projectID) {
     let postData = {
-      UserID: window.Profile.UserID,
-      TagID: tag.TagID,
-      TagName: tag.Name,
+      ProjectID: projectID
     };
-    return HTTP.post(`api/Log/DeleteATag`, postData);
+    return HTTP.post(`api/Log/DeleteAProject`, postData);
   },
 
   //target

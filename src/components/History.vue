@@ -32,7 +32,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="Title" label="Event" align="left" sortable>
+          <el-table-column prop="Title" label="Title" align="left" sortable>
             <template slot-scope="scope">
               {{scope.row.Title}}
             </template>

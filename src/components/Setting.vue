@@ -169,6 +169,19 @@ export default {
       } else {
         this.$message.error('Fail to modify your personal profile! Please Retry');
       }
+    },
+    async Delete(data) {
+      let result = await _logService.DeleteAProject(data.ProjectID)
+      if (result) {
+        this.$message({
+          message: 'successed!',
+          type: 'success'
+        });
+        this.IsProfileEdit = false;
+        this.QueryProjects();
+      } else {
+        this.$message.error('Fail to delete the project! Please Retry');
+      }
     }
   }
 }
