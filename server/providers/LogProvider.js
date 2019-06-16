@@ -65,9 +65,7 @@ module.exports = class {
   async GetUserProjects(userID) {
     var cmd = "SELECT * FROM `project` WHERE `UserID` = ?";
     let dbResult = await DB.query(cmd, [userID]);
-    if (dbResult.length != 0)
-      return dbResult;
-    return "no data";
+    return dbResult;
   }
 
   async ModifyOrAddAProject(data) {
