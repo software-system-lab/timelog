@@ -1,5 +1,5 @@
 import HTTP from './HttpRequest'
-
+import moment from 'moment'
 /**
  * Log APIs
  */
@@ -8,12 +8,10 @@ export default {
   async AddALog(logData) {
     let postData = {
       UserID: window.Profile.UserID,
-      IterationID: window.ProfilecurrentIterationID,
-      TagsString: JSON.stringify(logData.Tag),
-      Title: logData.Event,
-      Date: logData.Date,
-      StartTime: logData.Duration[0],
-      EndTime: logData.Duration[1],
+      ProjectID: logData.ProjectID,
+      Title: logData.Title,
+      StartTime: moment(logData.StartDate + ' ' + logData.StartTime).format('YYYY-MM-DD HH:mm'),
+      EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
       Description: logData.Description
     };
     return HTTP.post(`api/Log/AddALog`, postData);
@@ -23,12 +21,10 @@ export default {
     let postData = {
       LogID: logData.LogID,
       UserID: window.Profile.UserID,
-      IterationID: logData.IterationID,
-      TagsString: JSON.stringify(logData.Tags),
+      ProjectID: logData.ProjectID,
       Title: logData.Title,
-      Date: logData.Date,
-      StartTime: logData.Duration[0],
-      EndTime: logData.Duration[1],
+      StartTime: moment(logData.StartDate + ' ' + logData.StartTime).format('YYYY-MM-DD HH:mm'),
+      EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
       Description: logData.Description
     };
     return HTTP.post(`api/Log/ModifyALog`, postData);

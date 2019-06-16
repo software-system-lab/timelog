@@ -3,7 +3,7 @@
   <el-col :md="12" :sm="24">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>My Projects</span>
+        <h2>My Projects</h2>
       </div>
       <el-table :data="projectList" sortable="true">
 
@@ -40,7 +40,7 @@
   <el-col :md="12" :sm="24">
     <el-card>
       <div slot="header" class="clearfix">
-        <span>My Profile</span>
+        <h2>My Profile</h2>
       </div>
       <el-form ref="form" :model="UserForm" label-width="150px" :inline="true" :label-position="'right'">
         <el-form-item label="Your name" prop="UserName">

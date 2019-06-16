@@ -1,43 +1,62 @@
 <template>
 <div>
-  <el-row>
+  <el-row :gutter="20">
     <el-col :md="12" :sm="24">
-      <el-row>
-        <el-col :md="18" :sm="18">
-          Iteration: {{this.NowIteration}}
-        </el-col>
-      </el-row>
-      <h2>Add a log</h2>
-      <el-form ref="form" :model="LogForm" :rules="formRules" label-width="110px" :label-position="'right'">
-        <el-form-item label="What you do?" prop="Event">
-          <el-input v-model="LogForm.Event"></el-input>
-        </el-form-item>
-        <el-form-item label="Tag" prop="Tag">
-          <el-select v-model="LogForm.Tag" multiple filterable reserve-keyword placeholder="Choose">
-            <el-option v-for="item in TagList" :key="item.TagID" :label="item.TagName" :value="item.TagID">
-            </el-option>
-          </el-select>
-          <el-tooltip class="item" effect="dark" content="When you choose multiple tags,the time you spent would be equally divided into them!" placement="top">
-            <i class="el-icon-question"></i>
-          </el-tooltip>
-        </el-form-item>
-        <el-form-item label="What time?" prop="Date">
-          <el-date-picker v-model="LogForm.Date" type="date" placeholder="Day" :picker-options="pickerOptions" align="'center'"></el-date-picker>
-        </el-form-item>
-        <el-form-item prop="Duration">
-          <el-time-picker v-model="LogForm.Duration" range-separator="to" start-placeholder="Start" end-placeholder="End" format="HH:mm" value-format="HH:mm" is-range>
-          </el-time-picker>
-        </el-form-item>
-        <el-form-item label="Description" prop="Description">
-          <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-button type="danger" icon="el-icon-close" @click="Clear">Clear</el-button>
-      <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
+      <el-card>
+        <div slot="header" class="clearfix">
+          <h2>Add a Log</h2>
+        </div>
+        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="110px" :label-position="'right'">
+          <el-form-item label="What you do?" prop="Title">
+            <el-input v-model="LogForm.Title"></el-input>
+          </el-form-item>
+          <el-form-item label="Project" prop="ProjectID">
+            <el-select v-model="LogForm.ProjectID" filterable reserve-keyword placeholder="Choose">
+              <el-option v-for="item in ProjectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Start Time">
+            <el-col :md="12" :sm="24">
+              <el-form-item prop="StartDate">
+                <el-date-picker v-model="LogForm.StartDate" type="date" placeholder="Day" align="'center'"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" :sm="24">
+              <el-form-item prop="StartTime">
+                <el-time-picker v-model="LogForm.StartTime" format="HH:mm" value-format="HH:mm">
+                </el-time-picker>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="End Time">
+            <el-col :md="12" :sm="24">
+              <el-form-item prop="EndDate">
+                <el-date-picker v-model="LogForm.EndDate" type="date" placeholder="Day" :picker-options="endDateOption" align="'center'"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" :sm="24">
+              <el-form-item prop="EndTime">
+                <el-time-picker v-model="LogForm.EndTime" format="HH:mm" value-format="HH:mm" :picker-options='endTimeOption'>
+                </el-time-picker>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="Description" prop="Description">
+            <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-button type="danger" icon="el-icon-close" @click="Clear">Clear</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
+      </el-card>
     </el-col>
     <el-col :md="12" :sm="24">
-      <h2>My Iteration Target</h2>
-      <TargetBase v-for="tag in TagAnalysisList" :key="tag.TagID" v-if="tag.TagID != -1" :tag="tag"></TargetBase>
+      <el-card>
+        <div slot="header" class="clearfix">
+          <h2>My Iteration Target</h2>
+        </div>
+        <TargetBase v-for="project in TagAnalysisList" :key="project.ProjectID" v-if="project.ProjectID != null" :project="project"></TargetBase>
+      </el-card>
     </el-col>
   </el-row>
   <br>
@@ -77,41 +96,49 @@ import Chart from 'chart.js';
 import TargetBase from './Board/TargetBase'
 import _profileService from '../services/ProfileService.js'
 import _logService from '../services/LogService.js'
+import moment from 'moment'
 
 export default {
   data() {
     return {
       LogForm: {
-        Event: '',
-        Tag: [],
-        Date: new Date().toISOString().slice(0, 10),
-        Duration: '',
+        Title: '',
+        ProjectID: '',
+        StartTime: new moment().format('HH:mm'),
+        EndTime: new moment().format('HH:mm'),
+        StartDate: new moment().format('YYYY-MM-DD'),
+        EndDate: new moment().format('YYYY-MM-DD'),
         Description: ''
       },
-      TagList: window.TagList,
-      pickerOptions: {
-        disabledDate(time) {
-          return Date.parse(window.Profile.Sprint.StartDate) > time.getTime() || Date.parse(window.Profile
-            .Sprint.EndDate) < time.getTime()
-        },
-      },
+      ProjectList: window.ProjectList,
+      endDateOption: {},
       formRules: {
-        Event: [{
+        Title: [{
           required: true,
           message: 'Check Here!',
           trigger: 'blur'
         }],
-        Tag: [{
+        ProjectID: [{
+          required: false,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        StartTime: [{
           required: true,
           message: 'Check Here!',
           trigger: 'blur'
         }],
-        Date: [{
+        StartDate: [{
           required: true,
           message: 'Check Here!',
           trigger: 'blur'
         }],
-        Duration: [{
+        EndTime: [{
+          required: true,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        EndDate: [{
           required: true,
           message: 'Check Here!',
           trigger: 'blur'
@@ -140,9 +167,21 @@ export default {
       }
     }
   },
+  created() {
+    this.endDateOption.disabledDate = time => {
+      if (moment(this.LogForm.StartDate) > moment(time.getTime()))
+        return true;
+      return false;
+    }
+  },
   computed: {
-    NowIteration() {
-      return '';
+    endTimeOption() {
+      if (this.LogForm.StartDate == this.LogForm.EndDate) {
+        return {
+          selectableRange: this.LogForm.StartTime + ':00 - 23:59:59'
+        }
+      }
+      return;
     }
   },
   methods: {
@@ -163,10 +202,12 @@ export default {
     Clear() {
       this.$refs['form'].clearValidate();
       this.LogForm = {
-        Event: '',
-        Tag: [],
-        Date: new Date().toISOString().slice(0, 10),
-        Duration: '',
+        Title: '',
+        ProjectID: '',
+        StartTime: new moment().format('HH:mm'),
+        EndTime: new moment().format('HH:mm'),
+        StartDate: new moment().format('YYYY-MM-DD'),
+        EndDate: new moment().format('YYYY-MM-DD'),
         Description: ''
       }
     },
