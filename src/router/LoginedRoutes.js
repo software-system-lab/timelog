@@ -2,8 +2,10 @@ import Header from '../components/_Header.vue'
 import Board from '../components/Board.vue'
 import History from '../components/History.vue'
 import Team from '../components/Team.vue'
-import JoinATeam from '../components/Team/Join.vue'
-import Teammate from '../components/Team/Teammate.vue'
+import TeamContent from '../components/Team/team_content.vue'
+import CreateTeam from '../components/Team/create.vue'
+import JoinTeam from '../components/Team/join.vue'
+import TeamList from '../components/Team/Teammate.vue'
 import Setting from '../components/Setting.vue'
 import HelloWorld from '../components/HelloWorld'
 
@@ -25,29 +27,33 @@ const LoginedRoutes = [{
   },
   {
     name: 'Team',
-    path: "Team",
+    path: "/team/:id",
     components: {
       header: Header,
       default: Team
     },
     redirect: {
-      name: "Team - Join a team"
+      name: "Team - team list"
     },
     children: [{
-        name: "Team - Teammate",
-        path: "Teammate",
-        component: Teammate,
-        meta: {
-          tabIndex: '0'
-        }
+        name: "Team - content",
+        path: "",
+        component: TeamContent
       },
       {
-        name: "Team - Join a team",
-        path: "Join",
-        component: JoinATeam,
-        meta: {
-          tabIndex: '1'
-        }
+        name: "Team - team list",
+        path: "/teamlist",
+        component: TeamList
+      },
+      {
+        name: "Team - create team",
+        path: "/create",
+        component: CreateTeam
+      },
+      {
+        name: "Team - join team",
+        path: "/join",
+        component: JoinTeam
       }
     ]
   },

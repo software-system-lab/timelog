@@ -1,39 +1,11 @@
 <template>
 <div>
-  <el-tabs v-model="activeTab" @tab-click="handleClick">
-    <template v-for="tab in tabList">
-      <el-tab-pane :label="tab.tabLabel" :key="tab.routeName" :name="tab.routeName"></el-tab-pane>
-    </template>
-    <router-view></router-view>
-  </el-tabs>
+  <router-view></router-view>
 </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      tabList: [{
-          tabLabel: 'Teammate',
-          routeName: 'Team - Teammate'
-        },
-        {
-          tabLabel: 'Join a team',
-          routeName: 'Team - Join a team'
-        }
-      ],
-
-      activeTab: null,
-    }
-  },
-  methods: {
-    handleClick(tab) {
-      router.push({
-        name: tab.name
-      });
-    },
-  },
-}
+export default {}
 </script>
 
 <style scoped>

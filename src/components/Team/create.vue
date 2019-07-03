@@ -9,7 +9,7 @@
     <el-col>
       <el-card>
         <div slot="header">
-          <h2>Join a Team</h2>
+          <h2>Create Team</h2>
         </div>
         <el-form :label-position="'right'">
           <el-form-item label="Team Name">
@@ -18,7 +18,7 @@
           <el-form-item label="Team Code">
             <el-input></el-input>
           </el-form-item>
-          <el-button type="primary">Join</el-button>
+          <el-button type="primary" @click='createTeam'>Create</el-button>
         </el-form>
       </el-card>
     </el-col>
