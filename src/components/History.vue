@@ -73,7 +73,7 @@ export default {
         value: null
       }],
       logIDtoModify: null,
-      IterationIDToSearch: window.Profile.currentIterationID,
+      IterationIDToSearch: window.Profile.CurrentIterationID,
       IterationList: window.SprintList,
       dialogFormVisible: false,
       rowData: [],

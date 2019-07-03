@@ -15,7 +15,7 @@ module.exports = class {
     this.router.post("/GetProfile", async function(req, res) {
       try {
         let result = await _profileProvider.GetUserProfile(req.body.FBID);
-        let currentIterationInfo = await _logProvider.QueryIterationByIterationID(result.currentIterationID);
+        let currentIterationInfo = await _logProvider.QueryIterationByIterationID(result.CurrentIterationID);
         res.send(result);
       } catch (err) {
         console.log(err);

@@ -141,8 +141,10 @@ export default {
       this.editing = false;
       this.IterationForm = await _profileService.GetIterationById(this.iterationID);
       let response = await _profileService.ChangeIteration(this.iterationID);
+
       if (response != 'no data') {
-        window.Profile.currentIterationID = this.iterationID;
+        window.Profile.CurrentIterationID = this.iterationID;
+
         this.Query();
         this.$message({
           message: 'successed!',
