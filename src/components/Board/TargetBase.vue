@@ -12,9 +12,15 @@ export default {
   props: ['project'],
   computed: {
     ProjectProgressPercentage() {
+      var result = 0;
       if (this.project.GoalHour != null)
-        return Number((this.project.TimeLength / (this.project.GoalHour * 3600000) * 100).toFixed(2));
-      return 100;
+        result = Number((this.project.TimeLength / (this.project.GoalHour * 3600000) * 100).toFixed(2));
+      else
+        result = 100;
+
+      if (result > 100)
+        result = 100;
+      return result;
     },
     ProjectProgressColor() {
       let result = (this.project.TimeLength / (this.project.GoalHour * 3600000) * 100).toFixed(2);
