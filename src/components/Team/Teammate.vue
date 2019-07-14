@@ -1,32 +1,18 @@
 <template>
-  <el-collapse>
-    <el-collapse-item v-for="teammate in TeammateList" :key="teammate.FBUserID" :title="teammate.UserName" :name="teammate.FBUserID">
-
-      <TeammateBase :teammate="teammate"></TeammateBase>
-
-    </el-collapse-item>
-  </el-collapse>
+<el-collapse-item :title="info.UserName" :name="info.UserID">
+  <TeammateBase :teammate="info"></TeammateBase>
+</el-collapse-item>
 </template>
 
 <script>
-  import TeammateBase from "./TeammateBase";
-  import _profileService from "../../services/ProfileService.js";
+import TeammateBase from '@/components/Team/TeammateBase.vue'
 
-  export default {
-    data() {
-      return {
-        TeammateList: []
-      };
-    },
-    components: {
-      TeammateBase
-    },
-    async mounted() {
-      this.TeammateList = await _profileService.GetTeammates();
-    }
-  };
-
+export default {
+  props: {
+    info: Object
+  },
+  components: {
+    TeammateBase
+  }
+}
 </script>
-
-<style scoped>
-</style>

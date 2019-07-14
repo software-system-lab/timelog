@@ -75,7 +75,7 @@ module.exports = class {
   }
 
   async GetTeammatesByTeamID(teamID) {
-    var cmd = "SELECT * FROM `user_team_mapping` WHERE `TeamID` = ?";
+    var cmd = "SELECT * FROM `user`, `user_team_mapping` WHERE `TeamID` = ? AND user.UserID=user_team_mapping.UserID"
     let dbResult = await DB.query(cmd, [teamID]);
     if (dbResult.length != 0)
       return dbResult;

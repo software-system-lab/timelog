@@ -34,9 +34,9 @@ export default {
   },
 
   ////teams
-  async GetTeammates() {
+  async GetTeammates(teamID) {
     let req = {
-      TeamID: window.Profile.Team.TeamID
+      TeamID: teamID
     };
     return HTTP.post(`api/Profile/GetTeammates`, req);
   },

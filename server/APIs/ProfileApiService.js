@@ -69,7 +69,8 @@ module.exports = class {
         res.send(result);
       } catch (err) {
         console.log(err);
-        res.send(400);
+        res.status(404)
+          .send(err);
       }
     });
 

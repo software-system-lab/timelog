@@ -94,9 +94,7 @@ export default {
   },
   methods: {
     async QueryTeammateData() {
-      let result = await _logService.TagsAndLengthOfTime(
-        this.teammate.UserID
-      );
+      let result = await _logService.ProjectsAndLengthOfTime(this.teammate.UserID);
       if (result != "no data") {
         this.TagAnalysisList = result;
         //clear
@@ -138,6 +136,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-</style>
