@@ -37,5 +37,32 @@ module.exports = class {
         res.send(err);
       }
     })
+
+    this.router.post("/join", async (req, res) => {
+      try {
+        let result = await _teamProvider.joinTeam(req.body);
+        switch (result) {
+          case "Not found":
+            res.status(404);
+            res.send(result);
+            break;
+          case "Forbidden":
+            res.status(403);
+            res.send(result);
+            break;
+          case "Internal Error":
+            res.status(500);
+            res.send(result);
+            break;
+          default:
+            res.send({
+              TeamID: result
+            });
+        }
+      } catch (err) {
+        res.status(500);
+        res.send(err);
+      }
+    })
   }
 }

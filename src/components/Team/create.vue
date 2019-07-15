@@ -1,10 +1,5 @@
 <template>
 <div>
-  <el-row>
-    <el-card>
-
-    </el-card>
-  </el-row>
   <el-row :gutter="20">
     <el-col>
       <el-card>
@@ -18,12 +13,12 @@
           <el-form-item label="Team Code">
             <el-input v-model="createTeamCode"></el-input>
           </el-form-item>
-          <el-button type="primary" @click='createTeam'>Create</el-button>
+          <el-button type="primary" @click='createTeam' :disabled='!completed'> Create
+          </el-button>
         </el-form>
       </el-card>
     </el-col>
   </el-row>
-
 </div>
 </template>
 
@@ -36,6 +31,11 @@ export default {
       createTeamName: "",
       createTeamCode: ""
     };
+  },
+  computed: {
+    completed() {
+      return this.joinTeamName !== "" && this.joinTeamCode !== ""
+    }
   },
   methods: {
     async createTeam() {

@@ -9,6 +9,14 @@ export default {
     });
   },
 
+  async joinTeam(name, code) {
+    return HTTP.post(`api/team/join`, {
+      UserID: window.Profile.UserID,
+      TeamName: name,
+      TeamCode: code
+    });
+  },
+
   async getTeamName(teamID) {
     return HTTP.get(`api/team/name?id=${teamID}`);
   }
