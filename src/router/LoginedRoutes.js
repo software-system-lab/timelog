@@ -26,8 +26,16 @@ const LoginedRoutes = [{
     }
   },
   {
+    name: "Team - team list",
+    path: "teamlist",
+    components: {
+      header: Header,
+      default: TeamList
+    }
+  },
+  {
     name: 'Team',
-    path: "/team/:id",
+    path: "/team",
     components: {
       header: Header,
       default: Team
@@ -37,13 +45,8 @@ const LoginedRoutes = [{
     },
     children: [{
         name: "Team - content",
-        path: "",
+        path: "content/:id",
         component: TeamContent
-      },
-      {
-        name: "Team - team list",
-        path: "teamlist",
-        component: TeamList
       },
       {
         name: "Team - create team",

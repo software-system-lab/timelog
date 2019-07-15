@@ -15,7 +15,7 @@
       <span slot="title">History</span>
     </el-menu-item>
   </router-link>
-  <router-link :to="{ name: 'Team'}">
+  <router-link :to="{ name: 'Team - team list'}">
     <el-menu-item index="3">
       <i class="el-icon-menu"></i>
       <span slot="title">Team</span>
