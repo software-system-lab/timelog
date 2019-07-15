@@ -107,10 +107,10 @@ export default {
   },
 
   //analysis
-  async ProjectsAndLengthOfTime(userID = window.Profile.UserID) {
+  async ProjectsAndLengthOfTime(userID = window.Profile.UserID, IterationID = window.Profile.CurrentIterationID) {
     let postData = {
       UserID: userID,
-      IterationID: window.Profile.CurrentIterationID,
+      IterationID: IterationID,
     };
     return HTTP.post(`api/Log/ProjectsAndLengthOfTime`, postData);
   }

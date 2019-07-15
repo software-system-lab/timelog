@@ -23,8 +23,8 @@ export default {
     }
   },
   async created() {
-    const teamID = this.$route.params.TeamID;
-    this.TeammateList = await _profileService.GetTeammates(teamID);
+    const teamID = this.$route.params.id;
+    this.teammatesInfo = await _profileService.GetTeammates(teamID);
   }
 }
 </script>

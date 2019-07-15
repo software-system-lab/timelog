@@ -14,8 +14,7 @@
       </el-table-column>
       <el-table-column prop="TimeLength" label="Time Length">
         <template slot-scope="scope">
-          {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
-            3600000).toFixed(0),2)}}
+          {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft(((scope.row.TimeLength / 60000 % 60).toFixed(0)),2)}}
         </template>
       </el-table-column>
       <el-table-column prop="GoalHour" label="Time Goal(hr)">
@@ -23,9 +22,14 @@
           {{scope.row.GoalHour}}
         </template>
       </el-table-column>
+      <el-table-column label="Achieve Rate">
+        <template slot-scope="scope">
+          {{((scope.row.TimeLength/3600000) / scope.row.GoalHour * 100).toFixed(2)}} %
+        </template>
+      </el-table-column>
       <el-table-column label="Percentage">
         <template slot-scope="scope">
-          {{(scope.row.TimeLength / Data.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
+          {{((scope.row.TimeLength) / Data.datasets[0].TimeLengthSum * 100).toFixed(2)}} %
         </template>
       </el-table-column>
     </el-table>
@@ -94,7 +98,7 @@ export default {
   },
   methods: {
     async QueryTeammateData() {
-      let result = await _logService.ProjectsAndLengthOfTime(this.teammate.UserID);
+      let result = await _logService.ProjectsAndLengthOfTime(this.teammate.UserID, this.teammate.CurrentIterationID);
       if (result != "no data") {
         this.TagAnalysisList = result;
         //clear
@@ -103,29 +107,28 @@ export default {
         for (let i = 0; i < result.length; i++) {
           if (i < 5) {
             this.Data.labels.push(result[i].ProjectName);
-            this.Data.datasets[0].data.push(result[i].TimeLength.toFixed(0));
+            this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0));
             this.Data.datasets[1].data.push(
               result[i].GoalHour != null ?
-              result[i].GoalHour * 3600000 : 0
+              result[i].GoalHour : 0
             );
           } else if (i == 5) {
             this.Data.labels.push("Other Tags");
-            this.Data.datasets[0].data.push(result[i].TimeLength.toFixed(0));
+            this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0));
             this.Data.datasets[1].data.push(
               result[i].GoalHour != null ?
-              result[i].GoalHour * 3600000 : 0
+              result[i].GoalHour : 0
             );
           } else {
-            this.Data.datasets[0].data[5] = (
-              parseInt(this.Data.datasets[0].data[5]) + result[i].TimeLength
-            ).toFixed(0);
+            this.Data.datasets[0].data[5] = ((
+              parseInt(this.Data.datasets[0].data[5]) + result[i].TimeLength) / 3600000).toFixed(0);
             this.Data.datasets[1].data[5] +=
               result[i].GoalHour != null ?
-              result[i].GoalHour * 3600000 : 0;
+              result[i].GoalHour : 0;
           }
-          this.Data.datasets[0].TimeLengthSum += result[i].TimeLength;
+          this.Data.datasets[0].TimeLengthSum += parseInt((result[i].TimeLength).toFixed(0));
           this.Data.datasets[1].TargetTimeLengthSum +=
-            result[i].GoalHour * 3600000;
+            result[i].GoalHour;
         }
       }
     },
