@@ -13,10 +13,10 @@
         </div>
         <el-form :label-position="'right'">
           <el-form-item label="Team Name">
-            <el-input></el-input>
+            <el-input v-model="createTeamName"></el-input>
           </el-form-item>
           <el-form-item label="Team Code">
-            <el-input></el-input>
+            <el-input v-model="createTeamCode"></el-input>
           </el-form-item>
           <el-button type="primary" @click='createTeam'>Create</el-button>
         </el-form>
@@ -38,8 +38,23 @@ export default {
     };
   },
   methods: {
-    createTeam() {
-      _teamService.createTeam(this.createTeamName, this.createTeamCode);
+    async createTeam() {
+      const result = await _teamService.createTeam(this.createTeamName, this.createTeamCode);
+
+      if (result && result.TeamID) {
+        this.$router.push({
+          name: "Team - content",
+          params: {
+            id: result.TeamID
+          }
+        })
+      } else {
+        vueRoot.$message({
+          showClose: true,
+          message: 'Team Name invalid or used',
+          type: 'error'
+        });
+      }
     }
   }
 
