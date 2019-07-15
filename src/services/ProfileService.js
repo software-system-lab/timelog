@@ -29,8 +29,8 @@ export default {
     return HTTP.post(`api/Profile/EditUserProfile`, data);
   },
 
-  async GetTeamList() {
-    return HTTP.get(`api/Profile/GetTeamList`);
+  async GetTeamList(UserID) {
+    return HTTP.get(`api/Profile/GetTeamList?id=${UserID}`);
   },
 
   ////teams

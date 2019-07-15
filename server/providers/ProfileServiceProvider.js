@@ -74,6 +74,20 @@ module.exports = class {
     return false;
   }
 
+  async GetTeamList(UserID) {
+    var cmd = "SELECT `team`.`TeamID`, `team`.`TeamName` FROM `team`, `user_team_mapping` WHERE `user_team_mapping`.`UserID` = ? AND `user_team_mapping`.`TeamID` = `team`.`TeamID`";
+    let dbResult = await DB.query(cmd, [UserID]);
+    if (dbResult.length != 0)
+      return dbResult;
+    return "no data";
+  }
+
+  async GetTeamSize(TeamID) {
+    var cmd = "SELECT * FROM `user_team_mapping` WHERE `TeamID` = ?";
+    let dbResult = await DB.query(cmd, [TeamID]);
+    return dbResult.length
+  }
+
   async GetTeammatesByTeamID(teamID) {
     var cmd = "SELECT * FROM `user`, `user_team_mapping` WHERE `TeamID` = ? AND user.UserID=user_team_mapping.UserID"
     let dbResult = await DB.query(cmd, [teamID]);

@@ -55,7 +55,15 @@ module.exports = class {
 
     this.router.get("/GetTeamList", async function(req, res) {
       try {
-        let result = await _profileProvider.GetTeamList();
+        const UserID = req.query.id
+        let result = await _profileProvider.GetTeamList(UserID);
+        for (var team of result) {
+          team.name = team.TeamName
+          team.id = team.TeamID
+          delete team.TeamName
+          delete team.TeamID
+          team.size = await _profileProvider.GetTeamSize(team.id)
+        }
         res.send(result);
       } catch (err) {
         console.log(err);
