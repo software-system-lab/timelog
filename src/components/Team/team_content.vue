@@ -10,7 +10,8 @@
 </template>
 <script>
 import Teammate from "@/components/Team/teammate.vue"
-import _profileService from "../../services/ProfileService.js";
+import _profileService from "@/services/ProfileService.js";
+import _teamService from "@/services/TeamService.js";
 
 export default {
   components: {
@@ -24,6 +25,7 @@ export default {
   },
   async created() {
     const teamID = this.$route.params.id;
+    this.teamName = await _teamService.getTeamName(teamID)
     this.teammatesInfo = await _profileService.GetTeammates(teamID);
   }
 }

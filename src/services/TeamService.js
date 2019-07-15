@@ -7,5 +7,9 @@ export default {
       TeamName: name,
       TeamCode: code
     });
+  },
+
+  async getTeamName(teamID) {
+    return HTTP.get(`api/team/name?id=${teamID}`);
   }
 }
