@@ -1,31 +1,37 @@
 <template>
-<div>
-  <el-row :gutter="20">
-    <el-col>
-      <el-card>
-        <div slot="header">
-          <h2>Create Team</h2>
-        </div>
-        <el-form :label-position="'right'">
-          <el-form-item label="Team Name">
-            <el-input v-model="createTeamName"></el-input>
-          </el-form-item>
-          <el-form-item label="Team Code">
-            <el-input v-model="createTeamCode"></el-input>
-          </el-form-item>
-          <el-button type="primary" @click='createTeam' :disabled='!completed'> Create
-          </el-button>
-        </el-form>
-      </el-card>
-    </el-col>
-  </el-row>
-</div>
+<el-container>
+  <el-header style="height: 100px;">
+    <TeamlistButton css="text-align: left" />
+    <div style="text-align: center; font-size: 16px">
+      <h2>Create Team</h2>
+    </div>
+    <TeamButtons css="text-align: right" />
+  </el-header>
+  <el-main>
+    <el-form :label-position="'right'">
+      <el-form-item label="Team Name">
+        <el-input v-model="createTeamName"></el-input>
+      </el-form-item>
+      <el-form-item label="Team Code">
+        <el-input v-model="createTeamCode"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click='createTeam' :disabled='!completed'> Create
+      </el-button>
+    </el-form>
+  </el-main>
+</el-container>
 </template>
 
 <script>
+import TeamlistButton from "@/components/Team/teamlist_button.vue";
+import TeamButtons from "@/components/Team/button.vue";
 import _teamService from '@/services/TeamService.js'
 
 export default {
+  components: {
+    TeamlistButton,
+    TeamButtons
+  },
   data() {
     return {
       createTeamName: "",
