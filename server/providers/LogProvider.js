@@ -46,8 +46,9 @@ module.exports = class {
 
   async GetUserLogsBySearch(data) {
     var params = [];
-    var cmd = "SELECT `log`.* FROM `log` WHERE `log`.`IsDeleted` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?) ";
+    var cmd = "SELECT `log`.* FROM `log` WHERE `log`.`IsDeleted` = ? AND `log`.`UserID` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?)";
     params.push(false);
+    params.push(data.UserID);
     params.push("%" + data.Description + "%", "%" + data.Description + "%");
     if (data.StartTime && data.EndTime) {
       cmd += " AND (`log`.`StartTime` >= ? AND `log`.`EndTime` <= ?)";

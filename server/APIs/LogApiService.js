@@ -46,7 +46,6 @@ module.exports = class {
       try {
         let result = await _LogProvider.GetUserLogsBySearch(req.body);
         let dbProjectList = await _LogProvider.GetUserProjects(req.body.UserID);
-        console.log(dbProjectList)
         if (result !== 'no data' && dbProjectList !== 'no data')
           result.forEach(x => {
             let project = dbProjectList.find(y => x.ProjectID == y.ProjectID)
