@@ -79,7 +79,7 @@
           <el-table-column prop="Time Length" label="Time Length">
             <template slot-scope="scope">
               {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
-              3600000).toFixed(0),2)}}
+              3600000 / 60 / 1000).toFixed(0),2)}}
             </template>
           </el-table-column>
           <el-table-column label="Percentage">
