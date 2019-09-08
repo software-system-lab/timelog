@@ -14,7 +14,7 @@ export default {
       EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
       Description: logData.Description
     };
-    return HTTP.post(`api/Log/AddALog`, postData);
+    return HTTP.post(`/Log/AddALog`, postData);
   },
 
   async ModifyALog(logData) {
@@ -27,7 +27,7 @@ export default {
       EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
       Description: logData.Description
     };
-    return HTTP.post(`api/Log/ModifyALog`, postData);
+    return HTTP.post(`/Log/ModifyALog`, postData);
   },
 
   async DeleteALog(logData) {
@@ -35,7 +35,7 @@ export default {
       LogID: logData.LogID,
       UserID: window.Profile.UserID,
     };
-    return HTTP.post(`api/Log/DeleteALog`, postData);
+    return HTTP.post(`/Log/DeleteALog`, postData);
   },
 
   async GetUserLogs(description, startTime, endTime) {
@@ -45,7 +45,7 @@ export default {
       StartTime: startTime.format('YYYY-MM-DD'),
       EndTime: endTime.format('YYYY-MM-DD')
     };
-    let httpResult = await HTTP.post(`api/Log/GetUserLogs`, postData);
+    let httpResult = await HTTP.post(`/Log/GetUserLogs`, postData);
     if (httpResult != "no data")
       httpResult.forEach(x => {
         x.Duration = `${x.StartTime} ~ ${x.EndTime}`;
@@ -57,7 +57,7 @@ export default {
     let req = {
       LogID: logID
     };
-    let httpResult = await HTTP.post(`api/Log/GetAlog`, req);
+    let httpResult = await HTTP.post(`/Log/GetAlog`, req);
     if (httpResult != 'no data') {
       let start = new moment(httpResult.startTime);
       let end = new moment(httpResult.endTime);
@@ -72,7 +72,7 @@ export default {
 
   //Project
   async GetUserProjects() {
-    return HTTP.post(`api/Log/GetUserProjects`, {
+    return HTTP.post(`/Log/GetUserProjects`, {
       UserID: window.Profile.UserID
     });
   },
@@ -85,14 +85,14 @@ export default {
       IsPrivate: project.IsPrivate,
       IsEnable: project.IsEnable
     };
-    return HTTP.post(`api/Log/ModifyOrAddAProject`, postData);
+    return HTTP.post(`/Log/ModifyOrAddAProject`, postData);
   },
 
   async DeleteAProject(projectID) {
     let postData = {
       ProjectID: projectID
     };
-    return HTTP.post(`api/Log/DeleteAProject`, postData);
+    return HTTP.post(`/Log/DeleteAProject`, postData);
   },
 
   //target
@@ -103,7 +103,7 @@ export default {
       ProjectID: project.ProjectID,
       GoalHour: project.GoalHour,
     };
-    return HTTP.post(`api/Log/ModifyOrAddAGoal`, postData);
+    return HTTP.post(`/Log/ModifyOrAddAGoal`, postData);
   },
 
   //analysis
@@ -112,6 +112,6 @@ export default {
       UserID: userID,
       IterationID: IterationID,
     };
-    return HTTP.post(`api/Log/ProjectsAndLengthOfTime`, postData);
+    return HTTP.post(`/Log/ProjectsAndLengthOfTime`, postData);
   }
 }

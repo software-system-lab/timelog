@@ -2,7 +2,7 @@ import HTTP from './HttpRequest'
 
 export default {
   async createTeam(name, code) {
-    return HTTP.post(`api/team/create`, {
+    return HTTP.post(`/team/create`, {
       UserID: window.Profile.UserID,
       TeamName: name,
       TeamCode: code
@@ -10,7 +10,7 @@ export default {
   },
 
   async joinTeam(name, code) {
-    return HTTP.post(`api/team/join`, {
+    return HTTP.post(`/team/join`, {
       UserID: window.Profile.UserID,
       TeamName: name,
       TeamCode: code
@@ -18,6 +18,6 @@ export default {
   },
 
   async getTeamName(teamID) {
-    return HTTP.get(`api/team/name?id=${teamID}`);
+    return HTTP.get(`/team/name?id=${teamID}`);
   }
 }

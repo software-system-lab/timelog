@@ -14,10 +14,10 @@ export default {
     window.loading.close();
   },
 
-  async get(api) {
+  async get(route) {
     this.openLoading();
     try {
-      var response = await axios.get(`https://${Config.apiDest.host}:${Config.apiDest.port}/${api}`);
+      var response = await axios.get(`https://${Config.apiDest.host}:${Config.apiDest.port}/api${route}`);
     } catch (err) {
       console.log(err);
       this.closeLoading();
@@ -33,10 +33,10 @@ export default {
       return response.data;
     return;
   },
-  async post(api, data) {
+  async post(route, data) {
     this.openLoading();
     try {
-      var response = await axios.post(`https://${Config.apiDest.host}:${Config.apiDest.port}/${api}`, data);
+      var response = await axios.post(`https://${Config.apiDest.host}:${Config.apiDest.port}/${route}`, data);
     } catch (err) {
       console.log(err);
       this.closeLoading();
