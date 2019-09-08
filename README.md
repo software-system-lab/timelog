@@ -1,7 +1,5 @@
 # timelog
 
-> timelog is a web app for users to record how they use time.
-
 ![](/UI/assets/timelog.png)
 
 timelog is a web app for users to record how they use time.
