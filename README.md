@@ -54,6 +54,16 @@ $ npm install
 $ npm run build
 $ node server.js
 ```
+5. Server will starts.
+```
+#If NODE_ENV is production
+warning: please use IANA standard timezone format ('Etc/GMT-8')
+Server running at http://0.0.0.0:80/
+
+# Else
+warning: please use IANA standard timezone format ('Etc/GMT-8')
+Server running at http://0.0.0.0:5000/
+```
 
 ## Website
 
