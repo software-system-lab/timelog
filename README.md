@@ -38,18 +38,22 @@ It have been developed by node.js and mySQL.
 
 # How to use
 ## Sever
-1.Clone the project
+1. Clone the project
 
-2.Install node.js
-https://nodejs.org/
+2. In terminal,cd to the root folder of this project
 
-3.In terminal,cd to the root folder of this project
+```
+$ cd /path/to/timelog
+```
 
-  cd "Path"/timelog
+3. Setup config files in `src/config.js` and server/config.js`.
 
-4.In terminal,use node command to run timelog Server
-
-  node timelog
+4. In terminal,use node command to run timelog Server
+```
+$ npm install
+$ npm run build
+$ node server.js
+```
 
 ## Website
 
