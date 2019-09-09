@@ -1,9 +1,17 @@
 ---
 kind: pipeline
-name: Timelog
 type: docker
 
 steps:
+- name: Install node modules
+  image: node:10.16.3
+  commands:
+  - npm install
+
+- name: Build static web
+  image: node:10.16.3
+  commands:
+  - npm run build
 - name: Publish
   image: plugins/docker
   settings:
