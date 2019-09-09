@@ -4,7 +4,7 @@ ADD . /app
 WORKDIR /app
 
 # Specify node host
-RUN cat "104.16.27.35 registry.npmjs.org" >> /etc/hosts
+RUN echo "104.16.27.35 registry.npmjs.org" >> /etc/hosts
 
 # Install node modules
 RUN npm install
