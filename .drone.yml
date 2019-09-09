@@ -1,5 +1,6 @@
 ---
 kind: pipeline
+name: Timelog
 type: docker
 
 steps:
