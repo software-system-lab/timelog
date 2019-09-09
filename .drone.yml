@@ -1,6 +1,7 @@
 ---
 kind: pipeline
 type: docker
+name: Timelog
 
 steps:
 - name: Install node modules
@@ -12,6 +13,7 @@ steps:
   image: node:10.16.3
   commands:
   - npm run build
+
 - name: Publish
   image: plugins/docker
   settings:
