@@ -20,9 +20,9 @@ steps:
     repo: nightlord851108/timelog
     tags: ${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT:7}
     username:
-      from_secret: docker_username
+      from_secret: timelog_docker_user
     password:
-      from_secret: docker_password
+      from_secret: timelog_docker_passwd
 
 trigger:
   branch:
