@@ -18,7 +18,7 @@ steps:
   image: plugins/docker
   settings:
     repo: nightlord851108/timelog
-    tags: ${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT:7}
+    tags: ${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:7}
     username:
       from_secret: timelog_docker_user
     password:
