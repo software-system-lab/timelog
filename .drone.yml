@@ -1,3 +1,14 @@
+kind: secret
+name: timelog_docker_user
+data:
+---
+kind: secret
+name: timelog_docker_passwd
+data:
+---
+kind: secret
+name: rancher_cluster_token
+data:
 ---
 kind: pipeline
 type: docker
@@ -23,6 +34,16 @@ steps:
       from_secret: timelog_docker_user
     password:
       from_secret: timelog_docker_passwd
+
+- name: Deploy
+  image: traherom/kustomize-docker
+  environment:
+    CLUSTER_TOKEN:
+      from_secret: rancher_cluster_token
+  commands:
+  - cd kustomize/base
+  - kustomize build .
+  - kubectl apply --server=ssl-rancher.csie.ntut.edu.tw  --token=${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois -f -
 
 trigger:
   branch:

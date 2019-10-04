@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: timelog
+spec:
+  type: ClusterIP
+  selector:
+    app: timelog
+  ports:
+  - name: timelog_http
+    port: 80
