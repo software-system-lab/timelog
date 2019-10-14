@@ -11,30 +11,6 @@ const TeamApis = require('./server/APIs/team_api_service.js')
 //main framwork declare
 var app = express();
 
-// For vue.js history mode
-app.use(history({
-  rewrites: [
-    {
-      from: /^\/dist\/.*$/,
-      to: function(context) {
-        return context.parsedUrl.pathname;
-      }
-    },
-    {
-      from: /^\/.*[js|css]$/,
-      to: function(context) {
-        return '/dist/'+context.parsedUrl.pathname;
-      }
-    },
-    {
-      from: /^\/.*$/,
-      to: function(context) {
-        return '/dist/';
-      }
-    },
-  ]
-}));
-
 app.use(express.static(__dirname));
 
 //body parser-for POST Info to transfer in http packet
@@ -46,15 +22,15 @@ app.use(bodyParser.urlencoded({
 //router-sub directory separation
 var ProfileRouter = express.Router();
 new ProfileApis(ProfileRouter);
-app.use('/Profile', ProfileRouter);
+app.use('/api/Profile', ProfileRouter);
 
 var LogRouter = express.Router();
 new LogApis(LogRouter);
-app.use('/Log', LogRouter);
+app.use('/api/Log', LogRouter);
 
 var TeamRouter = express.Router();
 new TeamApis(TeamRouter);
-app.use('/team', TeamRouter);
+app.use('/api/team', TeamRouter);
 
 const hostname = '0.0.0.0';
 

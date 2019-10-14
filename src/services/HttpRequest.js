@@ -36,7 +36,7 @@ export default {
   async post(route, data) {
     this.openLoading();
     try {
-      var response = await axios.post(`https://${Config.apiDest.host}:${Config.apiDest.port}/${route}`, data);
+      var response = await axios.post(`https://${Config.apiDest.host}/api${route}`, data);
     } catch (err) {
       console.log(err);
       this.closeLoading();

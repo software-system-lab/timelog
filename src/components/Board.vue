@@ -7,7 +7,7 @@
           <h2>Add a Log</h2>
         </div>
         <el-form ref="form" :model="LogForm" :rules="formRules" label-width="110px" :label-position="'right'">
-          <el-form-item label="What you do?" prop="Title">
+          <el-form-item label="Title?" prop="Title">
             <el-input v-model="LogForm.Title"></el-input>
           </el-form-item>
           <el-form-item label="Project" prop="ProjectID">
