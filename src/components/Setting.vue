@@ -93,7 +93,7 @@ export default {
         ProjectName: '',
         InputDisabled: false,
         IsPrivate: false,
-        IsEnable: false
+        IsEnable: true
       });
 
       if (projectList == "no data")
