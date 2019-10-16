@@ -21,6 +21,7 @@
 import Config from "../config.js";
 import _profileService from "../services/ProfileService.js";
 import _logService from "../services/LogService.js";
+import { afterLogin } from "@/services/Login.js"
 
 export default {
   // name: 'Login',
@@ -35,70 +36,37 @@ export default {
 
       // Get FB Login Status
       FB.getLoginStatus(async response => {
-        //console.log('ini login status', response) // 這裡可以得到 fb 回傳的結果
         if (response.status === "connected") {
           var loginResult = await _profileService.Login(
             response.authResponse.userID,
             response.authResponse.accessToken
           );
-          if (loginResult == "logined") {
-            $(".fb-login-button").hide();
-            window.authorized = true;
-            await FB.api("/me?fields=name,id,email", async function(response) {
-              //Get user Profile from FB
-              window.FBProfile = await response;
-              //Get user Profile
-              window.Profile = await _profileService.GetProfile();
-              //Get User Tags
-              let projectList = await _logService.GetUserProjects();
-              window.ProjectList = [];
-              if (projectList == "no data")
-                vueRoot.$message({
-                  message: "Go setting page to add some tags!",
-                  type: "warning"
+          await FB.api("/me?fields=name,id,email", async function(response) {
+            //Get user Profile from FB
+            window.FBProfile = await response;
+            if (loginResult == "logined") {
+              $(".fb-login-button").hide();
+              await afterLogin();
+            } else if (loginResult == "unregistered") {
+              window.authorized = true;
+              await FB.api("/me?fields=name,id,email", async function(response) {
+                //Get user Profile from FB
+                window.FBProfile = await response;
+                router.push({
+                  name: "Register"
                 });
-              else {
-                projectList.forEach(x => {
-                  window.ProjectList.push({
-                    ProjectID: x.ProjectID,
-                    ProjectName: x.ProjectName
-                  });
-                });
-              }
-
-              $(".el-icon-loading").hide();
-
-              if (window.tempNextPath == undefined)
-                window.tempNextPath = "/Board";
-              router.push({
-                path: window.tempNextPath
               });
-            });
-          } else if (loginResult == "unregistered") {
-            window.authorized = true;
-            await FB.api("/me?fields=name,id,email", async function(response) {
-              //Get user Profile from FB
-              window.FBProfile = await response;
-              router.push({
-                name: "Register"
+            } else {
+              vueRoot.$message({
+                showClose: true,
+                message: "Cannot Login! Please Check Your FB status or internet connection (" +
+                  loginResult +
+                  ")",
+                type: "error"
               });
-            });
-          } else {
-            vueRoot.$message({
-              showClose: true,
-              message: "Cannot Login! Please Check Your FB status or internet connection (" +
-                loginResult +
-                ")",
-              type: "error"
-            });
-          }
+            }
+          });
         }
-        // else if (response.status === 'not_authorized') {
-        //   window.authorized = false;
-        // } else if (response.status === 'unknown') {
-        //   window.userProfile = {};
-        //   window.authorized = false;
-        // }
         else {
           $(".el-icon-loading").hide();
           window.userProfile = {};

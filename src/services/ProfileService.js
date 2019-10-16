@@ -5,7 +5,7 @@ import moment from 'moment'
  */
 export default {
   ////personal
-  async GetProfile() {
+  GetProfile() {
     return HTTP.post(`/Profile/GetProfile`, {
       FBID: window.FBProfile.id
     });

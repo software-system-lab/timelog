@@ -38,7 +38,7 @@
 
 <script>
 import _profileService from '../../services/ProfileService.js'
-
+import { afterLogin } from "@/services/Login.js"
 
 export default {
   data() {
@@ -96,8 +96,8 @@ export default {
               vueRoot.$alert('Register successed!!', {
                 confirmButtonText: 'ok',
                 type: 'success'
-              }).then(() => {
-                this.$router.push("/login");
+              }).then(async () => {
+                await afterLogin();
               });
             } else {
               this.$message({
