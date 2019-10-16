@@ -78,8 +78,8 @@ export default {
       dialogFormVisible: false,
       rowData: [],
       KeywordToSearch: '',
-      StartSearchDate: new moment().format('YYYY-MM-DD'),
-      EndSearchDate: new moment().add(7, 'days').format('YYYY-MM-DD')
+      StartSearchDate: new moment().add(-7, 'days').format('YYYY-MM-DD'),
+      EndSearchDate: new moment().format('YYYY-MM-DD')
     }
   },
   async mounted() {

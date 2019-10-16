@@ -43,7 +43,7 @@ export default {
       UserID: window.Profile.UserID,
       Description: description,
       StartTime: startTime.format('YYYY-MM-DD'),
-      EndTime: endTime.format('YYYY-MM-DD')
+      EndTime: endTime.add(1, 'd').format('YYYY-MM-DD')
     };
     let httpResult = await HTTP.post(`/Log/GetUserLogs`, postData);
     if (httpResult != "no data")

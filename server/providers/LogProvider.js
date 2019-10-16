@@ -51,7 +51,7 @@ module.exports = class {
     params.push(data.UserID);
     params.push("%" + data.Description + "%", "%" + data.Description + "%");
     if (data.StartTime && data.EndTime) {
-      cmd += " AND (`log`.`StartTime` >= ? AND `log`.`EndTime` <= ?)";
+      cmd += " AND (`log`.`StartTime` >= ? AND `log`.`EndTime` < ?)";
       params.push(data.StartTime, data.EndTime);
     }
     let dbResult = await DB.query(cmd, params);
