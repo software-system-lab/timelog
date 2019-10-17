@@ -28,7 +28,7 @@
           <el-form-item label="Name" prop="IterationName">
             <el-input v-model="IterationForm.IterationName"></el-input>
           </el-form-item>
-          <el-form-item label="Content" prop="Content">
+          <el-form-item label="Goal" prop="Content">
             <el-input type="textarea" v-model="IterationForm.Content" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
           </el-form-item>
         </el-form>
@@ -101,7 +101,12 @@ export default {
     async Query() {
       let result = await _logService.ProjectsAndLengthOfTime();
       if (result != "no data") {
-        this.GoalList = result;
+        this.GoalList = []
+        result.forEach(data => {
+          if (data.ProjectID != null) {
+            this.GoalList.push(data);
+          }
+        })
       }
     },
     async openHandler() {

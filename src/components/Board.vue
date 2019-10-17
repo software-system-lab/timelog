@@ -156,6 +156,7 @@ export default {
       },
       ProjectAnalysisList: [],
       iterationSetting: false,
+      ctx: null,
       PieData: {
         labels: [],
         datasets: [{
@@ -221,30 +222,41 @@ export default {
     },
     async QueryPieData() {
       let result = await _logService.ProjectsAndLengthOfTime();
-      if (result != "no data") {
-        this.ProjectAnalysisList = result;
-        //clear
-        this.PieData.labels.length = 0;
-        this.PieData.datasets[0].data.length = 0;
-        for (let i = 0; i < result.length; i++) {
-          if (i < 5) {
-            this.PieData.labels.push(result[i].ProjectName);
-            this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
-          } else if (i == 5) {
-            this.PieData.labels.push("Other Projects");
-            this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
-          } else {
-            this.PieData.datasets[0].data[5] = (parseInt(this.PieData.datasets[0].data[5]) + result[i].TimeLength).toFixed(
-              0);
-          }
-          this.PieData.datasets[0].TimeLengthSum += result[i].TimeLength;
-        }
-
-        //data to hour
-        for (let i = 0; i < this.PieData.datasets[0].data.length; i++) {
-          this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 3600000).toFixed(2);
-        }
+      if (result == "no data") {
+        return
       }
+      this.ProjectAnalysisList = result;
+      //clear
+      this.PieData.labels.length = 0;
+      this.PieData.datasets[0].data.length = 0;
+      for (let i = 0; i < result.length; i++) {
+        if (i < 5) {
+          this.PieData.labels.push(result[i].ProjectName);
+          this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
+        } else if (i == 5) {
+          this.PieData.labels.push("Other Projects");
+          this.PieData.datasets[0].data.push(result[i].TimeLength.toFixed(0));
+        } else {
+          this.PieData.datasets[0].data[5] = (parseInt(this.PieData.datasets[0].data[5]) + result[i].TimeLength).toFixed(
+            0);
+        }
+        this.PieData.datasets[0].TimeLengthSum += result[i].TimeLength;
+      }
+
+      //data to hour
+      for (let i = 0; i < this.PieData.datasets[0].data.length; i++) {
+        this.PieData.datasets[0].data[i] = (this.PieData.datasets[0].data[i] / 3600000).toFixed(2);
+      }
+      new Chart(this.ctx, {
+        type: 'polarArea',
+        data: this.PieData,
+        options: {
+          title: {
+            display: true,
+            text: '(hour)',
+          },
+        }
+      });
     },
     paddingLeft(str, len) {
       if (str.toString().length >= len)
@@ -262,26 +274,16 @@ export default {
       this.$message.error('Log Added Fail!Please Retry');
     },
     openIterationSetting() {
-      this.iterationSetting = true
+      this.iterationSetting = true;
     },
     closeIterationSetting() {
-      this.iterationSetting = false
+      this.QueryPieData();
+      this.iterationSetting = false;
     }
   },
   async mounted() {
+    this.ctx = $("#Chart");
     await this.QueryPieData();
-
-    var ctx = $("#Chart");
-    var myChart = new Chart(ctx, {
-      type: 'polarArea',
-      data: this.PieData,
-      options: {
-        title: {
-          display: true,
-          text: '(hour)',
-        },
-      }
-    });
   },
   components: {
     TargetBase,
