@@ -95,7 +95,7 @@ export default {
     this.projectFilters.length = 0;
     this.projectList.forEach(x => {
       this.projectFilters.push({
-        value: x.ProjectID.toString(),
+        value: x.ProjectID? x.ProjectID.toString(): null,
         text: x.ProjectName,
       })
     })
@@ -103,11 +103,9 @@ export default {
   methods: {
     filterProject(value, row) {
       var flag = false;
-      console.log(row);
-      row.Projects.forEach(x => {
-        if (x == value)
-          flag = true;
-      });
+      if (row.ProjectID == value) {
+        flag = true
+      }
       return flag;
     },
     Edit(rowData) {
