@@ -229,6 +229,11 @@ export default {
       //clear
       this.PieData.labels.length = 0;
       this.PieData.datasets[0].data.length = 0;
+      if (result.length >= 5) {
+        result.sort((a, b) => {
+          return a.TimeLength > b.TimeLength;
+        })
+      }
       for (let i = 0; i < result.length; i++) {
         if (i < 5) {
           this.PieData.labels.push(result[i].ProjectName);
