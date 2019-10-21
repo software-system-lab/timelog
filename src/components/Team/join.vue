@@ -5,10 +5,10 @@
     <div style="text-align: center; font-size: 16px">
       <h2>Join a Team</h2>
     </div>
-    <TeamButtons css="text-align: right" />
   </el-header>
   <el-main>
     <el-form :label-position="'right'">
+      <TeamButtons css="text-align: right" />
       <el-form-item label="Team Name">
         <el-input v-model="joinTeamName"></el-input>
       </el-form-item>
