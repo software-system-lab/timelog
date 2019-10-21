@@ -28,7 +28,7 @@
 
           <el-table-column prop="Project" label="Project" align="left" :filters="projectFilters" :filter-method="filterProject">
             <template slot-scope="scope">
-              {{scope.row.ProjectName}}
+              {{scope.row.ProjectName ? scope.row.ProjectName : "Other Events"}}
             </template>
           </el-table-column>
 
