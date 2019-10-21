@@ -121,7 +121,7 @@ module.exports = class {
           projects = dbProjects;
         projects.push({
           ProjectID: null,
-          ProjectName: 'other',
+          ProjectName: 'Untitled Events',
         });
         projects.forEach(project => {
           project.TimeLength = 0;

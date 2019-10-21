@@ -65,11 +65,16 @@ import moment from 'moment'
 
 export default {
   data() {
+    var projectList = window.ProjectList;
+    projectList.push({
+      ProjectName: "Other Events",
+      ProjectID: ""
+    });
     return {
       logList: [],
-      projectList: window.ProjectList,
+      projectList: projectList,
       projectFilters: [{
-        text: 'other',
+        text: 'Untitled Events',
         value: null
       }],
       logIDtoModify: null,
@@ -98,6 +103,7 @@ export default {
   methods: {
     filterProject(value, row) {
       var flag = false;
+      console.log(row);
       row.Projects.forEach(x => {
         if (x == value)
           flag = true;
