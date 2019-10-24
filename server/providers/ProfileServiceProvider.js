@@ -79,7 +79,7 @@ module.exports = class {
     let dbResult = await DB.query(cmd, [UserID]);
     if (dbResult.length != 0)
       return dbResult;
-    return "no data";
+    return [];
   }
 
   async GetTeamSize(TeamID) {

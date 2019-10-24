@@ -17,7 +17,7 @@ export default {
   async get(route) {
     this.openLoading();
     try {
-      var response = await axios.get(`https://${Config.apiDest.host}:${Config.apiDest.port}/api${route}`);
+      var response = await axios.get(`https://${Config.apiDest.host}/api${route}`);
     } catch (err) {
       console.log(err);
       this.closeLoading();
