@@ -2,53 +2,7 @@
 <div>
   <el-row :gutter="20">
     <el-col :md="12" :sm="24">
-      <el-card>
-        <div slot="header" class="clearfix">
-          <h2>Add a Log</h2>
-        </div>
-        <el-form ref="form" :model="LogForm" :rules="formRules" label-width="110px" :label-position="'right'">
-          <el-form-item label="Title?" prop="Title">
-            <el-input v-model="LogForm.Title"></el-input>
-          </el-form-item>
-          <el-form-item label="Project" prop="ProjectID">
-            <el-select v-model="LogForm.ProjectID" filterable reserve-keyword placeholder="Choose">
-              <el-option v-for="item in ProjectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="Start Time">
-            <el-col :md="12" :sm="24">
-              <el-form-item prop="StartDate">
-                <el-date-picker v-model="LogForm.StartDate" type="date" placeholder="Start Date" align="'center'"></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :md="12" :sm="24">
-              <el-form-item prop="StartTime">
-                <el-time-picker v-model="LogForm.StartTime" format="HH:mm" value-format="HH:mm">
-                </el-time-picker>
-              </el-form-item>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="End Time">
-            <el-col :md="12" :sm="24">
-              <el-form-item prop="EndDate">
-                <el-date-picker v-model="LogForm.EndDate" type="date" placeholder="End Date" :picker-options="endDateOption" align="'center'"></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :md="12" :sm="24">
-              <el-form-item prop="EndTime">
-                <el-time-picker v-model="LogForm.EndTime" format="HH:mm" value-format="HH:mm" :picker-options='endTimeOption'>
-                </el-time-picker>
-              </el-form-item>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="Description" prop="Description">
-            <el-input type="textarea" v-model="LogForm.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-button type="danger" icon="el-icon-close" @click="Clear">Clear</el-button>
-        <el-button type="primary" icon="el-icon-edit" @click="onSubmit">Add</el-button>
-      </el-card>
+      <AddLog />
     </el-col>
     <el-col :md="12" :sm="24">
       <el-card>
@@ -101,59 +55,11 @@ import TargetBase from './Board/TargetBase'
 import _profileService from '../services/ProfileService.js'
 import _logService from '../services/LogService.js'
 import IterationSetting from '@/components/Board/IterationSetting.vue'
-import moment from 'moment'
+import AddLog from '@/components/log/addLog.vue'
 
 export default {
   data() {
     return {
-      LogForm: {
-        Title: '',
-        ProjectID: null,
-        StartTime: new moment().add(-1, 'hours').format('HH:mm'),
-        EndTime: new moment().format('HH:mm'),
-        StartDate: new moment().add(-1, 'hours').format('YYYY-MM-DD'),
-        EndDate: new moment().format('YYYY-MM-DD'),
-        Description: ''
-      },
-      ProjectList: window.ProjectList,
-      endDateOption: {},
-      formRules: {
-        Title: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        ProjectID: [{
-          required: false,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        StartTime: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        StartDate: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        EndTime: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        EndDate: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        Description: [{
-          required: false,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-      },
       ProjectAnalysisList: [],
       iterationSetting: false,
       ctx: null,
@@ -174,59 +80,13 @@ export default {
       }
     }
   },
-  created() {
-    this.endDateOption.disabledDate = time => {
-      if (moment(this.LogForm.StartDate) > moment(time.getTime()))
-        return true;
-      return false;
-    }
-  },
-  computed: {
-    endTimeOption() {
-      if (this.LogForm.StartDate == this.LogForm.EndDate) {
-        return {
-          selectableRange: this.LogForm.StartTime + ':00 - 23:59:59'
-        }
-      }
-      return;
-    }
-  },
   methods: {
-    async onSubmit() {
-      this.$refs['form'].validate(async (valid) => {
-        if (valid) {
-          this.LogForm.StartDate = moment(this.LogForm.StartDate).format('YYYY-MM-DD')
-          this.LogForm.EndDate = moment(this.LogForm.EndDate).format('YYYY-MM-DD')
-          let result = await _logService.AddALog(this.LogForm);
-          if (result) {
-            this.successMsg();
-            this.Clear();
-            await this.QueryPieData();
-          } else {
-            this.errorMsg();
-          }
-        }
-      });
-    },
-    Clear() {
-      this.$refs['form'].clearValidate();
-      this.LogForm = {
-        Title: '',
-        ProjectID: null,
-        StartTime: new moment().format('HH:mm'),
-        EndTime: new moment().add(1, 'hours').format('HH:mm'),
-        StartDate: new moment().format('YYYY-MM-DD'),
-        EndDate: new moment().add(1, 'hours').format('YYYY-MM-DD'),
-        Description: ''
-      }
-    },
     async QueryPieData() {
       let result = await _logService.ProjectsAndLengthOfTime();
       if (result == "no data") {
         return
       }
       this.ProjectAnalysisList = result;
-      //clear
       this.PieData.labels.length = 0;
       this.PieData.datasets[0].data.length = 0;
       if (result.length >= 5) {
@@ -292,7 +152,8 @@ export default {
   },
   components: {
     TargetBase,
-    IterationSetting
+    IterationSetting,
+    AddLog
   }
 }
 </script>

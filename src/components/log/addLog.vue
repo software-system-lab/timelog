@@ -1,0 +1,150 @@
+<template>
+  <el-card>
+    <div slot="header" class="clearfix">
+      <h2>Add a Log</h2>
+    </div>
+    <el-form ref="form" :model="logData" :rules="formRules" label-width="110px" :label-position="'right'">
+      <el-form-item label="Title?" prop="Title">
+        <el-input v-model="logData.Title"></el-input>
+      </el-form-item>
+      <el-form-item label="Project" prop="ProjectID">
+        <el-select v-model="logData.ProjectID" filterable reserve-keyword placeholder="Choose">
+          <el-option v-for="item in ProjectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Start Time">
+        <el-col :md="12" :sm="24">
+          <el-form-item prop="StartDate">
+            <el-date-picker v-model="logData.StartDate" type="date" placeholder="Start Date" align="'center'"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12" :sm="24">
+          <el-form-item prop="StartTime">
+            <el-time-picker v-model="logData.StartTime" format="HH:mm" value-format="HH:mm">
+            </el-time-picker>
+          </el-form-item>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="End Time">
+        <el-col :md="12" :sm="24">
+          <el-form-item prop="EndDate">
+            <el-date-picker v-model="logData.EndDate" type="date" placeholder="End Date" :picker-options="endDateOption" align="'center'"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12" :sm="24">
+          <el-form-item prop="EndTime">
+            <el-time-picker v-model="logData.EndTime" format="HH:mm" value-format="HH:mm" :picker-options='endTimeOption'>
+            </el-time-picker>
+          </el-form-item>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="Description" prop="Description">
+        <el-input type="textarea" v-model="logData.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
+      </el-form-item>
+    </el-form>
+    <el-button type="danger" icon="el-icon-close" @click="clear">Clear</el-button>
+    <el-button type="primary" icon="el-icon-edit" @click="submit">Add</el-button>
+  </el-card>
+</template>
+
+<script>
+import moment from 'moment'
+
+export default {
+  data() {
+    return {
+      ProjectList: window.ProjectList,
+      logData: this.emptyLog(),
+      formRules: {
+        Title: [{
+          required: true,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        ProjectID: [{
+          required: false,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        StartTime: [{
+          required: true,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        StartDate: [{
+          required: true,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        EndTime: [{
+          required: true,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        EndDate: [{
+          required: true,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+        Description: [{
+          required: false,
+          message: 'Check Here!',
+          trigger: 'blur'
+        }],
+      },
+      endDateOption: {}
+    };
+  },
+  created() {
+    this.endDateOption.disabledDate = time => {
+      if (moment(this.logData.StartDate) > moment(time.getTime()))
+        return true;
+      return false;
+    }
+  },
+  computed: {
+    endTimeOption() {
+      if (this.logData.StartDate == this.logData.EndDate) {
+        return {
+          selectableRange: this.logData.StartTime + ':00 - 23:59:59'
+        }
+      }
+      return;
+    }
+  },
+  methods: {
+    async submit() {
+      this.$refs['form'].validate(async (valid) => {
+        if (valid) {
+          this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
+          this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
+          let result = await _logService.AddALog(this.logData);
+          if (result) {
+            this.successMsg();
+            this.clear();
+            await this.QueryPieData();
+          } else {
+            this.errorMsg();
+          }
+        }
+      });
+    },
+    clear() {
+      this.$refs['form'].clearValidate();
+      this.logData = this.emptyLog();
+    },
+    emptyLog() {
+      return {
+        Title: '',
+        ProjectID: null,
+        StartTime: new moment().format('HH:mm'),
+        EndTime: new moment().add(1, 'hours').format('HH:mm'),
+        StartDate: new moment().format('YYYY-MM-DD'),
+        EndDate: new moment().add(1, 'hours').format('YYYY-MM-DD'),
+        Description: ''
+      }
+    }
+  }
+}
+</script>
