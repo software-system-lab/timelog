@@ -45,8 +45,8 @@ steps:
 #   - kustomize build .
 #   - kubectl apply --server=ssl-rancher.csie.ntut.edu.tw  --token=${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois -f -
 #
-# trigger:
-#   branch:
-#   - master
-#   event:
-#   - push
+trigger:
+  branch:
+  - master
+  event:
+  - push
