@@ -7,7 +7,6 @@ import CreateTeam from '../components/Team/create.vue'
 import JoinTeam from '../components/Team/join.vue'
 import TeamList from '../components/Team/team_list.vue'
 import Setting from '../components/Setting.vue'
-import HelloWorld from '../components/HelloWorld'
 
 const LoginedRoutes = [{
     name: 'Board',
