@@ -54,7 +54,7 @@ export default {
     let req = {
       UserID: window.Profile.UserID
     };
-    return await HTTP.post(`/Profile/GetIterations`, req);
+    return (await HTTP.post(`/Profile/GetIterations`, req)).reverse();
   },
 
   async GetIterationById(id) {
@@ -73,7 +73,8 @@ export default {
       EndDate: moment(rowData.EndDate).format('YYYY-MM-DD'),
       Content: rowData.Content
     };
-    return await HTTP.post(`/Profile/EditIteration`, req);
+    const result =  await HTTP.post(`/Profile/EditIteration`, req);
+    return result.IterationID
   },
 
   async DeleteAIteration(rowData) {
@@ -81,5 +82,13 @@ export default {
       IterationID: rowData.IterationID,
     };
     return await HTTP.post(`/Profile/DeleteAIteration`, req);
+  },
+
+  async getCurrentIteration() {
+    let req = {
+      UserID: window.Profile.UserID
+    }
+    const result = await HTTP.post('/Profile/iteration/current', req);
+    return result.IterationID
   }
 }

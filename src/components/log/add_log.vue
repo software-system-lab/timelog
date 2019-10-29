@@ -43,13 +43,14 @@
         <el-input type="textarea" v-model="logData.Description" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
       </el-form-item>
     </el-form>
-    <el-button type="danger" icon="el-icon-close" @click="clear">Clear</el-button>
+    <el-button type="danger" icon="el-icon-close" @click="cancel">Cancel</el-button>
     <el-button type="primary" icon="el-icon-edit" @click="submit">Add</el-button>
   </el-card>
 </template>
 
 <script>
 import moment from 'moment'
+import logService from '@/services/LogService.js'
 
 export default {
   data() {
@@ -119,20 +120,21 @@ export default {
         if (valid) {
           this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
           this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
-          let result = await _logService.AddALog(this.logData);
+          let result = await logService.AddALog(this.logData);
           if (result) {
             this.successMsg();
-            this.clear();
-            await this.QueryPieData();
+            this.cancel();
+            this.$emit("close")
           } else {
             this.errorMsg();
           }
         }
       });
     },
-    clear() {
+    cancel() {
       this.$refs['form'].clearValidate();
       this.logData = this.emptyLog();
+      this.$emit("close")
     },
     emptyLog() {
       return {
@@ -144,6 +146,15 @@ export default {
         EndDate: new moment().add(1, 'hours').format('YYYY-MM-DD'),
         Description: ''
       }
+    },
+    successMsg() {
+      this.$message({
+        message: 'Log Added!',
+        type: 'success'
+      });
+    },
+    errorMsg() {
+      this.$message.error('Log Added Fail!Please Retry');
     }
   }
 }

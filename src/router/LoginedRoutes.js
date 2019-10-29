@@ -1,5 +1,5 @@
-import Header from '../components/_Header.vue'
-import Board from '../components/Board.vue'
+import Sidemenu from '../components/sidemenu.vue'
+import Board from '../components/Board/index.vue'
 import History from '../components/History.vue'
 import Team from '../components/Team.vue'
 import TeamContent from '../components/Team/team_content.vue'
@@ -12,7 +12,7 @@ const LoginedRoutes = [{
     name: 'Board',
     path: "Board",
     components: {
-      header: Header,
+      header: Sidemenu,
       default: Board
     }
   },
@@ -20,7 +20,7 @@ const LoginedRoutes = [{
     name: 'History',
     path: "History",
     components: {
-      header: Header,
+      header: Sidemenu,
       default: History
     }
   },
@@ -28,7 +28,7 @@ const LoginedRoutes = [{
     name: "Team - team list",
     path: "teamlist",
     components: {
-      header: Header,
+      header: Sidemenu,
       default: TeamList
     }
   },
@@ -36,7 +36,7 @@ const LoginedRoutes = [{
     name: 'Team',
     path: "/team",
     components: {
-      header: Header,
+      header: Sidemenu,
       default: Team
     },
     redirect: {
@@ -63,7 +63,7 @@ const LoginedRoutes = [{
     name: 'Setting',
     path: "Setting",
     components: {
-      header: Header,
+      header: Sidemenu,
       default: Setting
     }
   },

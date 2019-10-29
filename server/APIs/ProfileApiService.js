@@ -1,8 +1,32 @@
 const ProfileProvider = require('../providers/ProfileServiceProvider.js');
 const LogProvider = require('../providers/LogProvider.js');
+const moment = require('moment');
 
 const _profileProvider = new ProfileProvider();
 const _logProvider = new LogProvider();
+async function getCurrentIteration(userID) {
+  let iterationList = await _profileProvider.GetIterations(userID)
+  let result = null
+  const now = new moment(Date.now())
+  iterationList.forEach(iteration => {
+    const start = new moment(iteration.StartDate)
+    const end = new moment(iteration.EndDate).add(1, 'days')
+    const update = new moment(iteration.UpdateTime)
+    if (now.isAfter(start) && now.isBefore(end) && (result === null || moment(result.UpdateTime).isBefore(update))) {
+      result = iteration
+    }
+  })
+
+  if (result === null) {
+    iterationList.forEach(iteration => {
+      const end = new moment(iteration.EndDate).add(1, 'days')
+      if (now.isAfter(end) && (result === null || end.isAfter(moment(iteration.EndDate)))) {
+        result = iteration
+      }
+    })
+  }
+  return result ? result.IterationID : null;
+}
 
 module.exports = class {
 
@@ -106,10 +130,15 @@ module.exports = class {
     this.router.post("/EditIteration", async function(req, res) {
       try {
         let result = await _profileProvider.EditIteration(req.body);
-        res.send(result);
+        if (result) {
+          const iterationID = await getCurrentIteration(req.body.UserID)
+          res.send({IterationID: iterationID})
+        } else {
+          res.send(400);
+        }
       } catch (err) {
         console.log(err);
-        res.send(400);
+        res.send(500);
       }
     });
 
@@ -131,6 +160,14 @@ module.exports = class {
         console.log(err);
         res.send(400);
       }
+    })
+
+    this.router.post("/iteration/current", async function(req, res) {
+      if (!req.body.UserID) {
+        res.send(400);
+      }
+      const iterationID = await getCurrentIteration(req.body.UserID)
+      res.status(200).send({ IterationID: iterationID })
     })
   }
 }

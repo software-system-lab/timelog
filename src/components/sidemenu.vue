@@ -3,6 +3,10 @@
   <img src="../../static/image/timelog.png" alt="logo">
   <img alt="profile img" :src="this.profilePicture" class="img-circle" />
   <h4>{{this.profileName}}</h4>
+  <el-menu-item index="1" @click="addLog">
+    <i class="el-icon-document-add"></i>
+    <span slot="title">New</span>
+  </el-menu-item>
   <router-link :to="{ name: 'Board'}">
     <el-menu-item index="1">
       <i class="el-icon-edit"></i>
@@ -13,12 +17,6 @@
     <el-menu-item index="2">
       <i class="el-icon-document"></i>
       <span slot="title">History</span>
-    </el-menu-item>
-  </router-link>
-  <router-link :to="{ name: 'Team - team list'}">
-    <el-menu-item index="3">
-      <i class="el-icon-menu"></i>
-      <span slot="title">Team</span>
     </el-menu-item>
   </router-link>
   <router-link :to="{ name: 'Setting'}">
@@ -46,6 +44,11 @@ export default {
       return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`;
     }
   },
+  methods: {
+    addLog() {
+      this.$emit("addLog");
+    }
+  }
 }
 </script>
 

@@ -98,8 +98,7 @@ module.exports = class {
 
   async GetIterations(userID) {
     var cmd = "SELECT * FROM `iteration` WHERE `UserID` = ?";
-    let dbResult = await DB.query(cmd, [userID])
-    return dbResult;
+    return await DB.query(cmd, [userID])
   }
 
   async GetIterationByID(iterationID) {
@@ -118,13 +117,14 @@ module.exports = class {
       cmd = "INSERT INTO `iteration` (`UserID`, `IterationName`, `StartDate`, `EndDate`, `Content`) VALUES (?, ?, ?, ?, ?); ";
       params.push(data.UserID, data.IterationName, data.StartDate, data.EndDate, data.Content);
     } else {
-      cmd = "UPDATE `iteration` SET `IterationName` = ?, `StartDate` = ?, `EndDate` = ?, `Content` = ? WHERE `IterationID` = ?";
-      params.push(data.IterationName, data.StartDate, data.EndDate, data.Content, data.IterationID);
+      cmd = "UPDATE `iteration` SET `IterationName` = ?, `StartDate` = ?, `EndDate` = ?, `Content` = ?, `UpdateTime` = ? WHERE `IterationID` = ?";
+      params.push(data.IterationName, data.StartDate, data.EndDate, data.Content, new Date, data.IterationID);
     }
     let dbResult = await DB.query(cmd, params);
-    if (dbResult)
-      return true;
-    return false;
+    if (!dbResult) {
+      return false
+    }
+    return true
   }
 
   async ChangeIteration(data) {

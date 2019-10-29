@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     async Query() {
-      let result = await _logService.ProjectsAndLengthOfTime();
+      let result = await _logService.ProjectsAndLengthOfTime(window.Profile.UserID, window.Profile.CurrentIterationID);
       if (result != "no data") {
         this.GoalList = []
         result.forEach(data => {

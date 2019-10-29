@@ -107,7 +107,7 @@ export default {
   },
 
   //analysis
-  async ProjectsAndLengthOfTime(userID = window.Profile.UserID, IterationID = window.Profile.CurrentIterationID) {
+  async ProjectsAndLengthOfTime(userID, IterationID) {
     let postData = {
       UserID: userID,
       IterationID: IterationID,
