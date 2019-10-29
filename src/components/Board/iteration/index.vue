@@ -5,16 +5,19 @@ this.iterationInfo.iterationID<template>
     </div>
     <el-row>
       <el-col :md="12" :sm="24" id="board-duration-iteration">
-        <el-col :md="12" :sm="24">
-          <Selection @selected="iterationSelected" :iterationInfo="iterationInfo" ref="selection"/>
-          <el-divider></el-divider>
+        <el-row>
+          <el-col :md="12" :sm="24">
+            <Selection @selected="iterationSelected" :iterationInfo="iterationInfo" ref="selection"/>
+          </el-col>
+          <el-col :md="6" :sm="24">
+              <el-button @click="edit" class="iteration-button">Edit</el-button>
+              <el-button @click="setGoal" class="iteration-button">Set Goal</el-button>
+          </el-col>
+        </el-row>
+        <el-divider></el-divider>
+        <el-row>
           <el-button @click="newIteration" icon="el-icon-document-add">NewIteration</el-button>
-        </el-col>
-        <el-col :md="12" :sm="24">
-          <!-- <el-button @click="edit">Edit</el-button>
-          <br/>
-          <el-button @click="setGoal">Set Goal</el-button> -->
-        </el-col>
+        </el-row>
       </el-col>
       <el-col :md="12" :sm="24" id="board-duration-datepicker">
       </el-col>
@@ -48,12 +51,18 @@ export default {
     },
     closeDialog(type) {
       if (type === 'iteration_info') {
-        this.isNew = false
         this.infoDialogActive = false
       }
     },
     iterationSelected(iterationID) {
       this.$emit("update", iterationID)
+    },
+    edit() {
+      this.isNew = false
+      this.infoDialogActive = true
+    },
+    setGoal() {
+
     }
   },
   components: {
@@ -62,3 +71,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.iteration-button {
+  /* margin-top: 5%;
+  margin-bottom: 5%; */
+}
+</style>
