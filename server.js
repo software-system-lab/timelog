@@ -7,6 +7,7 @@ const history = require('connect-history-api-fallback');
 const ProfileApis = require('./server/APIs/ProfileApiService.js')
 const LogApis = require('./server/APIs/LogApiService.js')
 const TeamApis = require('./server/APIs/team_api_service.js')
+const PublishApis = require('./server/APIs/publish_api_service.js')
 
 //main framwork declare
 var app = express();
@@ -31,6 +32,10 @@ app.use('/api/Log', LogRouter);
 var TeamRouter = express.Router();
 new TeamApis(TeamRouter);
 app.use('/api/team', TeamRouter);
+
+var PublishRouter = express.Router();
+new PublishApis(PublishRouter);
+app.use('/api/publish', PublishRouter);
 
 const hostname = '0.0.0.0';
 

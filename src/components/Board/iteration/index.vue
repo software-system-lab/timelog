@@ -44,6 +44,9 @@
         </el-row>
       </el-col>
     </el-row>
+    <el-row>
+      <el-button type="warning" @click="publish">Publish</el-button>
+    </el-row>
     <InfoDialog :visible="infoDialogActive" :iterationInfo="iterationInfo" :isNew="isNew" @update="iterationSelected" @close="closeDialog" ref="infoDialog"/>
     <GoalDialog :visible="goalDialogActive" :iterationInfo="iterationInfo" :projectList="projectList" @close="closeDialog" />
   </el-card>
@@ -54,6 +57,7 @@ import moment from 'moment'
 import Selection from '@/components/Board/iteration/selection.vue'
 import InfoDialog from '@/components/Board/iteration/info_dialog.vue'
 import GoalDialog from '@/components/Board/iteration/goal_dialog.vue'
+import publishService from '@/services/publish_service.js'
 
 export default {
   props: {
@@ -68,9 +72,6 @@ export default {
       endDateOption: {},
       pickedDate: []
     }
-  },
-  created() {
-
   },
   watch: {
     iterationInfo: function(itr) {
@@ -124,6 +125,17 @@ export default {
         start: this.pickedDate[0],
         end: this.pickedDate[1]
       })
+    },
+    async publish() {
+      let result = await publishService.publish(window.Profile.UserID, this.pickedDate[0], this.pickedDate[1])
+      if (result === 'success') {
+        this.$message({
+          message: 'Log Published!',
+          type: 'success'
+        });
+      } else {
+        this.$message.error('Failed to publish log.')
+      }
     }
   },
   components: {
