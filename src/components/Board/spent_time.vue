@@ -88,8 +88,10 @@ export default {
       for (let i = 0; i < this.pieData.datasets[0].data.length; i++) {
         this.pieData.datasets[0].data[i] = (this.pieData.datasets[0].data[i] / 3600000).toFixed(2);
       }
-      new Chart(this.ctx, {
-        type: 'polarArea',
+    },
+    generatePieChart() {
+      this.pieChart = new Chart(this.ctx, {
+        type: 'pie',
         data: this.pieData,
         options: {
           title: {
