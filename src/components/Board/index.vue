@@ -1,17 +1,15 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <Iteration @update="changeIteration" :iterationInfo="iterationInfo" ref="iteration"/>
+  <Iteration @update="changeIteration" @updateGoal="getProjectsData" @displayByDate="displayByDate" :iterationInfo="iterationInfo" :projectList="projectList" ref="iteration"/>
   <br>
   <SpentTime :projectList="projectList" ref="spentTime"/>
   <br>
-  <Goal :projectList="projectList" @setting="openIterationSetting" ref='goal'/>
-  <IterationSetting :visible='iterationSetting' @close='closeIterationSetting' />
+  <Goal v-if="goalDisplay" :projectList="projectList" @setting="openIterationSetting" ref='goal'/>
 </div>
 </template>
 
 <script>
-import IterationSetting from '@/components/Board/IterationSetting.vue'
 import Iteration from '@/components/Board/iteration/index.vue'
 import SpentTime from '@/components/Board/spent_time.vue'
 import Goal from '@/components/Board/goal.vue'
@@ -26,16 +24,19 @@ export default {
       },
       projectList: [],
       iterationSetting: false,
+      goalDisplay: true
     }
   },
   async created() {
-    this.iterationInfo.iterationID = await profileService.getCurrentIteration();
+    const iterationID = await profileService.getCurrentIteration();
+    this.iterationInfo = await profileService.GetIterationById(iterationID)
     this.getProjectsData()
+    this.$refs.iteration.iterationDate();
   },
   methods: {
     async getProjectList() {
       const userID = window.Profile.UserID
-      let result = await logService.ProjectsAndLengthOfTime(userID, this.iterationInfo.iterationID)
+      let result = await logService.projectTimeByIteration(userID, this.iterationInfo.IterationID)
       if (result != "no data") {
         this.projectList = result
       }
@@ -45,11 +46,13 @@ export default {
       this.$refs.spentTime.update()
     },
     update() {
+      this.goalDisplay = true
       this.getProjectsData()
       this.$refs.iteration.update()
+      this.$refs.spentTime.update()
     },
-    changeIteration(iterationID) {
-      this.iterationInfo.iterationID = iterationID
+    async changeIteration(iterationID) {
+      this.iterationInfo = await profileService.GetIterationById(iterationID)
       this.update()
     },
     openIterationSetting() {
@@ -59,9 +62,14 @@ export default {
       this.iterationSetting = false
       this.update()
     },
+    async displayByDate(date) {
+      this.goalDisplay = false
+      this.iterationInfo.IterationID = ""
+      const userID = window.Profile.UserID
+      this.projectList = await logService.projectTime(userID, date.start, date.end)
+    }
   },
   components: {
-    IterationSetting,
     Iteration,
     SpentTime,
     Goal

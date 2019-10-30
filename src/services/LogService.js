@@ -96,10 +96,10 @@ export default {
   },
 
   //target
-  async ModifyOrAddAGoal(project) {
+  async ModifyOrAddAGoal(project, iterationID) {
     let postData = {
       UserID: window.Profile.UserID,
-      IterationID: window.Profile.CurrentIterationID,
+      IterationID: iterationID,
       ProjectID: project.ProjectID,
       GoalHour: project.GoalHour,
     };
@@ -107,11 +107,20 @@ export default {
   },
 
   //analysis
-  async ProjectsAndLengthOfTime(userID, IterationID) {
+  async projectTimeByIteration(userID, IterationID) {
     let postData = {
       UserID: userID,
       IterationID: IterationID,
     };
-    return HTTP.post(`/Log/ProjectsAndLengthOfTime`, postData);
+    return HTTP.post(`/Log/projectTimeByIteration`, postData);
+  },
+
+  async projectTime(userID, startDate, endDate) {
+    let postData = {
+      UserID: userID,
+      StartDate: moment(startDate).format('YYYY-MM-DD'),
+      EndDate: moment(endDate).add(1, 'd').format('YYYY-MM-DD')
+    }
+    return HTTP.post(`/Log/projectTime`, postData);
   }
 }

@@ -36,13 +36,7 @@ export default {
   },
   data() {
     return {
-      iterationForm: {
-        IterationID: null,
-        IterationName: '',
-        StartDate: new moment(),
-        EndDate: new moment().add(7, 'days'),
-        Content: ''
-      },
+      iterationForm: this.newForm(),
       endDateOption: {}
     }
   },
@@ -56,17 +50,27 @@ export default {
   },
   methods: {
     async update() {
-      this.iterationForm = await profileService.GetIterationById(this.iterationInfo.iterationID)
-      console.log(this.iterationForm)
+      this.iterationForm = this.iterationInfo
     },
     openHandler() {
-      if (!this.isNew) {
+      if (this.isNew) {
+        this.iterationForm = this.newForm();
+      } else {
         this.update();
+      }
+    },
+    newForm() {
+      return {
+        IterationID: null,
+        IterationName: '',
+        StartDate: new moment(),
+        EndDate: new moment().add(7, 'days'),
+        Content: ''
       }
     },
     closeDialog() {
       this.$refs['form'].resetFields();
-      this.$emit('close', "iteration_info");
+      this.$emit('close', "info_dialog");
     },
     async saveIteration() {
       let result = await profileService.ModifyOrAddAIteration(this.iterationForm)

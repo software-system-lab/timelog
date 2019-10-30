@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async QueryTeammateData() {
-      let result = await _logService.ProjectsAndLengthOfTime(this.teammate.UserID, this.teammate.CurrentIterationID);
+      let result = await _logService.projectTimeByIteration(this.teammate.UserID, this.teammate.CurrentIterationID);
       if (result != "no data") {
         this.TagAnalysisList = result;
         //clear

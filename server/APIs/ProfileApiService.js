@@ -4,6 +4,7 @@ const moment = require('moment');
 
 const _profileProvider = new ProfileProvider();
 const _logProvider = new LogProvider();
+
 async function getCurrentIteration(userID) {
   let iterationList = await _profileProvider.GetIterations(userID)
   let result = null

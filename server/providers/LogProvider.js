@@ -44,6 +44,11 @@ module.exports = class {
     return dbResult;
   }
 
+  async GetUserLogsByRange(startDate, endDate) {
+    var cmd = "SELECT * FROM `log` WHERE `StartTime` >= ? AND `EndTime` <= ?"
+    return await DB.query(cmd, [startDate, endDate])
+  }
+
   async GetUserLogsBySearch(data) {
     var params = [];
     var cmd = "SELECT `log`.* FROM `log` WHERE `log`.`IsDeleted` = ? AND `log`.`UserID` = ? AND (`log`.`Title` LIKE ? OR `log`.`Description` LIKE ?)";

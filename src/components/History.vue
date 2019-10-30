@@ -59,9 +59,10 @@
 </template>
 
 <script>
-import ModifyHistoryModal from './History/ModifyModal'
-import _logService from '../services/LogService.js'
 import moment from 'moment'
+import ModifyHistoryModal from '@/components/History/ModifyModal'
+import _logService from '@/services/LogService.js'
+import profileService from '@/services/ProfileService.js'
 
 export default {
   data() {
@@ -78,7 +79,7 @@ export default {
         value: null
       }],
       logIDtoModify: null,
-      IterationIDToSearch: window.Profile.CurrentIterationID,
+      IterationIDToSearch: null,
       IterationList: window.SprintList,
       dialogFormVisible: false,
       rowData: [],
@@ -88,6 +89,7 @@ export default {
     }
   },
   async mounted() {
+    this.IterationIDToSearch = await profileService.getCurrentIteration()
     this.QueryLogs();
 
     //projectFilters

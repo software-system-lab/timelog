@@ -3,6 +3,34 @@ const LogProvider = require('../providers/LogProvider.js');
 const _LogProvider = new LogProvider();
 const moment = require('moment')
 
+async function getProjectList(userID) {
+  let dbProjects = await _LogProvider.GetUserProjects(userID);
+  var projects = [];
+
+  if (dbProjects != 'no data')
+    projects = dbProjects;
+  projects.push({
+    ProjectID: null,
+    ProjectName: 'Untitled Events',
+  });
+  return projects
+}
+
+async function getProjectsTime(logs, projects) {
+  projects.forEach(project => {
+    project.TimeLength = 0;
+  })
+
+  logs.forEach(log => {
+    log.ProjectID
+    let xx = projects.find(y => y.ProjectID == log.ProjectID);
+    if (xx != undefined)
+      xx.TimeLength += moment(log.EndTime) - moment(log.StartTime);
+  });
+  //sort by TimeLength DESC
+  projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
+}
+
 module.exports = class {
 
   constructor(router) {
@@ -112,24 +140,16 @@ module.exports = class {
     });
 
     ////analysis
-    this.router.post("/ProjectsAndLengthOfTime", async function(req, res) {
+    this.router.post("/projectTimeByIteration", async function(req, res) {
       try {
-        let dbProjects = await _LogProvider.GetUserProjects(req.body.UserID);
-        var projects = [];
+        var projects = await getProjectList(req.body.UserID);
 
-        if (dbProjects != 'no data')
-          projects = dbProjects;
-        projects.push({
-          ProjectID: null,
-          ProjectName: 'Untitled Events',
-        });
         projects.forEach(project => {
-          project.TimeLength = 0;
           project.GoalHour = null;
           project.IsEdit = false;
         });
-        let targets = await _LogProvider.QueryGoalByIteration(req.body); //sync method
 
+        let targets = await _LogProvider.QueryGoalByIteration(req.body);
         if (targets != "no data") {
           targets.forEach(x => {
             let proj = projects.find(y => y.ProjectID == x.ProjectID);
@@ -140,20 +160,20 @@ module.exports = class {
 
         let logs = await _LogProvider.GetUserLogsByIterationID(req.body.IterationID);
 
-        logs.forEach(log => {
-          log.ProjectID
-          let xx = projects.find(y => y.ProjectID == log.ProjectID);
-          if (xx != undefined)
-            xx.TimeLength += moment(log.EndTime) - moment(log.StartTime);
-        });
-        //sort by TimeLength DESC
-        projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
+        getProjectsTime(logs, projects)
 
-        res.send(projects);
+        res.send(projects)
       } catch (err) {
         console.log(err);
         res.send(400);
       }
     });
+
+    this.router.post('/projectTime', async function (req, res) {
+      var projects = await getProjectList(req.body.UserID);
+      let logs = await _LogProvider.GetUserLogsByRange(req.body.StartDate, req.body.EndDate)
+      getProjectsTime(logs, projects)
+      res.send(projects)
+    })
   }
 }
