@@ -43,13 +43,12 @@ export default {
     },
     async getProjectsData() {
       await this.getProjectList()
-      this.$refs.spentTime.update()
+      this.$refs.spentTime.update(this.projectList)
     },
     update() {
       this.goalDisplay = true
       this.getProjectsData()
       this.$refs.iteration.update()
-      this.$refs.spentTime.update()
     },
     async changeIteration(iterationID) {
       this.iterationInfo = await profileService.GetIterationById(iterationID)
@@ -67,6 +66,7 @@ export default {
       this.iterationInfo.IterationID = ""
       const userID = window.Profile.UserID
       this.projectList = await logService.projectTime(userID, date.start, date.end)
+      this.$refs.spentTime.update(this.projectList)
     }
   },
   components: {
