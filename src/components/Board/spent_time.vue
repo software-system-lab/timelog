@@ -1,7 +1,8 @@
 <template>
   <el-card>
     <el-row>
-      <h2>Project / Spent Time</h2>
+      <h2>Spent Time</h2>
+      <h3>{{getHour(pieData.datasets[0].timeLength)}} : {{getMinute(pieData.datasets[0].timeLength)}}</h3>
       <el-col :md="12" :sm="24">
         <div class="chart-container" style="margin: auto;">
           <canvas id="Chart"></canvas>
@@ -16,8 +17,7 @@
           </el-table-column>
           <el-table-column prop="Time Length" label="Time Length">
             <template slot-scope="scope">
-              {{paddingLeft((scope.row.TimeLength / 3600000).toFixed(0),2)}} : {{paddingLeft((scope.row.TimeLength %
-              3600000 / 60 / 1000).toFixed(0),2)}}
+              {{getHour(scope.row.TimeLength)}} : {{getMinute(scope.row.TimeLength)}}
             </template>
           </el-table-column>
           <el-table-column label="Percentage">
@@ -32,15 +32,15 @@
 </template>
 
 <script>
-import Chart from 'chart.js';
+import moment from 'moment'
+import Chart from 'chart.js'
 
 export default {
-  props: {
-    projectList: Array
-  },
   data() {
     return {
       ctx: null,
+      pieChart: null,
+      projectList: [],
       pieData: {
         labels: [],
         datasets: [{
@@ -62,19 +62,20 @@ export default {
     this.ctx = $("#Chart");
   },
   methods: {
-    async queryPieData() {
+    serializePieData() {
       this.pieData.labels.length = 0;
       this.pieData.datasets[0].data.length = 0;
-      if (this.projectList.length >= 5) {
+      const maxLabelNums = 7
+      if (this.projectList.length >= maxLabelNums) {
         this.projectList.sort((a, b) => {
           return a.TimeLength > b.TimeLength;
         })
       }
       for (let i = 0; i < this.projectList.length; i++) {
-        if (i < 5) {
+        if (i < maxLabelNums) {
           this.pieData.labels.push(this.projectList[i].ProjectName);
           this.pieData.datasets[0].data.push(this.projectList[i].TimeLength.toFixed(0));
-        } else if (i == 5) {
+        } else if (i == maxLabelNums) {
           this.pieData.labels.push("Other Projects");
           this.pieData.datasets[0].data.push(this.projectList[i].TimeLength.toFixed(0));
         } else {
@@ -96,8 +97,27 @@ export default {
         options: {
           title: {
             display: true,
-            text: '(hour)',
+            text: '(hour)'
           },
+          // showAllTooltips: true,
+          tooltips: {
+            callbacks: {
+              label: (tooltipItem, data) => {
+                var dataset = data.datasets[tooltipItem.datasetIndex];
+                //計算總和
+                var sum = 0
+                dataset.data.forEach(data => {
+                  const t = data.split('.')
+                  const time = parseInt(t[0]) * 3600000 + parseInt(t[1]) * 60000
+                  sum += time
+                })
+                var currentValue = dataset.data[tooltipItem.index].replace('.', ':');
+                return " " + data.labels[tooltipItem.index] + ": " + currentValue;
+                label += Math.round(tooltipItem.yLabel * 100) / 100;
+                return label;
+              }
+            }
+          }
         }
       });
     },
@@ -109,8 +129,18 @@ export default {
         return this.paddingLeft('0' + str, len);
       }
     },
-    update() {
-      this.queryPieData()
+    getHour(time) {
+      return this.paddingLeft((time / 3600000).toFixed(0),2)
+    },
+    getMinute(time) {
+      return this.paddingLeft((time %
+      3600000 / 60 / 1000).toFixed(0),2)
+    },
+    update(projectList) {
+      this.projectList = projectList
+      this.serializePieData()
+      this.generatePieChart()
+
     }
   }
 }
