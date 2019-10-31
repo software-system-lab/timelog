@@ -78,10 +78,6 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-size: 40px;
-}
-
 .el-form {
   width: 90%
 }

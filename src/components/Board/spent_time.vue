@@ -36,6 +36,9 @@ import moment from 'moment'
 import Chart from 'chart.js'
 
 export default {
+  props: {
+    ProjectList: Array
+  },
   data() {
     return {
       ctx: null,
@@ -60,6 +63,10 @@ export default {
   },
   async mounted() {
     this.ctx = $("#Chart");
+    if (this.ProjectList) {
+      this.projectList = this.ProjectList
+      this.setPieChart()
+    }
   },
   methods: {
     serializePieData() {
@@ -136,11 +143,13 @@ export default {
       return this.paddingLeft((time %
       3600000 / 60 / 1000).toFixed(0),2)
     },
-    update(projectList) {
-      this.projectList = projectList
+    setPieChart() {
       this.serializePieData()
       this.generatePieChart()
-
+    },
+    update(projectList) {
+      this.projectList = projectList
+      this.setPieChart()
     }
   }
 }

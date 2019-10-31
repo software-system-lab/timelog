@@ -8,13 +8,13 @@
     <span slot="title">New</span>
   </el-menu-item>
   <router-link :to="{ name: 'Board'}">
-    <el-menu-item index="1">
+    <el-menu-item index="2">
       <i class="el-icon-edit"></i>
       <span slot="title">Board</span>
     </el-menu-item>
   </router-link>
   <router-link :to="{ name: 'History'}">
-    <el-menu-item index="2">
+    <el-menu-item index="3">
       <i class="el-icon-document"></i>
       <span slot="title">History</span>
     </el-menu-item>
@@ -23,6 +23,12 @@
     <el-menu-item index="4">
       <i class="el-icon-setting"></i>
       <span slot="title">Setting</span>
+    </el-menu-item>
+  </router-link>
+  <router-link :to="{ name: 'Publish'}">
+    <el-menu-item index="5">
+      <i class="el-icon-view"></i>
+      <span slot="title">Publish</span>
     </el-menu-item>
   </router-link>
 

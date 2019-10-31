@@ -12,4 +12,8 @@ module.exports = class {
       await DB.query(updatePublishCmd, [startDate, endDate, userID])
     }
   }
+  async getAll() {
+    var cmd = "SELECT * FROM `published_log` WHERE 1"
+    return await DB.query(cmd)
+  }
 }

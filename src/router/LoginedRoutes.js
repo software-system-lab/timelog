@@ -7,10 +7,11 @@ import CreateTeam from '../components/Team/create.vue'
 import JoinTeam from '../components/Team/join.vue'
 import TeamList from '../components/Team/team_list.vue'
 import Setting from '../components/Setting.vue'
+import Publish from '../components/publish/index.vue'
 
 const LoginedRoutes = [{
     name: 'Board',
-    path: "Board",
+    path: "board",
     components: {
       header: Sidemenu,
       default: Board
@@ -18,7 +19,7 @@ const LoginedRoutes = [{
   },
   {
     name: 'History',
-    path: "History",
+    path: "history",
     components: {
       header: Sidemenu,
       default: History
@@ -61,12 +62,20 @@ const LoginedRoutes = [{
   },
   {
     name: 'Setting',
-    path: "Setting",
+    path: "setting",
     components: {
       header: Sidemenu,
       default: Setting
     }
   },
+  {
+    name: 'Publish',
+    path: 'publish',
+    components: {
+      header: Sidemenu,
+      default: Publish
+    }
+  }
 ];
 
 export default LoginedRoutes;

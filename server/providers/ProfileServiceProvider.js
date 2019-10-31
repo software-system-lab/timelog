@@ -15,6 +15,14 @@ module.exports = class {
     return "no data";
   }
 
+  async getUserProfileByUserID(userID) {
+    var cmd = "SELECT * FROM `user` WHERE UserID = ?";
+    let dbResult = await DB.query(cmd, [userID]);
+    if (dbResult.length != 0)
+      return dbResult[0];
+    return "no data";
+  }
+
   async Login(data) {
     var cmd = "SELECT `FBID` FROM `user` WHERE FBID = ?";
     let dbResult = await DB.query(cmd, [data.FBID]);

@@ -9,5 +9,8 @@ export default {
       EndDate: moment(endDate).format("YYYY-MM-DD")
     }
     return HTTP.post(`/publish`, postData);
+  },
+  getUserDataList() {
+    return HTTP.get("/publish/data");
   }
 }
