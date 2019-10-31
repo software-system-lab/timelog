@@ -12,19 +12,6 @@ const PublishApis = require('./server/APIs/publish_api_service.js')
 //main framwork declare
 var app = express();
 
-// Middleware for serving '/dist' directory
-const staticFileMiddleware = express.static('dist');
-
-// 1st call for unredirected requests
-app.use(staticFileMiddleware);
-
-// Support history api
-app.use(history({
-  index: '/dist/index.html'
-}));
-
-// 2nd call for redirected requests
-app.use(staticFileMiddleware);
 
 //body parser-for POST Info to transfer in http packet
 app.use(bodyParser.json());
@@ -48,6 +35,22 @@ app.use('/api/team', TeamRouter);
 var PublishRouter = express.Router();
 new PublishApis(PublishRouter);
 app.use('/api/publish', PublishRouter);
+
+
+
+// Middleware for serving '/dist' directory
+const staticFileMiddleware = express.static('dist');
+
+// 1st call for unredirected requests
+app.use(staticFileMiddleware);
+
+// Support history api
+app.use(history({
+  index: '/dist/index.html'
+}));
+
+// 2nd call for redirected requests
+app.use(staticFileMiddleware);
 
 const hostname = '0.0.0.0';
 
