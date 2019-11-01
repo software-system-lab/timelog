@@ -44,21 +44,7 @@ export default {
       ctx: null,
       pieChart: null,
       projectList: [],
-      pieData: {
-        labels: [],
-        datasets: [{
-          timeLength: 0,
-          data: [],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)',
-            'rgba(255, 145, 64, 0.7)'
-          ],
-        }]
-      }
+      pieData: null
     }
   },
   async mounted() {
@@ -70,6 +56,7 @@ export default {
   },
   methods: {
     serializePieData() {
+      this.initPieData();
       this.pieData.labels.length = 0;
       this.pieData.datasets[0].data.length = 0;
       const maxLabelNums = 7
@@ -95,6 +82,24 @@ export default {
       //data to hour
       for (let i = 0; i < this.pieData.datasets[0].data.length; i++) {
         this.pieData.datasets[0].data[i] = (this.pieData.datasets[0].data[i] / 3600000).toFixed(2);
+      }
+    },
+    initPieData() {
+      this.pieData = {
+        labels: [],
+        datasets: [{
+          timeLength: 0,
+          data: [],
+          backgroundColor: [
+            'rgba(6, 71, 212, 0.7)',
+            'rgba(255, 206, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(153, 102, 255, 0.7)',
+            'rgba(255, 145, 64, 0.7)',
+            'rgba(0, 199, 239, 0.7)'
+            'rgba(255, 99, 132, 0.7)',
+          ],
+        }]
       }
     },
     generatePieChart() {
