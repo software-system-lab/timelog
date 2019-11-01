@@ -44,7 +44,7 @@ export default {
       ctx: null,
       pieChart: null,
       projectList: [],
-      pieData: null
+      pieData: this.initPieData()
     }
   },
   async mounted() {
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     serializePieData() {
-      this.initPieData();
+      this.pieData = this.initPieData();
       this.pieData.labels.length = 0;
       this.pieData.datasets[0].data.length = 0;
       const maxLabelNums = 7
@@ -85,7 +85,7 @@ export default {
       }
     },
     initPieData() {
-      this.pieData = {
+      return {
         labels: [],
         datasets: [{
           timeLength: 0,
