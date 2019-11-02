@@ -31,7 +31,7 @@ module.exports = class {
       return "unregistered";
     else {
       let access_token = await axios.get(`https://graph.facebook.com/oauth/access_token` +
-        `?client_id=${Config.FBAppAccessToken.appId}&client_secret=${Config.FBAppAccessToken.appSecrete}&grant_type=client_credentials`);
+        `?client_id=${Config.FBAppAccessToken.appId}&client_secret=${Config.FBAppAccessToken.appSecret}&grant_type=client_credentials`);
 
       let FBVerifyResult = await axios.get(`https://graph.facebook.com/debug_token?input_token=` + data.userAccessToken + `&access_token=` + access_token.data.access_token);
 
@@ -43,7 +43,7 @@ module.exports = class {
 
   async Register(data) {
     let access_token = await axios.get(`https://graph.facebook.com/oauth/access_token` +
-      `?client_id=${Config.FBAppAccessToken.appId}&client_secret=${Config.FBAppAccessToken.appSecrete}&grant_type=client_credentials`);
+      `?client_id=${Config.FBAppAccessToken.appId}&client_secret=${Config.FBAppAccessToken.appSecret}&grant_type=client_credentials`);
 
     let FBVerifyResult = await axios.get(`https://graph.facebook.com/debug_token?input_token=` + data.UserAccessToken + `&access_token=` + access_token.data.access_token);
 

@@ -8,6 +8,6 @@ module.exports = {
   },
   FBAppAccessToken: {
     appId: process.env.FB_ID,
-    appSecrete: process.env.FB_SECRETE
+    appSecret: process.env.FB_SECRET
   }
 }
