@@ -13,12 +13,10 @@ module.exports = class {
   async getUserDataList() {
     const userDataList = []
     const publishList = await this.publishProvider.getAll()
-    console.log(publishList)
     for (var i = 0; i < publishList.length; ++i) {
       const data = publishList[i]
-      console.log("data", data)
       const userProfile = await this.profileProvider.getUserProfileByUserID(data.UserID)
-      const projectList = await this.logService.getProjectTimeByDuration(data.UserID, data.StartDate, data.EndDate)
+      const projectList = (await this.logService.getProjectTimeByDuration(data.UserID, data.StartDate, data.EndDate)).filter(project => !project.IsPrivate)
 
       var total = 0
       projectList.forEach(project => {
