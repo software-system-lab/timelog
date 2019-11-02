@@ -60,7 +60,7 @@ export default {
   props: ['visible', 'rowDataID'],
   data() {
     return {
-      LogForm: {},
+      LogForm: this.initLogForm(),
       ProjectList: window.ProjectList,
       endDateOption: {},
       formRules: {
@@ -127,12 +127,23 @@ export default {
       this.LogForm = await _logService.GetAlog(this.rowDataID);
     },
     closeModal() {
+      this.LogForm = this.initLogForm();
       this.$refs['form'].resetFields();
       this.$emit('close-modal');
+    },
+    initLogForm() {
+      return {
+        StartDate: new Date(),
+        EndDate: new Date(),
+        StartTime: "",
+        EndTime: ""
+      }
     },
     async Modify() {
       this.$refs['form'].validate(async (valid) => {
         if (valid) {
+          this.LogForm.StartDate = moment(this.LogForm.StartDate).format('YYYY-MM-DD')
+          this.LogForm.EndDate = moment(this.LogForm.EndDate).format('YYYY-MM-DD')
           let result = await _logService.ModifyALog(this.LogForm);
           if (result) {
             this.$message({

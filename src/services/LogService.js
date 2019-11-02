@@ -59,12 +59,12 @@ export default {
     };
     let httpResult = await HTTP.post(`/Log/GetAlog`, req);
     if (httpResult != 'no data') {
-      let start = new moment(httpResult.startTime);
-      let end = new moment(httpResult.endTime);
-      httpResult.StartDate = start.format('YYYY-MM-DD');
+      let start = moment(httpResult.StartTime);
+      let end = moment(httpResult.EndTime);
+      httpResult.StartDate = new Date(start.format('YYYY-MM-DD'));
       httpResult.StartTime = start.format('HH:mm');
-      httpResult.EndDate = start.format('YYYY-MM-DD');
-      httpResult.EndTime = start.format('HH:mm');
+      httpResult.EndDate = new Date(end.format('YYYY-MM-DD'));
+      httpResult.EndTime = end.format('HH:mm');
     }
 
     return httpResult
