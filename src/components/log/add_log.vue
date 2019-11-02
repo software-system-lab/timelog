@@ -124,7 +124,7 @@ export default {
           if (result) {
             this.successMsg();
             this.cancel();
-            this.$emit("close")
+            this.$emit("saved")
           } else {
             this.errorMsg();
           }

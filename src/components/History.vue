@@ -125,6 +125,9 @@ export default {
         this.logList = result;
       else
         this.logList = [];
+    },
+    update() {
+      this.QueryLogs()
     }
   },
   components: {

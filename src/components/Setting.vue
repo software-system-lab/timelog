@@ -182,7 +182,8 @@ export default {
       } else {
         this.$message.error('Fail to delete the project! Please Retry');
       }
-    }
+    },
+    update() {}
   }
 }
 </script>

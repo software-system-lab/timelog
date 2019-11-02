@@ -2,7 +2,7 @@
 <div>
   <div v-if="addLogVisible" id="add-log-popup" class="overlay">
     <div class="popup">
-      <AddLog @close="closePopup"/>
+      <AddLog @close="closePopup" @saved="update"/>
     </div>
   </div>
   <el-container>
@@ -15,7 +15,7 @@
         <el-button slot="reference" class="el-icon-more-outline"></el-button>
       </el-popover>
       <el-main>
-        <router-view />
+        <router-view ref="view" />
       </el-main>
     </el-container>
   </el-container>
@@ -33,10 +33,14 @@ export default {
   },
   methods: {
     openPopup() {
-      this.addLogVisible = true;
+      this.addLogVisible = true
     },
     closePopup() {
-      this.addLogVisible = false;
+      this.addLogVisible = false
+    },
+    update() {
+      this.$refs.view.update()
+      this.closePopup()
     }
   },
   components: {
