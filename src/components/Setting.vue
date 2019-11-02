@@ -56,9 +56,9 @@
           <el-input :disabled="!IsProfileEdit" v-model="UserForm.Phone"></el-input>
         </el-form-item>
       </el-form>
-      <el-button v-if="!IsProfileEdit" type="primary" icon="el-icon-edit" @click="()=>{this.IsProfileEdit = true;}">Edit</el-button>
+      <el-button v-if="!IsProfileEdit" type="primary" icon="el-icon-edit" @click="()=>{this.IsProfileEdit = true}">Edit</el-button>
       <el-button v-if="IsProfileEdit" type="primary" icon="el-icon-edit" @click="EditUserProfile">Save</el-button>
-      <el-button v-if="IsProfileEdit" @click="QueryUserProfile">Cancel</el-button>
+      <el-button v-if="IsProfileEdit" @click="cancel">Cancel</el-button>
     </el-card>
   </el-col>
 </el-row>
@@ -77,16 +77,16 @@ export default {
     }
   },
   async created() {
-    this.QueryProjects();
-    this.QueryUserProfile();
+    this.QueryProjects()
+    this.QueryUserProfile()
   },
   methods: {
     async QueryProjects() {
-      let projectList = await _logService.GetUserProjects();
+      let projectList = await _logService.GetUserProjects()
 
       //clear list
-      this.projectList.length = 0;
-      window.ProjectList.length = 0;
+      this.projectList.length = 0
+      window.ProjectList.length = 0
       // input to add project
       this.projectList.push({
         ProjectID: null,
@@ -94,13 +94,13 @@ export default {
         InputDisabled: false,
         IsPrivate: false,
         IsEnable: true
-      });
+      })
 
       if (projectList == "no data")
         this.$message({
           message: 'no Project data!',
           type: 'warning'
-        });
+        })
       else {
         projectList.forEach(x => {
           this.projectList.push({
@@ -109,46 +109,50 @@ export default {
             IsPrivate: x.IsPrivate ? true : false,
             IsEnable: x.IsEnable ? true : false,
             InputDisabled: true
-          });
+          })
           window.ProjectList.push({
             ProjectID: x.ProjectID,
             ProjectName: x.ProjectName,
             IsPrivate: x.IsPrivate ? true : false,
             IsEnable: x.IsEnable ? true : false
           })
-        });
+        })
       }
+    },
+    cancel() {
+      this.IsProfileEdit = false
+      this.QueryUserProfile()
     },
     async ModifyOrAdd(project) {
       if (project.InputDisabled == true) {
         if (project.ProjectID) //not new project
-          project.InputDisabled = false;
+          project.InputDisabled = false
       } else {
         if (project.ProjectName.length < 1) {
-          this.$message.error('Name of project cannot be null!');
-          return;
+          this.$message.error('Name of project cannot be null!')
+          return
         }
 
         var DuplicatedProject = this.projectList.find(x => x.ProjectName == project.ProjectName && x.ProjectID != null && x.ProjectID != project.ProjectID)
         if (DuplicatedProject) {
-          this.$message.error('Duplicate name!');
-          return;
+          this.$message.error('Duplicate name!')
+          return
         }
 
-        let result = await _logService.ModifyOrAddAProject(project);
+        let result = await _logService.ModifyOrAddAProject(project)
         if (result) {
           this.$message({
             message: 'successed!',
             type: 'success'
-          });
-          this.QueryProjects();
+          })
+          this.QueryProjects()
         } else {
-          this.$message.error('Fail to add/modify the project! Please Retry');
+          this.$message.error('Fail to add/modify the project! Please Retry')
         }
       }
     },
     async QueryUserProfile() {
-      window.Profile = await _profileService.GetProfile();
+      window.Profile = await _profileService.GetProfile()
       this.UserForm = {
         UserID: window.Profile.UserID,
         UserName: window.Profile.UserName,
@@ -158,16 +162,16 @@ export default {
       }
     },
     async EditUserProfile() {
-      let result = await _profileService.EditUserProfile(this.UserForm);
+      let result = await _profileService.EditUserProfile(this.UserForm)
       if (result) {
         this.$message({
           message: 'successed!',
           type: 'success'
-        });
-        this.IsProfileEdit = false;
-        this.QueryUserProfile();
+        })
+        this.IsProfileEdit = false
+        this.QueryUserProfile()
       } else {
-        this.$message.error('Fail to modify your personal profile! Please Retry');
+        this.$message.error('Fail to modify your personal profile! Please Retry')
       }
     },
     async Delete(data) {
@@ -176,11 +180,11 @@ export default {
         this.$message({
           message: 'successed!',
           type: 'success'
-        });
-        this.IsProfileEdit = false;
-        this.QueryProjects();
+        })
+        this.IsProfileEdit = false
+        this.QueryProjects()
       } else {
-        this.$message.error('Fail to delete the project! Please Retry');
+        this.$message.error('Fail to delete the project! Please Retry')
       }
     },
     update() {}
