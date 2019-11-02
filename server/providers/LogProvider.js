@@ -38,15 +38,16 @@ module.exports = class {
     return "no data";;
   }
 
-  async GetUserLogsByIterationID(iterationID) {
-    var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ? AND `log`.`IsDeleted` = ?";
-    let dbResult = await DB.query(cmd, [iterationID, false]);
+  async GetUserLogsByIterationID(userID, iterationID) {
+    var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`UserID` = ? AND `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ? AND `log`.`IsDeleted` = ?";
+    let dbResult = await DB.query(cmd, [userID, iterationID, false]);
     return dbResult;
   }
 
-  async GetUserLogsByRange(startDate, endDate) {
-    var cmd = "SELECT * FROM `log` WHERE `StartTime` >= ? AND `EndTime` <= ? AND `IsDeleted` = ?"
-    return await DB.query(cmd, [startDate, endDate, false])
+  async GetUserLogsByRange(userID, startDate, endDate) {
+    var cmd = "SELECT * FROM `log` WHERE `UserID` = ? AND `StartTime` >= ? AND `EndTime` <= ? AND `IsDeleted` = ?"
+    const result =  await DB.query(cmd, [userID, startDate, endDate, false])
+    return result
   }
 
   async GetUserLogsBySearch(data) {

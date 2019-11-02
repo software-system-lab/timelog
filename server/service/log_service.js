@@ -23,7 +23,7 @@ module.exports = class {
       })
     }
 
-    let logs = await this.logProvider.GetUserLogsByIterationID(iterationID);
+    let logs = await this.logProvider.GetUserLogsByIterationID(userID, iterationID);
 
     this.getProjectsTime(logs, projects)
     return projects
@@ -31,7 +31,7 @@ module.exports = class {
 
   async getProjectTimeByDuration(userID, startDate, endDate) {
     var projects = await this.getProjectList(userID);
-    let logs = await this.logProvider.GetUserLogsByRange(startDate, endDate)
+    let logs = await this.logProvider.GetUserLogsByRange(userID, startDate, endDate)
     this.getProjectsTime(logs, projects)
     return projects
   }
