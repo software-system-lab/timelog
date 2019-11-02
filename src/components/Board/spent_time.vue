@@ -60,11 +60,6 @@ export default {
       this.pieData.labels.length = 0;
       this.pieData.datasets[0].data.length = 0;
       const maxLabelNums = 7
-      if (this.projectList.length >= maxLabelNums) {
-        this.projectList.sort((a, b) => {
-          return a.TimeLength > b.TimeLength;
-        })
-      }
       for (let i = 0; i < this.projectList.length; i++) {
         if (i < maxLabelNums) {
           this.pieData.labels.push(this.projectList[i].ProjectName);
