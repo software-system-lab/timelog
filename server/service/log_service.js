@@ -44,7 +44,7 @@ module.exports = class {
       projects = dbProjects;
     projects.push({
       ProjectID: null,
-      ProjectName: 'Untitled Events',
+      ProjectName: 'Untitled Events'
     });
     return projects
   }
@@ -60,6 +60,10 @@ module.exports = class {
       if (xx != undefined)
         xx.TimeLength += moment(log.EndTime) - moment(log.StartTime);
     });
+
+    if (projects[projects.length - 1].TimeLength === 0) {
+      projects.pop()
+    }
     //sort by TimeLength DESC
     projects.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
   }

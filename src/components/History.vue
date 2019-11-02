@@ -68,7 +68,7 @@ export default {
   data() {
     var projectList = window.ProjectList;
     projectList.push({
-      ProjectName: "Other Events",
+      ProjectName: "Untitled Events",
       ProjectID: ""
     });
     return {
