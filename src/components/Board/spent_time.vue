@@ -98,6 +98,9 @@ export default {
       }
     },
     generatePieChart() {
+      if (this.pieChart) {
+        this.pieChart.destroy()
+      }
       this.pieChart = new Chart(this.ctx, {
         type: 'pie',
         data: this.pieData,
