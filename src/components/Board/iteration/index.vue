@@ -13,8 +13,8 @@
             <Selection @selected="iterationSelected" :iterationInfo="iterationInfo" ref="selection"/>
           </el-col>
           <el-col :md="6" :sm="24">
-              <el-button @click="edit" class="iteration-button">Edit</el-button>
-              <el-button @click="setGoal" class="iteration-button">Goal</el-button>
+              <el-button :disabled="iterationInfo.IterationID === ''" @click="edit" class="iteration-button">Edit</el-button>
+              <el-button :disabled="iterationInfo.IterationID === ''" @click="setGoal" class="iteration-button">Goal</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
