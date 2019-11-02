@@ -15,7 +15,7 @@
           </el-table-column>
           <el-table-column prop="GoalHour" label="Goal(Hour)">
             <template slot-scope="scope">
-              <el-input type='number' step="1" min="1" :disabled="!scope.row.IsEdit" v-model="scope.row.GoalHour"></el-input>
+              <el-input-number :min="0" :disabled="!scope.row.IsEdit" step-strictly v-model="scope.row.GoalHour"></el-input-number>
             </template>
           </el-table-column>
           <el-table-column label="">
