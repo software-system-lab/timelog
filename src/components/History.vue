@@ -79,7 +79,6 @@ export default {
         value: null
       }],
       logIDtoModify: null,
-      IterationIDToSearch: null,
       IterationList: window.SprintList,
       dialogFormVisible: false,
       rowData: [],
@@ -89,7 +88,12 @@ export default {
     }
   },
   async mounted() {
-    this.IterationIDToSearch = await profileService.getCurrentIteration()
+    const currentIteration = await profileService.getCurrentIterationRange()
+    if (currentIteration) {
+      this.StartSearchDate = moment(currentIteration.StartDate)
+      this.EndSearchDate = moment(currentIteration.EndDate)
+    }
+
     this.QueryLogs();
 
     //projectFilters
@@ -135,8 +139,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-
-</style>

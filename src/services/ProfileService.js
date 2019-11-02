@@ -90,5 +90,12 @@ export default {
     }
     const result = await HTTP.post('/Profile/iteration/current', req);
     return result.IterationID
+  },
+
+  async getCurrentIterationRange() {
+    let req = {
+      UserID: window.Profile.UserID
+    }
+    return await HTTP.post('/Profile/iteration/currentRange', req);
   }
 }

@@ -170,5 +170,13 @@ module.exports = class {
       const iterationID = await getCurrentIteration(req.body.UserID)
       res.status(200).send({ IterationID: iterationID })
     })
+
+    this.router.post("/iteration/currentRange", async function(req, res) {
+      if (!req.body.UserID) {
+        res.send(400)
+      }
+      const iterationID = await getCurrentIteration(req.body.UserID)
+      res.send(await _profileProvider.GetIterationByID(iterationID))
+    })
   }
 }
