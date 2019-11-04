@@ -140,10 +140,10 @@ export default {
       return {
         Title: '',
         ProjectID: null,
-        StartTime: new moment().format('HH:mm'),
-        EndTime: new moment().add(1, 'hours').format('HH:mm'),
-        StartDate: new moment().format('YYYY-MM-DD'),
-        EndDate: new moment().add(1, 'hours').format('YYYY-MM-DD'),
+        StartTime: new moment().add(-1, 'hours').format('HH:mm'),
+        EndTime: new moment().format('HH:mm'),
+        StartDate: new moment().add(-1, 'hours').format('YYYY-MM-DD'),
+        EndDate: new moment().format('YYYY-MM-DD'),
         Description: ''
       }
     },
