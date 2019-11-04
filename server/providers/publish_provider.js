@@ -8,8 +8,8 @@ module.exports = class {
       var newPublishCmd = "INSERT INTO `published_log` (`UserID`, `StartDate`, `EndDate`) VALUES (?, ?, ?)"
       await DB.query(newPublishCmd, [userID, startDate, endDate])
     } else {
-      var updatePublishCmd = "UPDATE `published_log` SET `StartDate` = ?, `EndDate` = ? WHERE `UserID` = ?"
-      await DB.query(updatePublishCmd, [startDate, endDate, userID])
+      var updatePublishCmd = "UPDATE `published_log` SET `StartDate` = ?, `EndDate` = ?, `UpdateTime` = ? WHERE `UserID` = ?"
+      await DB.query(updatePublishCmd, [startDate, endDate, new Date(), userID])
     }
   }
   async getAll() {
