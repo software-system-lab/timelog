@@ -140,7 +140,7 @@ export default {
       }
     },
     getHour(time) {
-      return this.paddingLeft((time / 3600000).toFixed(0),2)
+      return this.paddingLeft(Math.floor(time / 3600000),2)
     },
     getMinute(time) {
       return this.paddingLeft((time %
