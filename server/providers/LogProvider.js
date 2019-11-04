@@ -39,7 +39,7 @@ module.exports = class {
   }
 
   async GetUserLogsByIterationID(userID, iterationID) {
-    var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`UserID` = ? AND `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= `iteration`.`EndDate` AND `IterationID` = ? AND `log`.`IsDeleted` = ?";
+    var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`UserID` = ? AND `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= DATE_ADD(`iteration`.`EndDate`, INTERVAL 1 DAY) AND `IterationID` = ? AND `log`.`IsDeleted` = ?";
     let dbResult = await DB.query(cmd, [userID, iterationID, false]);
     return dbResult;
   }
