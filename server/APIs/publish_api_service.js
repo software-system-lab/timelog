@@ -24,7 +24,7 @@ module.exports = class {
     this.router.get("/data", async (req, res) => {
       try {
         const userDataList = await this.publishService.getUserDataList()
-        res.send(userDataList);
+        res.status(200).send(userDataList);
       } catch (err) {
         console.log(err)
         res.sendStatus(500)

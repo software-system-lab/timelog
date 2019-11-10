@@ -29,7 +29,7 @@ export default {
       return;
     }
     this.closeLoading();
-    if (response.statusText == "OK")
+    if (response.status == 200)
       return response.data;
     return;
   },
