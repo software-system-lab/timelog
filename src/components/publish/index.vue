@@ -49,6 +49,7 @@ export default {
   methods: {
     async update() {
       this.userDataList = await publishService.getUserDataList()
+      this.$forceUpdate();
     },
     paddingLeft(str, len) {
       if (str.toString().length >= len) {
