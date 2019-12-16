@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import Iteration from '@/components/Board/iteration/index.vue'
 import SpentTime from '@/components/Board/spent_time.vue'
 import Goal from '@/components/Board/goal.vue'
@@ -29,65 +29,62 @@ export default class Board extends Vue {
   iterationInfo = {
     iterationID: null
   };
-  projectList = [];
-  iterationSetting = false;
-  goalDisplay = true;
-
-
-  // ComponentsΩ
+  projectList = []
+  iterationSetting = false
+  goalDisplay = true
 
 
   // Life cycle
 
   async created() {
-    const iterationID = await profileService.getCurrentIteration();
+    const iterationID = await profileService.getCurrentIteration()
     this.iterationInfo = await profileService.GetIterationById(iterationID)
     this.getProjectsData()
-    this.$refs.iteration.iterationDate();
+    this.$refs.iteration.iterationDate()
   }
 
 
   // Methods
 
   async getProjectList() {
-    const userID = window.Profile.UserID;
-    let result = await logService.projectTimeByIteration(userID, this.iterationInfo.IterationID);
+    const userID = window.Profile.UserID
+    let result = await logService.projectTimeByIteration(userID, this.iterationInfo.IterationID)
     if (result != "no data") {
-      this.projectList = result;
+      this.projectList = result
     }
   }
 
   async getProjectsData() {
-    await this.getProjectList();
-    this.$refs.spentTime.update(this.projectList);
+    await this.getProjectList()
+    this.$refs.spentTime.update(this.projectList)
   }
 
   update() {
-    this.goalDisplay = true;
-    this.getProjectsData();
-    this.$refs.iteration.update();
+    this.goalDisplay = true
+    this.getProjectsData()
+    this.$refs.iteration.update()
   }
 
   async changeIteration(iterationID) {
-    this.iterationInfo = await profileService.GetIterationById(iterationID);
-    this.update();
+    this.iterationInfo = await profileService.GetIterationById(iterationID)
+    this.update()
   }
 
   openIterationSetting() {
-    this.iterationSetting = true;
+    this.iterationSetting = true
   }
 
   closeIterationSetting() {
-    this.iterationSetting = false;
-    this.update();
+    this.iterationSetting = false
+    this.update()
   }
 
   async displayByDate(date) {
-    this.goalDisplay = false;
-    this.iterationInfo.IterationID = "";
-    const userID = window.Profile.UserID;
-    this.projectList = await logService.projectTime(userID, date.start, date.end);
-    this.$refs.spentTime.update(this.projectList);
+    this.goalDisplay = false
+    this.iterationInfo.IterationID = ""
+    const userID = window.Profile.UserID
+    this.projectList = await logService.projectTime(userID, date.start, date.end)
+    this.$refs.spentTime.update(this.projectList)
   }
 }
 </script>

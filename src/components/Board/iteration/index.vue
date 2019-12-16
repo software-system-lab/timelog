@@ -53,95 +53,105 @@
 </template>
 
 <script>
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import moment from 'moment'
 import Selection from '@/components/Board/iteration/selection.vue'
 import InfoDialog from '@/components/Board/iteration/info_dialog.vue'
 import GoalDialog from '@/components/Board/iteration/goal_dialog.vue'
 import publishService from '@/services/publish_service.js'
 
-export default {
-  props: {
-    iterationInfo: Object,
-    projectList: Array
-  },
-  data() {
-    return {
-      infoDialogActive: false,
-      goalDialogActive: false,
-      isNew: false,
-      endDateOption: {},
-      pickedDate: []
-    }
-  },
-  watch: {
-    iterationInfo: function(itr) {
-      if (itr.IterationID !== null) {
-        this.iterationDate();
-      }
-    }
-  },
-  methods: {
-    update() {
-      this.$refs.infoDialog.update()
-      this.$refs.selection.update()
-      this.iterationDate()
-    },
-    iterationDate() {
-      let startDate = new Date(this.iterationInfo.StartDate)
-      let endDate = new Date(this.iterationInfo.EndDate)
-      this.pickedDate = [startDate, endDate]
-    },
-    setEndDateOption() {
-      this.endDateOption.disabledDate = time => {
-        if (moment(this.iterationInfo.StartDate) > moment(time.getTime()))
-          return true;
-        return false;
-      }
-    },
-    newIteration() {
-      this.isNew = true
-      this.infoDialogActive = true
-    },
-    closeDialog(type) {
-      if (type === 'info_dialog') {
-        this.infoDialogActive = false
-      } else if (type === 'goal_dialog') {
-        this.goalDialogActive = false
-        this.$emit("updateGoal")
-      }
-    },
-    iterationSelected(iterationID) {
-      this.$emit("update", iterationID)
-    },
-    edit() {
-      this.isNew = false
-      this.infoDialogActive = true
-    },
-    setGoal() {
-      this.goalDialogActive = true
-    },
-    displayByDate() {
-      this.$emit("displayByDate", {
-        start: this.pickedDate[0],
-        end: this.pickedDate[1]
-      })
-    },
-    async publish() {
-      let result = await publishService.publish(window.Profile.UserID, this.pickedDate[0], this.pickedDate[1])
-      if (result === 'success') {
-        this.$message({
-          message: 'Log Published!',
-          type: 'success'
-        });
-      } else {
-        this.$message.error('Failed to publish log.')
-      }
-    }
-  },
+@Component({
   components: {
     Selection,
     InfoDialog,
     GoalDialog
+  },
+  props: {
+    iterationInfo: Object,
+    projectList: Array
+  }
+})
+export default class Iteration extends Vue {
+  // Data members
+  infoDialogActive = false
+  goalDialogActive = false
+  isNew = false
+  endDateOption = {}
+  pickedDate = []
+
+  @Watch('iterationInfo')
+  onIterationInfoChange(itr) {
+    if (itr.IterationID !== null) {
+      this.iterationDate();
+    }
+  }
+
+
+  // Methods
+  update() {
+    this.$refs.infoDialog.update()
+    this.$refs.selection.update()
+    this.iterationDate()
+  }
+
+  iterationDate() {
+    let startDate = new Date(this.iterationInfo.StartDate)
+    let endDate = new Date(this.iterationInfo.EndDate)
+    this.pickedDate = [startDate, endDate]
+  }
+
+  setEndDateOption() {
+    this.endDateOption.disabledDate = time => {
+      if (moment(this.iterationInfo.StartDate) > moment(time.getTime()))
+        return true
+      return false
+    }
+  }
+
+  newIteration() {
+    this.isNew = true
+    this.infoDialogActive = true
+  }
+
+  closeDialog(type) {
+    if (type === 'info_dialog') {
+      this.infoDialogActive = false
+    } else if (type === 'goal_dialog') {
+      this.goalDialogActive = false
+      this.$emit("updateGoal")
+    }
+  }
+
+  iterationSelected(iterationID) {
+    this.$emit("update", iterationID)
+  }
+
+  edit() {
+    this.isNew = false
+    this.infoDialogActive = true
+  }
+
+  setGoal() {
+    this.goalDialogActive = true
+  }
+
+  displayByDate() {
+    this.$emit("displayByDate", {
+      start: this.pickedDate[0],
+      end: this.pickedDate[1]
+    })
+  }
+
+  async publish() {
+    let result = await publishService.publish(window.Profile.UserID, this.pickedDate[0], this.pickedDate[1])
+    if (result === 'success') {
+      this.$message({
+        message: 'Log Published!',
+        type: 'success'
+      });
+    } else {
+      this.$message.error('Failed to publish log.')
+    }
   }
 }
 </script>
