@@ -36,24 +36,23 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
+import { Vue, Component } from 'vue-property-decorator'
 
-    }
-  },
-  computed: {
-    profileName() {
-      return window.Profile.UserName;
-    },
-    profilePicture() {
-      return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`;
-    }
-  },
-  methods: {
-    addLog() {
-      this.$emit("addLog");
-    }
+@Component
+export default class Sidemenu extends Vue {
+  // Computed
+  get profileName() {
+    return window.Profile.UserName
+  }
+
+  get profilePicture() {
+    return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`
+  }
+
+
+  // Methods
+  addLog() {
+    this.$emit("addLog")
   }
 }
 </script>
