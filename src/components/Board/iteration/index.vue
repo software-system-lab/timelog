@@ -53,7 +53,8 @@
 </template>
 
 <script>
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { LogComponent } from '@/components/interface.js'
+import { Component, Watch } from 'vue-property-decorator'
 import moment from 'moment'
 import Selection from '@/components/Board/iteration/selection.vue'
 import InfoDialog from '@/components/Board/iteration/info_dialog.vue'
@@ -71,7 +72,7 @@ import publishService from '@/services/publish_service.js'
     projectList: Array
   }
 })
-export default class Iteration extends Vue {
+export default class Iteration extends LogComponent {
   // Data members
   infoDialogActive = false
   goalDialogActive = false

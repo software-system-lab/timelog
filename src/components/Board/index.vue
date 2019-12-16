@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { LogView } from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import Iteration from '@/components/Board/iteration/index.vue'
 import SpentTime from '@/components/Board/spent_time.vue'
 import Goal from '@/components/Board/goal.vue'
@@ -22,13 +23,13 @@ import profileService from '@/services/ProfileService.js'
     Iteration,
     SpentTime,
     Goal
- }
+  }
 })
-export default class Board extends Vue {
+export default class Board extends LogView {
   // Data members
   iterationInfo = {
     iterationID: null
-  };
+  }
   projectList = []
   iterationSetting = false
   goalDisplay = true

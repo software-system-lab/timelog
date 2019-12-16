@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { LogComponent } from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import TargetBase from '@/components/Board/TargetBase'
 
 @Component({
@@ -19,5 +20,5 @@ import TargetBase from '@/components/Board/TargetBase'
     projectList: Array
   }
 })
-export default class Goal extends Vue {}
+export default class Goal extends LogComponent {}
 </script>
