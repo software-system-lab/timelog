@@ -65,129 +65,138 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import _logService from '../services/LogService.js'
 import _profileService from '../services/ProfileService.js'
 
-export default {
-  data() {
-    return {
-      projectList: [],
-      UserForm: {},
-      IsProfileEdit: false
-    }
-  },
+@Component
+export default class Setting extends Vue {
+  // Data members
+  projectList = []
+  UserForm = {}
+  IsProfileEdit = false
+
+
+  // Life cycle
   async created() {
     this.QueryProjects()
     this.QueryUserProfile()
-  },
-  methods: {
-    async QueryProjects() {
-      let projectList = await _logService.GetUserProjects()
+  }
 
-      //clear list
-      this.projectList.length = 0
-      window.ProjectList.length = 0
-      // input to add project
-      this.projectList.push({
-        ProjectID: null,
-        ProjectName: '',
-        InputDisabled: false,
-        IsPrivate: false,
-        IsEnable: true
+
+  // Methods
+  async QueryProjects() {
+    let projectList = await _logService.GetUserProjects()
+
+    //clear list
+    this.projectList.length = 0
+    window.ProjectList.length = 0
+    // input to add project
+    this.projectList.push({
+      ProjectID: null,
+      ProjectName: '',
+      InputDisabled: false,
+      IsPrivate: false,
+      IsEnable: true
+    })
+
+    if (projectList == "no data")
+      this.$message({
+        message: 'no Project data!',
+        type: 'warning'
       })
-
-      if (projectList == "no data")
-        this.$message({
-          message: 'no Project data!',
-          type: 'warning'
+    else {
+      projectList.forEach(x => {
+        this.projectList.push({
+          ProjectID: x.ProjectID,
+          ProjectName: x.ProjectName,
+          IsPrivate: x.IsPrivate ? true : false,
+          IsEnable: x.IsEnable ? true : false,
+          InputDisabled: true
         })
-      else {
-        projectList.forEach(x => {
-          this.projectList.push({
-            ProjectID: x.ProjectID,
-            ProjectName: x.ProjectName,
-            IsPrivate: x.IsPrivate ? true : false,
-            IsEnable: x.IsEnable ? true : false,
-            InputDisabled: true
-          })
-          window.ProjectList.push({
-            ProjectID: x.ProjectID,
-            ProjectName: x.ProjectName,
-            IsPrivate: x.IsPrivate ? true : false,
-            IsEnable: x.IsEnable ? true : false
-          })
+        window.ProjectList.push({
+          ProjectID: x.ProjectID,
+          ProjectName: x.ProjectName,
+          IsPrivate: x.IsPrivate ? true : false,
+          IsEnable: x.IsEnable ? true : false
         })
-      }
-    },
-    cancel() {
-      this.IsProfileEdit = false
-      this.QueryUserProfile()
-    },
-    async ModifyOrAdd(project) {
-      if (project.InputDisabled == true) {
-        if (project.ProjectID) //not new project
-          project.InputDisabled = false
-      } else {
-        if (project.ProjectName.length < 1) {
-          this.$message.error('Name of project cannot be null!')
-          return
-        }
+      })
+    }
+  }
 
-        var DuplicatedProject = this.projectList.find(x => x.ProjectName == project.ProjectName && x.ProjectID != null && x.ProjectID != project.ProjectID)
-        if (DuplicatedProject) {
-          this.$message.error('Duplicate name!')
-          return
-        }
+  cancel() {
+    this.IsProfileEdit = false
+    this.QueryUserProfile()
+  }
 
-        let result = await _logService.ModifyOrAddAProject(project)
-        if (result) {
-          this.$message({
-            message: 'successed!',
-            type: 'success'
-          })
-          this.QueryProjects()
-        } else {
-          this.$message.error('Fail to add/modify the project! Please Retry')
-        }
+  async ModifyOrAdd(project) {
+    if (project.InputDisabled == true) {
+      if (project.ProjectID) //not new project
+        project.InputDisabled = false
+    } else {
+      if (project.ProjectName.length < 1) {
+        this.$message.error('Name of project cannot be null!')
+        return
       }
-    },
-    async QueryUserProfile() {
-      window.Profile = await _profileService.GetProfile()
-      this.UserForm = {
-        UserID: window.Profile.UserID,
-        UserName: window.Profile.UserName,
-        AccountID: window.Profile.AccountID,
-        Mail: window.Profile.Mail,
-        Phone: window.Profile.Phone
+
+      var DuplicatedProject = this.projectList.find(x => x.ProjectName == project.ProjectName && x.ProjectID != null && x.ProjectID != project.ProjectID)
+      if (DuplicatedProject) {
+        this.$message.error('Duplicate name!')
+        return
       }
-    },
-    async EditUserProfile() {
-      let result = await _profileService.EditUserProfile(this.UserForm)
+
+      let result = await _logService.ModifyOrAddAProject(project)
       if (result) {
         this.$message({
           message: 'successed!',
           type: 'success'
         })
-        this.IsProfileEdit = false
-        this.QueryUserProfile()
-      } else {
-        this.$message.error('Fail to modify your personal profile! Please Retry')
-      }
-    },
-    async Delete(data) {
-      let result = await _logService.DeleteAProject(data.ProjectID)
-      if (result) {
-        this.$message({
-          message: 'successed!',
-          type: 'success'
-        })
-        this.IsProfileEdit = false
         this.QueryProjects()
       } else {
-        this.$message.error('Fail to delete the project! Please Retry')
+        this.$message.error('Fail to add/modify the project! Please Retry')
       }
-    },
-    update() {}
+    }
   }
+
+  async QueryUserProfile() {
+    window.Profile = await _profileService.GetProfile()
+    this.UserForm = {
+      UserID: window.Profile.UserID,
+      UserName: window.Profile.UserName,
+      AccountID: window.Profile.AccountID,
+      Mail: window.Profile.Mail,
+      Phone: window.Profile.Phone
+    }
+  }
+
+  async EditUserProfile() {
+    let result = await _profileService.EditUserProfile(this.UserForm)
+    if (result) {
+      this.$message({
+        message: 'successed!',
+        type: 'success'
+      })
+      this.IsProfileEdit = false
+      this.QueryUserProfile()
+    } else {
+      this.$message.error('Fail to modify your personal profile! Please Retry')
+    }
+  }
+
+  async Delete(data) {
+    let result = await _logService.DeleteAProject(data.ProjectID)
+    if (result) {
+      this.$message({
+        message: 'successed!',
+        type: 'success'
+      })
+      this.IsProfileEdit = false
+      this.QueryProjects()
+    } else {
+      this.$message.error('Fail to delete the project! Please Retry')
+    }
+  }
+
+  update() {}
 }
 </script>

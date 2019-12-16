@@ -23,28 +23,31 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import AddLog from '@/components/log/add_log.vue'
 
-export default {
-  data() {
-    return {
-      addLogVisible: false
-    }
-  },
-  methods: {
-    openPopup() {
-      this.addLogVisible = true
-    },
-    closePopup() {
-      this.addLogVisible = false
-    },
-    update() {
-      this.$refs.view.update()
-      this.closePopup()
-    }
-  },
+@Component({
   components: {
     AddLog
+  }
+})
+export default class LoginedLayout extends Vue {
+  // Data members
+  addLogVisible = false
+
+
+  // Methods
+  openPopup() {
+    this.addLogVisible = true
+  }
+
+  closePopup() {
+    this.addLogVisible = false
+  }
+
+  update() {
+    this.$refs.view.update()
+    this.closePopup()
   }
 }
 </script>
