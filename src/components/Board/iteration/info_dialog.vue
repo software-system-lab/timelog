@@ -25,21 +25,24 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import moment from 'moment'
 import profileService from '@/services/ProfileService.js'
 
-export default {
+@Component({
   props: {
     iterationInfo: Object,
     visible: Boolean,
     isNew: Boolean
-  },
-  data() {
-    return {
-      iterationForm: this.newForm(),
-      endDateOption: {}
-    }
-  },
+  }
+})
+export default class InfoDialog extends Vue {
+  // Data members
+  iterationForm = this.newForm()
+  endDateOption = {}
+
+
+  // Life cycle
   created() {
     this.endDateOption.disabledDate = time => {
       if (moment(this.iterationForm.StartDate) > moment(time.getTime())) {
@@ -47,43 +50,48 @@ export default {
       }
       return false
     }
-  },
-  methods: {
-    async update() {
-      this.iterationForm = this.iterationInfo
-    },
-    openHandler() {
-      if (this.isNew) {
-        this.iterationForm = this.newForm();
-      } else {
-        this.update();
-      }
-    },
-    newForm() {
-      return {
-        IterationID: null,
-        IterationName: '',
-        StartDate: new moment(),
-        EndDate: new moment().add(7, 'days'),
-        Content: ''
-      }
-    },
-    closeDialog() {
-      this.$refs['form'].resetFields();
-      this.$emit('close', "info_dialog");
-    },
-    async saveIteration() {
-      let result = await profileService.ModifyOrAddAIteration(this.iterationForm)
-      if (result) {
-        this.$message({
-          message: 'successed!',
-          type: 'success'
-        })
-        this.closeDialog();
-        this.$emit("update", result);
-      } else {
-        this.$message.error('Failed to save iteration info! Please Retry!');
-      }
+  }
+
+
+  // Methods
+  async update() {
+    this.iterationForm = this.iterationInfo
+  }
+
+  openHandler() {
+    if (this.isNew) {
+      this.iterationForm = this.newForm();
+    } else {
+      this.update();
+    }
+  }
+
+  newForm() {
+    return {
+      IterationID: null,
+      IterationName: '',
+      StartDate: new moment(),
+      EndDate: new moment().add(7, 'days'),
+      Content: ''
+    }
+  }
+
+  closeDialog() {
+    this.$refs['form'].resetFields();
+    this.$emit('close', "info_dialog");
+  }
+
+  async saveIteration() {
+    let result = await profileService.ModifyOrAddAIteration(this.iterationForm)
+    if (result) {
+      this.$message({
+        message: 'successed!',
+        type: 'success'
+      })
+      this.closeDialog();
+      this.$emit("update", result);
+    } else {
+      this.$message.error('Failed to save iteration info! Please Retry!');
     }
   }
 }

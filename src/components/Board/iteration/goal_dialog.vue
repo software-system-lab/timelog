@@ -34,51 +34,54 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import logService from '@/services/LogService.js'
 
-export default {
+@Component({
   props: {
     iterationInfo: Object,
     projectList: Array,
     visible: Boolean
-  },
-  data() {
-    return {
-      goalList: window.ProjectList
-    }
-  },
-  methods: {
-    openHandler() {
-      this.goalList = []
-      this.projectList.forEach(project => {
-        if (project.ProjectID != null) {
-          this.goalList.push(JSON.parse(JSON.stringify(project)))
-        }
-      })
-    },
-    close() {
-      this.$emit("close", "goal_dialog")
-    },
-    ModifyOrAdd(data) {
-      data.IsEdit = false;
-      logService.ModifyOrAddAGoal(data, this.iterationInfo.IterationID)
-      this.projectList.forEach(project => {
-        if (project.ProjectID === data.ProjectID) {
-          project.GoalHour = data.GoalHour
-        }
-      })
-    },
-    cancelGoal(data) {
-      this.projectList.forEach(project => {
-        if (project.ProjectID === data.ProjectID) {
-          const keyList = Object.keys(data)
-          keyList.forEach(key => {
-            data[key] = project[key]
-          })
-        }
-      })
-      data.IsEdit = false;
-    }
+  }
+})
+export default class GoalDialog extends Vue {
+  // Data members
+  goalList = window.ProjectList
+
+  // Methods
+  openHandler() {
+    this.goalList = []
+    this.projectList.forEach(project => {
+      if (project.ProjectID != null) {
+        this.goalList.push(JSON.parse(JSON.stringify(project)))
+      }
+    })
+  }
+
+  close() {
+    this.$emit("close", "goal_dialog")
+  }
+
+  ModifyOrAdd(data) {
+    data.IsEdit = false;
+    logService.ModifyOrAddAGoal(data, this.iterationInfo.IterationID)
+    this.projectList.forEach(project => {
+      if (project.ProjectID === data.ProjectID) {
+        project.GoalHour = data.GoalHour
+      }
+    })
+  }
+
+  cancelGoal(data) {
+    this.projectList.forEach(project => {
+      if (project.ProjectID === data.ProjectID) {
+        const keyList = Object.keys(data)
+        keyList.forEach(key => {
+          data[key] = project[key]
+        })
+      }
+    })
+    data.IsEdit = false;
   }
 }
 </script>

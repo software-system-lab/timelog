@@ -6,27 +6,27 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import profileService from '@/services/ProfileService.js'
 
-export default {
+@Component({
   props: {
     iterationInfo: Object
-  },
-  data() {
-    return {
-      iterationList: []
-    }
-  },
+  }
+})
+export default class Selection extends Vue {
+  iterationList = []
+
   created() {
     this.update()
-  },
-  methods: {
-    async update() {
-      this.iterationList = await profileService.GetIterations()
-    },
-    async onSelect(iterationID) {
-      this.$emit("selected", iterationID)
-    },
+  }
+
+  async update() {
+    this.iterationList = await profileService.GetIterations()
+  }
+
+  async onSelect(iterationID) {
+    this.$emit("selected", iterationID)
   }
 }
 </script>
