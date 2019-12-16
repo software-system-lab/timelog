@@ -18,21 +18,19 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import Config from "../config.js";
 import _profileService from "../services/ProfileService.js";
 import _logService from "../services/LogService.js";
 import { afterLogin } from "@/services/Login.js"
 
-export default {
-  // name: 'Login',
-  data() {
-    return {};
-  },
-  methods: {},
+@Component
+export default class Login extends Vue {
+  // Life cycle
   mounted() {
     window.fbAsyncInit = function() {
-      FB.init(Config.FBLogin);
-      FB.AppEvents.logPageView();
+      FB.init(Config.FBLogin)
+      FB.AppEvents.logPageView()
 
       // Get FB Login Status
       FB.getLoginStatus(async response => {
@@ -40,22 +38,22 @@ export default {
           var loginResult = await _profileService.Login(
             response.authResponse.userID,
             response.authResponse.accessToken
-          );
+          )
           await FB.api("/me?fields=name,id,email", async function(response) {
             //Get user Profile from FB
             window.FBProfile = await response;
             if (loginResult == "logined") {
-              $(".fb-login-button").hide();
-              await afterLogin();
+              $(".fb-login-button").hide()
+              await afterLogin()
             } else if (loginResult == "unregistered") {
-              window.authorized = true;
+              window.authorized = true
               await FB.api("/me?fields=name,id,email", async function(response) {
                 //Get user Profile from FB
-                window.FBProfile = await response;
+                window.FBProfile = await response
                 router.push({
                   name: "Register"
-                });
-              });
+                })
+              })
             } else {
               vueRoot.$message({
                 showClose: true,
@@ -63,19 +61,19 @@ export default {
                   loginResult +
                   ")",
                 type: "error"
-              });
+              })
             }
-          });
+          })
         }
         else {
-          $(".el-icon-loading").hide();
-          window.userProfile = {};
-          window.authorized = false;
+          $(".el-icon-loading").hide()
+          window.userProfile = {}
+          window.authorized = false
         }
-      });
-    };
+      })
+    }
   }
-};
+}
 </script>
 
 <style scoped>

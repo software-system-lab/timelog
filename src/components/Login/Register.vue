@@ -37,78 +37,77 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import _profileService from '../../services/ProfileService.js'
 import { afterLogin } from "@/services/Login.js"
 
-export default {
-  data() {
-    return {
-      UserForm: {
-        UserName: window.FBProfile.name,
-        FBID: window.FBProfile.id,
-        AccountID: '',
-        Mail: '',
-        Phone: ''
-      },
-      formRules: {
-        UserName: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        AccountID: [{
-          required: true,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-        Mail: [{
-          required: false,
-          message: 'Check Here!',
-          trigger: 'blur',
-          type: 'email'
-        }],
-        Phone: [{
-          required: false,
-          message: 'Check Here!',
-          trigger: 'blur'
-        }],
-      },
-    }
-  },
-  mounted() {
+@Component
+export default class Register extends Vue {
+  // Data members
+  UserForm = {
+    UserName: window.FBProfile.name,
+    FBID: window.FBProfile.id,
+    AccountID: '',
+    Mail: '',
+    Phone: ''
+  }
 
-  },
-  computed: {
-    profileName() {
-      return window.FBProfile.name;
-    },
-    profilePicture() {
-      return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`;
-    }
-  },
-  methods: {
-    async Submit() {
-      this.$refs['form'].validate(async (valid) => {
-        if (valid) {
-          FB.getLoginStatus(async response => {
-            let result = await _profileService.Register(this.UserForm, response.authResponse.accessToken);
-            if (result) {
-              vueRoot.$alert('Register successed!!', {
-                confirmButtonText: 'ok',
-                type: 'success'
-              }).then(async () => {
-                await afterLogin();
-              });
-            } else {
-              this.$message({
-                type: 'error',
-                message: 'Retry Or Contact the administrator'
-              });
-            }
-          });
-        }
-      });
-    }
+  formRules = {
+    UserName: [{
+      required: true,
+      message: 'Check Here!',
+      trigger: 'blur'
+    }],
+    AccountID: [{
+      required: true,
+      message: 'Check Here!',
+      trigger: 'blur'
+    }],
+    Mail: [{
+      required: false,
+      message: 'Check Here!',
+      trigger: 'blur',
+      type: 'email'
+    }],
+    Phone: [{
+      required: false,
+      message: 'Check Here!',
+      trigger: 'blur'
+    }],
+  }
+
+
+  // Computed
+  get profileName() {
+    return window.FBProfile.name;
+  }
+  get profilePicture() {
+    return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`;
+  }
+
+
+  // Methods
+  async Submit() {
+    this.$refs['form'].validate(async (valid) => {
+      if (valid) {
+        FB.getLoginStatus(async response => {
+          let result = await _profileService.Register(this.UserForm, response.authResponse.accessToken);
+          if (result) {
+            vueRoot.$alert('Register successed!!', {
+              confirmButtonText: 'ok',
+              type: 'success'
+            }).then(async () => {
+              await afterLogin();
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: 'Retry Or Contact the administrator'
+            });
+          }
+        });
+      }
+    });
   }
 }
 </script>
