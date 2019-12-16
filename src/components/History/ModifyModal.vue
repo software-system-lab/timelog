@@ -118,6 +118,7 @@ export default class ModifyModal extends Vue {
         selectableRange: this.LogForm.StartTime + ':00 - 23:59:59'
       }
     }
+    return
   }
 
 
