@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { LogComponent } from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import profileService from '@/services/ProfileService.js'
 
 @Component({
@@ -14,7 +15,7 @@ import profileService from '@/services/ProfileService.js'
     iterationInfo: Object
   }
 })
-export default class Selection extends Vue {
+export default class Selection extends LogComponent {
   // Data members
   iterationList = []
 

@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import LogComponent from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import moment from 'moment'
 import Chart from 'chart.js'
 
@@ -41,7 +42,7 @@ import Chart from 'chart.js'
     ProjectList: Array
   }
 })
-export default class SpentTime extends Vue {
+export default class SpentTime extends LogComponent {
   // Data members
   ctx = null
   pieChart = null

@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { LogComponent } from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import moment from 'moment'
 import profileService from '@/services/ProfileService.js'
 
@@ -36,7 +37,7 @@ import profileService from '@/services/ProfileService.js'
     isNew: Boolean
   }
 })
-export default class InfoDialog extends Vue {
+export default class InfoDialog extends LogComponent {
   // Data members
   iterationForm = this.newForm()
   endDateOption = {}
@@ -54,7 +55,7 @@ export default class InfoDialog extends Vue {
 
 
   // Methods
-  async update() {
+  update() {
     this.iterationForm = this.iterationInfo
   }
 

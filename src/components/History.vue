@@ -59,7 +59,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import LogView from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import moment from 'moment'
 import ModifyHistoryModal from '@/components/History/ModifyModal'
 import _logService from '@/services/LogService.js'
@@ -70,7 +71,7 @@ import profileService from '@/services/ProfileService.js'
     ModifyHistoryModal,
   }
 })
-export default class History extends Vue {
+export default class History extends LogView {
   // Data members
   logList = []
 
