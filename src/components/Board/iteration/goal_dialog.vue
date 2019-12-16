@@ -62,14 +62,12 @@ export default class GoalDialog extends Vue {
     this.$emit("close", "goal_dialog")
   }
 
-  ModifyOrAdd(data) {
+  async ModifyOrAdd(data) {
     data.IsEdit = false;
-    logService.ModifyOrAddAGoal(data, this.iterationInfo.IterationID)
-    this.projectList.forEach(project => {
-      if (project.ProjectID === data.ProjectID) {
-        project.GoalHour = data.GoalHour
-      }
-    })
+    let result = await logService.ModifyOrAddAGoal(data, this.iterationInfo.IterationID)
+    if (result) {
+      this.$emit("goalEdit", data)
+    }
   }
 
   cancelGoal(data) {

@@ -48,7 +48,7 @@
       <el-button type="warning" @click="publish">Publish</el-button>
     </el-row>
     <InfoDialog :visible="infoDialogActive" :iterationInfo="iterationInfo" :isNew="isNew" @update="iterationSelected" @close="closeDialog" ref="infoDialog"/>
-    <GoalDialog :visible="goalDialogActive" :iterationInfo="iterationInfo" :projectList="projectList" @close="closeDialog" />
+    <GoalDialog :visible="goalDialogActive" :iterationInfo="iterationInfo" :projectList="projectList" @goalEdit="goalEdit" @close="closeDialog" />
   </el-card>
 </template>
 
@@ -119,7 +119,6 @@ export default class Iteration extends LogComponent {
       this.infoDialogActive = false
     } else if (type === 'goal_dialog') {
       this.goalDialogActive = false
-      this.$emit("updateGoal")
     }
   }
 
@@ -134,6 +133,10 @@ export default class Iteration extends LogComponent {
 
   setGoal() {
     this.goalDialogActive = true
+  }
+
+  goalEdit() {
+    this.$emit("updateGoal")
   }
 
   displayByDate() {
