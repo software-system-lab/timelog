@@ -35,7 +35,6 @@ export default class Board extends Vue {
 
 
   // Life cycle
-
   async created() {
     const iterationID = await profileService.getCurrentIteration()
     this.iterationInfo = await profileService.GetIterationById(iterationID)
@@ -45,7 +44,6 @@ export default class Board extends Vue {
 
 
   // Methods
-
   async getProjectList() {
     const userID = window.Profile.UserID
     let result = await logService.projectTimeByIteration(userID, this.iterationInfo.IterationID)

@@ -15,12 +15,17 @@ import profileService from '@/services/ProfileService.js'
   }
 })
 export default class Selection extends Vue {
+  // Data members
   iterationList = []
 
+
+  // Life cycle
   created() {
     this.update()
   }
 
+
+  // Methods
   async update() {
     this.iterationList = await profileService.GetIterations()
   }

@@ -8,14 +8,16 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import TargetBase from '@/components/Board/TargetBase'
 
-export default {
-  props: {
-    projectList: Array
-  },
+@Component({
   components: {
     TargetBase
+  },
+  props: {
+    projectList: Array
   }
-}
+})
+export default class Goal extends Vue {}
 </script>
