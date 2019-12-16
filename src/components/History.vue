@@ -59,34 +59,44 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator'
 import moment from 'moment'
 import ModifyHistoryModal from '@/components/History/ModifyModal'
 import _logService from '@/services/LogService.js'
 import profileService from '@/services/ProfileService.js'
 
-export default {
-  data() {
-    var projectList = window.ProjectList;
-    projectList.push({
+@Component({
+  components: {
+    ModifyHistoryModal,
+  }
+})
+export default class History extends Vue {
+  // Data members
+  logList = []
+
+  projectList = window.ProjectList
+
+  projectFilters = [{
+    text: 'Untitled Events',
+    value: null
+  }]
+
+  logIDtoModify = null
+  IterationList = window.SprintList
+  dialogFormVisible = false
+  rowData = []
+  KeywordToSearch = ''
+  StartSearchDate = new moment().add(-7, 'days').format('YYYY-MM-DD')
+  EndSearchDate = new moment().format('YYYY-MM-DD')
+
+  // Life cycle
+  beforeCreated() {
+    this.projectList.push({
       ProjectName: "Untitled Events",
       ProjectID: ""
-    });
-    return {
-      logList: [],
-      projectList: projectList,
-      projectFilters: [{
-        text: 'Untitled Events',
-        value: null
-      }],
-      logIDtoModify: null,
-      IterationList: window.SprintList,
-      dialogFormVisible: false,
-      rowData: [],
-      KeywordToSearch: '',
-      StartSearchDate: new moment().add(-7, 'days').format('YYYY-MM-DD'),
-      EndSearchDate: new moment().format('YYYY-MM-DD')
-    }
-  },
+    })
+  }
+
   async mounted() {
     const currentIteration = await profileService.getCurrentIterationRange()
     if (currentIteration) {
@@ -94,48 +104,50 @@ export default {
       this.EndSearchDate = moment(currentIteration.EndDate)
     }
 
-    this.QueryLogs();
+    this.QueryLogs()
 
     //projectFilters
     //clear list
-    this.projectFilters.length = 0;
+    this.projectFilters.length = 0
     this.projectList.forEach(x => {
       this.projectFilters.push({
         value: x.ProjectID? x.ProjectID.toString(): null,
         text: x.ProjectName,
       })
     })
-  },
-  methods: {
-    filterProject(value, row) {
-      var flag = false;
-      if (row.ProjectID == value) {
-        flag = true
-      }
-      return flag;
-    },
-    Edit(rowData) {
-      this.logIDtoModify = rowData.LogID;
-      this.dialogFormVisible = true;
-    },
-    async closeModal() {
-      this.logIDtoModify = null;
-      this.QueryLogs();
-      this.dialogFormVisible = false;
-    },
-    async QueryLogs() {
-      let result = await _logService.GetUserLogs(this.KeywordToSearch, new moment(this.StartSearchDate), new moment(this.EndSearchDate));
-      if (result != "no data")
-        this.logList = result;
-      else
-        this.logList = [];
-    },
-    update() {
-      this.QueryLogs()
+  }
+
+
+  // Methods
+  filterProject(value, row) {
+    var flag = false
+    if (row.ProjectID == value) {
+      flag = true
     }
-  },
-  components: {
-    ModifyHistoryModal,
+    return flag
+  }
+
+  Edit(rowData) {
+    this.logIDtoModify = rowData.LogID
+    this.dialogFormVisible = true
+  }
+
+  async closeModal() {
+    this.logIDtoModify = null
+    this.QueryLogs()
+    this.dialogFormVisible = false
+  }
+
+  async QueryLogs() {
+    let result = await _logService.GetUserLogs(this.KeywordToSearch, new moment(this.StartSearchDate), new moment(this.EndSearchDate))
+    if (result != "no data")
+      this.logList = result
+    else
+      this.logList = []
+  }
+
+  update() {
+    this.QueryLogs()
   }
 }
 </script>
