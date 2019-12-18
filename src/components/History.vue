@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import LogView from '@/components/interface.js'
+import { LogView } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
 import moment from 'moment'
 import ModifyHistoryModal from '@/components/History/ModifyModal'

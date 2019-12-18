@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import LogComponent from '@/components/interface.js'
+import { LogComponent } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
 import moment from 'moment'
 import Chart from 'chart.js'
