@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: timelog
+  name: timelog-production
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: timelog
+      app: timelog-production
       version: v1
   template:
     metadata:
       labels:
-        app: timelog
+        app: timelog-production
         version: v1
     spec:
       containers:
-        - name: timelog
+        - name: timelog-production
           image: nightlord851108/timelog:master.f320057
           imagePullPolicy: Always
           ports:

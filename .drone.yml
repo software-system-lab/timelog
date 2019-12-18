@@ -36,15 +36,13 @@ steps:
       from_secret: timelog_docker_passwd
 
 # - name: Deploy
-#   image: traherom/kustomize-docker
+#   image: nightlord851108/kustomize
 #   environment:
 #     CLUSTER_TOKEN:
 #       from_secret: rancher_cluster_token
 #   commands:
-#   - cd kustomize/base
-#   - kustomize build .
-#   - kubectl apply --server=ssl-rancher.csie.ntut.edu.tw  --token=${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois -f -
-#
+#   - kustomize build kustomize/base | kubectl apply --server=ssl-rancher.csie.ntut.edu.tw  --token=${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois -f -
+
 trigger:
   branch:
   - master
