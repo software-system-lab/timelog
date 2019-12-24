@@ -23,7 +23,8 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { LogComponent } from '@/components/interface.js'
+import { Component } from 'vue-property-decorator'
 import AddLog from '@/components/log/add_log.vue'
 
 @Component({
@@ -31,7 +32,7 @@ import AddLog from '@/components/log/add_log.vue'
     AddLog
   }
 })
-export default class LoginedLayout extends Vue {
+export default class LoginedLayout extends LogComponent {
   // Data members
   addLogVisible = false
 
