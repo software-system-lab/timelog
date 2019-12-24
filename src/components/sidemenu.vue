@@ -31,12 +31,12 @@
       <span slot="title">Publish</span>
     </el-menu-item>
   </router-link>
-  <router-link :to="{ name: 'Team'}">
+  <!-- <router-link :to="{ name: 'Team'}">
     <el-menu-item index="6">
       <i class="el-icon-custom"></i>
       <span slot="title">Team</span>
     </el-menu-item>
-  </router-link>
+  </router-link> -->
 
 </el-menu>
 </template>
