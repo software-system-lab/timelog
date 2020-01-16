@@ -1,14 +1,11 @@
 # Timelog
 
-[![Build Status](https://drone.hsiang.me/api/badges/software-system-lab/timelog/status.svg)](https://drone.hsiang.me/software-system-lab/timelog)
+[![Build Status](https://drone.hsiang.me/api/badges/ois/timelog/status.svg)](https://drone.hsiang.me/ois/timelog)
 
 ![](static/image/timelog.png)
 
 timelog is a web app for users to record how they use time.
 It have been developed by node.js and mySQL.
-
-## CI Status
-[![Build Status](https://drone.hsiang.me/api/badges/ois/timelog/status.svg)](https://drone.hsiang.me/ois/timelog)
 
 ## How to use
 ### Sever
