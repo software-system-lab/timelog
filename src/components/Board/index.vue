@@ -1,11 +1,21 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <Iteration @update="changeIteration" @updateGoal="getProjectsData" @displayByDate="displayByDate" :iterationInfo="iterationInfo" :projectList="projectList" ref="iteration"/>
+  <Iteration
+    @update="changeIteration"
+    @updateGoal="getTaskTypesData"
+    @displayByDate="displayByDate"
+    :iterationInfo="iterationInfo"
+    :taskTypeList="taskTypeList"
+    ref="iteration"/>
   <br>
-  <SpentTime :projectList="projectList" ref="spentTime"/>
+  <SpentTime :taskTypeList="taskTypeList" ref="spentTime"/>
   <br>
-  <Goal v-if="goalDisplay" :projectList="projectList" @setting="openIterationSetting" ref='goal'/>
+  <Goal
+    v-if="goalDisplay"
+    :taskTypeList="taskTypeList"
+    @setting="openIterationSetting"
+    ref='goal'/>
 </div>
 </template>
 
@@ -30,7 +40,7 @@ export default class Board extends LogView {
   iterationInfo = {
     iterationID: null
   }
-  projectList = []
+  taskTypeList = []
   iterationSetting = false
   goalDisplay = true
 
@@ -39,28 +49,28 @@ export default class Board extends LogView {
   async created() {
     const iterationID = await profileService.getCurrentIteration()
     this.iterationInfo = await profileService.GetIterationById(iterationID)
-    this.getProjectsData()
+    this.getTaskTypesData()
     this.$refs.iteration.iterationDate()
   }
 
 
   // Methods
-  async getProjectList() {
+  async getTaskTypeList() {
     const userID = window.Profile.UserID
-    let result = await logService.projectTimeByIteration(userID, this.iterationInfo.IterationID)
+    let result = await logService.taskTypeTimeByIteration(userID, this.iterationInfo.IterationID)
     if (result != "no data") {
-      this.projectList = result
+      this.taskTypeList = result
     }
   }
 
-  async getProjectsData() {
-    await this.getProjectList()
-    this.$refs.spentTime.update(this.projectList)
+  async getTaskTypesData() {
+    await this.getTaskTypeList()
+    this.$refs.spentTime.update(this.taskTypeList)
   }
 
   update() {
     this.goalDisplay = true
-    this.getProjectsData()
+    this.getTaskTypesData()
     this.$refs.iteration.update()
   }
 
@@ -82,8 +92,8 @@ export default class Board extends LogView {
     this.goalDisplay = false
     this.iterationInfo.IterationID = ""
     const userID = window.Profile.UserID
-    this.projectList = await logService.projectTime(userID, date.start, date.end)
-    this.$refs.spentTime.update(this.projectList)
+    this.taskTypeList = await logService.taskTypeTime(userID, date.start, date.end)
+    this.$refs.spentTime.update(this.taskTypeList)
   }
 }
 </script>

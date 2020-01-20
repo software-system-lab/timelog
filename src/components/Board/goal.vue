@@ -3,7 +3,11 @@
     <div slot="header" class="clearfix">
       <h2>My Iteration Target</h2>
     </div>
-    <TargetBase v-for="project in projectList" :key="project.ProjectID" v-if="project.ProjectID != null && project.GoalHour > 0" :project="project"></TargetBase>
+    <TargetBase
+      v-if="taskType.TaskTypeID != null && taskType.GoalHour > 0"
+      v-for="taskType in taskTypeList"
+      :key="taskType.TaskTypeID"
+      :taskType="taskType"></TargetBase>
   </el-card>
 </template>
 
@@ -17,7 +21,7 @@ import TargetBase from '@/components/Board/TargetBase'
     TargetBase
   },
   props: {
-    projectList: Array
+    taskTypeList: Array
   }
 })
 export default class Goal extends LogComponent {}

@@ -7,9 +7,9 @@
   </el-col>
   <el-col :md="12" :sm="24">
     <el-table :data="TagAnalysisList" sortable="true">
-      <el-table-column prop="ProjectName" label="Tag">
+      <el-table-column prop="TaskTypeName" label="Tag">
         <template slot-scope="scope">
-          {{scope.row.ProjectName}}
+          {{scope.row.TaskTypeName}}
         </template>
       </el-table-column>
       <el-table-column prop="TimeLength" label="Time Length">
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async QueryTeammateData() {
-      let result = await _logService.projectTimeByIteration(this.teammate.UserID, this.teammate.CurrentIterationID);
+      let result = await _logService.taskTypeTimeByIteration(this.teammate.UserID, this.teammate.CurrentIterationID);
       if (result != "no data") {
         this.TagAnalysisList = result;
         //clear
@@ -106,7 +106,7 @@ export default {
         this.Data.datasets[0].data.length = 0;
         for (let i = 0; i < result.length; i++) {
           if (i < 5) {
-            this.Data.labels.push(result[i].ProjectName);
+            this.Data.labels.push(result[i].TaskTypeName);
             this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0));
             this.Data.datasets[1].data.push(
               result[i].GoalHour != null ?

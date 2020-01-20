@@ -6,7 +6,7 @@
     <el-table :data="userDataList" sortable="true">
       <el-table-column type="expand">
         <template slot-scope="scope">
-          <SpentTime :ProjectList="scope.row.projectList"/>
+          <SpentTime :TaskTypeList="scope.row.taskTypeList"/>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="Name" align="center">
