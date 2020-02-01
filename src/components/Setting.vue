@@ -3,15 +3,15 @@
   <el-col :md="12" :sm="24">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <h2>My Projects</h2>
+        <h2>My TaskTypes</h2>
       </div>
-      <el-table :data="projectList" sortable="true">
+      <el-table :data="taskTypeList" sortable="true">
 
-        <el-table-column prop="ProjectName" label="Name" align="left">
+        <el-table-column prop="TaskTypeName" label="Name" align="left">
           <template slot-scope="scope">
-            <el-input v-if="scope.row.ProjectID == null" placeholder="Add a new project" minlength="1" v-model="scope.row.ProjectName">
+            <el-input v-if="scope.row.TaskTypeID == null" placeholder="Add a new taskType" minlength="1" v-model="scope.row.TaskTypeName">
             </el-input>
-            <el-input v-else :disabled="scope.row.InputDisabled" minlength="1" v-model="scope.row.ProjectName">
+            <el-input v-else :disabled="scope.row.InputDisabled" minlength="1" v-model="scope.row.TaskTypeName">
             </el-input>
           </template>
         </el-table-column>
@@ -29,9 +29,9 @@
         </el-table-column>
         <el-table-column label="" align="left">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.ProjectID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.TaskTypeID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
             <el-button type="primary" icon="el-icon-edit" v-else circle @click="ModifyOrAdd(scope.row)"></el-button>
-            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.ProjectID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
+            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.TaskTypeID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,51 +72,51 @@ import _profileService from '../services/ProfileService.js'
 @Component
 export default class Setting extends Vue {
   // Data members
-  projectList = []
+  taskTypeList = []
   UserForm = {}
   IsProfileEdit = false
 
 
   // Life cycle
   async created() {
-    this.QueryProjects()
+    this.QueryTaskTypes()
     this.QueryUserProfile()
   }
 
 
   // Methods
-  async QueryProjects() {
-    let projectList = await _logService.GetUserProjects()
+  async QueryTaskTypes() {
+    let taskTypeList = await _logService.GetUserTaskTypes()
 
     //clear list
-    this.projectList.length = 0
-    window.ProjectList.length = 0
-    // input to add project
-    this.projectList.push({
-      ProjectID: null,
-      ProjectName: '',
+    this.taskTypeList.length = 0
+    window.TaskTypeList.length = 0
+    // input to add taskType
+    this.taskTypeList.push({
+      TaskTypeID: null,
+      TaskTypeName: '',
       InputDisabled: false,
       IsPrivate: false,
       IsEnable: true
     })
 
-    if (projectList == "no data")
+    if (taskTypeList == "no data")
       this.$message({
-        message: 'no Project data!',
+        message: 'no TaskType data!',
         type: 'warning'
       })
     else {
-      projectList.forEach(x => {
-        this.projectList.push({
-          ProjectID: x.ProjectID,
-          ProjectName: x.ProjectName,
+      taskTypeList.forEach(x => {
+        this.taskTypeList.push({
+          TaskTypeID: x.TaskTypeID,
+          TaskTypeName: x.TaskTypeName,
           IsPrivate: x.IsPrivate ? true : false,
           IsEnable: x.IsEnable ? true : false,
           InputDisabled: true
         })
-        window.ProjectList.push({
-          ProjectID: x.ProjectID,
-          ProjectName: x.ProjectName,
+        window.TaskTypeList.push({
+          TaskTypeID: x.TaskTypeID,
+          TaskTypeName: x.TaskTypeName,
           IsPrivate: x.IsPrivate ? true : false,
           IsEnable: x.IsEnable ? true : false
         })
@@ -129,31 +129,31 @@ export default class Setting extends Vue {
     this.QueryUserProfile()
   }
 
-  async ModifyOrAdd(project) {
-    if (project.InputDisabled == true) {
-      if (project.ProjectID) //not new project
-        project.InputDisabled = false
+  async ModifyOrAdd(taskType) {
+    if (taskType.InputDisabled == true) {
+      if (taskType.TaskTypeID) //not new taskType
+        taskType.InputDisabled = false
     } else {
-      if (project.ProjectName.length < 1) {
-        this.$message.error('Name of project cannot be null!')
+      if (taskType.TaskTypeName.length < 1) {
+        this.$message.error('Name of taskType cannot be null!')
         return
       }
 
-      var DuplicatedProject = this.projectList.find(x => x.ProjectName == project.ProjectName && x.ProjectID != null && x.ProjectID != project.ProjectID)
-      if (DuplicatedProject) {
+      var DuplicatedTaskType = this.taskTypeList.find(x => x.TaskTypeName == taskType.TaskTypeName && x.TaskTypeID != null && x.TaskTypeID != taskType.TaskTypeID)
+      if (DuplicatedTaskType) {
         this.$message.error('Duplicate name!')
         return
       }
 
-      let result = await _logService.ModifyOrAddAProject(project)
+      let result = await _logService.ModifyOrAddATaskType(taskType)
       if (result) {
         this.$message({
           message: 'successed!',
           type: 'success'
         })
-        this.QueryProjects()
+        this.QueryTaskTypes()
       } else {
-        this.$message.error('Fail to add/modify the project! Please Retry')
+        this.$message.error('Fail to add/modify the taskType! Please Retry')
       }
     }
   }
@@ -184,16 +184,16 @@ export default class Setting extends Vue {
   }
 
   async Delete(data) {
-    let result = await _logService.DeleteAProject(data.ProjectID)
+    let result = await _logService.DeleteATaskType(data.TaskTypeID)
     if (result) {
       this.$message({
         message: 'successed!',
         type: 'success'
       })
       this.IsProfileEdit = false
-      this.QueryProjects()
+      this.QueryTaskTypes()
     } else {
-      this.$message.error('Fail to delete the project! Please Retry')
+      this.$message.error('Fail to delete the taskType! Please Retry')
     }
   }
 

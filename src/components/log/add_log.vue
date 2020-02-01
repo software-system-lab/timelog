@@ -7,9 +7,9 @@
       <el-form-item label="Title?" prop="Title">
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
-      <el-form-item label="Project" prop="ProjectID">
-        <el-select v-model="logData.ProjectID" filterable reserve-keyword placeholder="Choose">
-          <el-option v-for="item in ProjectList" :key="item.ProjectID" :label="item.ProjectName" :value="item.ProjectID">
+      <el-form-item label="TaskType" prop="TaskTypeID">
+        <el-select v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
+          <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
           </el-option>
         </el-select>
       </el-form-item>
@@ -56,7 +56,7 @@ import logService from '@/services/LogService.js'
 @Component
 export default class AddLog extends Vue {
   // Data members
-  ProjectList = window.ProjectList
+  TaskTypeList = window.TaskTypesList
   logData = this.emptyLog()
   formRules = {
     Title: [{
@@ -64,7 +64,7 @@ export default class AddLog extends Vue {
       message: 'Check Here!',
       trigger: 'blur'
     }],
-    ProjectID: [{
+    TaskTypeID: [{
       required: false,
       message: 'Check Here!',
       trigger: 'blur'
@@ -146,7 +146,7 @@ export default class AddLog extends Vue {
   emptyLog() {
     return {
       Title: '',
-      ProjectID: null,
+      TaskTypeID: null,
       StartTime: new moment().add(-1, 'hours').format('HH:mm'),
       EndTime: new moment().format('HH:mm'),
       StartDate: new moment().add(-1, 'hours').format('YYYY-MM-DD'),

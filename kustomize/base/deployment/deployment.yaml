@@ -7,18 +7,18 @@ spec:
   selector:
     matchLabels:
       app: timelog-production
-      version: v1
   template:
     metadata:
+      annotations:
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"timelog-production-loadbalancer","kind":"LoadBalancer","name":"http","protocol":"TCP"}]]'
       labels:
         app: timelog-production
-        version: v1
     spec:
       containers:
         - name: timelog-production
           image: nightlord851108/timelog:master.f320057
           imagePullPolicy: Always
           ports:
-            - name: http
+            - name: timelog-http
               containerPort: 80
               protocol: TCP

@@ -7,7 +7,15 @@ name: timelog_docker_passwd
 data:
 ---
 kind: secret
-name: rancher_cluster_token
+name: rancher_cluster_token_2
+data:
+---
+kind: secret
+name: rancher_user
+data:
+---
+kind: secret
+name: rancher_passwd
 data:
 ---
 kind: pipeline
@@ -35,13 +43,22 @@ steps:
     password:
       from_secret: timelog_docker_passwd
 
-# - name: Deploy
-#   image: nightlord851108/kustomize
-#   environment:
-#     CLUSTER_TOKEN:
-#       from_secret: rancher_cluster_token
-#   commands:
-#   - kustomize build kustomize/base | kubectl apply --server=ssl-rancher.csie.ntut.edu.tw  --token=${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois -f -
+- name: Deploy
+  image: nightlord851108/kustomize
+  environment:
+    CLUSTER_TOKEN:
+      from_secret:
+        rancher_cluster_token_2
+    USERNAME:
+      from_secret:
+        rancher_user
+    PASSWD:
+      from_secret:
+        rancher_passwd
+  commands:
+  - cd kustomize/base
+  - kustomize edit set image nightlord851108/timelog:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+  - kustomize build . | kubectl apply --server=https://ssl-rancher.csie.ntut.edu.tw/k8s/clusters/local  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-production -f -
 
 trigger:
   branch:
