@@ -7,15 +7,7 @@ name: timelog_docker_passwd
 data:
 ---
 kind: secret
-name: rancher_cluster_token_2
-data:
----
-kind: secret
-name: rancher_user
-data:
----
-kind: secret
-name: rancher_passwd
+name: rancher_cluster_token
 data:
 ---
 kind: pipeline
@@ -48,13 +40,7 @@ steps:
   environment:
     CLUSTER_TOKEN:
       from_secret:
-        rancher_cluster_token_2
-    USERNAME:
-      from_secret:
-        rancher_user
-    PASSWD:
-      from_secret:
-        rancher_passwd
+        rancher_cluster_token
   commands:
   - cd kustomize/base
   - kustomize edit set image nightlord851108/timelog:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
