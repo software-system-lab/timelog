@@ -10,6 +10,10 @@ kind: secret
 name: rancher_cluster_token
 data:
 ---
+kind: secret
+name: rancher_host
+data: https://ssl-rancher.csie.ntut.edu.tw/k8s/clusters/local
+---
 kind: pipeline
 type: docker
 name: Timelog
@@ -35,19 +39,47 @@ steps:
     password:
       from_secret: timelog_docker_passwd
 
-- name: Deploy
+- name: Deploy Beta
   image: nightlord851108/kustomize
   environment:
+    RANCHER_HOST:
+      from_secret:
+        rancher_host
     CLUSTER_TOKEN:
       from_secret:
         rancher_cluster_token
   commands:
   - cd kustomize/base
   - kustomize edit set image nightlord851108/timelog:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
-  - kustomize build . | kubectl apply --server=https://ssl-rancher.csie.ntut.edu.tw/k8s/clusters/local  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-production -f -
+  - kustomize build . | kubectl apply --server=$${RANCHER_HOST}  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-beta -f -
+  trigger:
+    branch:
+    - beta
+    event:
+    - push
+
+- name: Deploy Production
+  image: nightlord851108/kustomize
+  environment:
+    RANCHER_HOST:
+      from_secret:
+        rancher_host
+    CLUSTER_TOKEN:
+      from_secret:
+        rancher_cluster_token
+  commands:
+  - cd kustomize/base
+  - kustomize edit set image nightlord851108/timelog:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+  - kustomize build . | kubectl apply --server=$${RANCHER_HOST}  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-production -f -
+  trigger:
+    branch:
+    - master
+    event:
+    - push
 
 trigger:
   branch:
   - master
+  - cicd
   event:
   - push

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timelog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timelog
+  template:
+    metadata:
+      annotations:
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"timelog-beta-loadbalancer","kind":"LoadBalancer","name":"http","protocol":"TCP"}]]'
+      labels:
+        app: timelog
+    spec:
+      containers:
+        - name: timelog
+          image: nightlord851108/timelog
+          imagePullPolicy: Always
+          ports:
+            - name: timelog-http
+              containerPort: 80
+              protocol: TCP
