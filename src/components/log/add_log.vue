@@ -4,7 +4,7 @@
       <h2>Add a Log</h2>
     </div>
     <el-form ref="form" :model="logData" :rules="formRules" label-width="110px" :label-position="'right'">
-      <el-form-item label="Title?" prop="Title">
+      <el-form-item label="Title" prop="Title">
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
       <el-form-item label="TaskType" prop="TaskTypeID">
@@ -56,7 +56,7 @@ import logService from '@/services/LogService.js'
 @Component
 export default class AddLog extends Vue {
   // Data members
-  TaskTypeList = window.TaskTypesList
+  TaskTypeList = window.TaskTypeList
   logData = this.emptyLog()
   formRules = {
     Title: [{
@@ -65,7 +65,7 @@ export default class AddLog extends Vue {
       trigger: 'blur'
     }],
     TaskTypeID: [{
-      required: false,
+      required: true,
       message: 'Check Here!',
       trigger: 'blur'
     }],
