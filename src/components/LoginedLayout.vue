@@ -53,14 +53,7 @@ export default class LoginedLayout extends LogComponent {
 }
 </script>
 
-<style scoped>
-.el-button {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 999;
-}
-
+<style>
 .overlay {
   position: fixed;
   top: 0;
@@ -81,5 +74,4 @@ export default class LoginedLayout extends LogComponent {
   position: relative;
   transition: all 5s ease-in-out;
 }
-
 </style>
