@@ -6,20 +6,20 @@ export async function afterLogin() {
 
   //Get user Profile
   window.Profile = await _profileService.GetProfile();
-  //Get User Projects
-  let projectList = await _logService.GetUserProjects();
+  //Get User TaskTypes
+  let taskTypeList = await _logService.GetUserTaskTypes();
 
-  window.ProjectList = [];
-  if (projectList == "no data")
+  window.TaskTypeList = [];
+  if (taskTypeList == "no data")
     vueRoot.$message({
       message: "Go setting page to add some tags!",
       type: "warning"
     });
   else {
-    projectList.forEach(x => {
-      window.ProjectList.push({
-        ProjectID: x.ProjectID,
-        ProjectName: x.ProjectName
+    taskTypeList.forEach(x => {
+      window.TaskTypeList.push({
+        TaskTypeID: x.TaskTypeID,
+        TaskTypeName: x.TaskTypeName
       });
     });
   }
