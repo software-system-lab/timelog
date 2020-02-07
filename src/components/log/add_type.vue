@@ -32,7 +32,7 @@ export default class AddType extends Vue {
 
   // Methods
   async submit() {
-    this.$emit("saved")
+    this.$emit("saved", 9)
     // this.$refs['form'].validate(async (valid) => {
     //   if (valid) {
     //     this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
