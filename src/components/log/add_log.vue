@@ -9,7 +9,11 @@
       </el-form-item>
       <el-form-item label="TaskType" prop="TaskTypeID">
         <el-select v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
-          <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
+          <el-option
+            v-for="item in TaskTypeList"
+            :key="item.TaskTypeID"
+            :label="item.TaskTypeName"
+            :value="item.TaskTypeID">
           </el-option>
         </el-select>
       </el-form-item>

@@ -72,15 +72,21 @@ export default {
 
   //TaskType
   async GetUserTaskTypes() {
-    let httpResult = await HTTP.post(`/Log/GetUserTaskTypes`, {
+    let userTaskTypes = await HTTP.post(`/Log/GetUserTaskTypes`, {
       UserID: window.Profile.UserID
     });
-    if (httpResult != "no data")
-    //從這裡改
-      httpResult.forEach(x => {
-        x.Duration = `${x.StartTime} ~ ${x.EndTime}`;
+    if (userTaskTypes != "no data"){
+      userTaskTypes.sort(function(a, b){
+        if (b.TaskTypeName === "others"){
+          return -1;
+        } else if(a.TaskTypeName === "others"){
+          return 1;
+        } else {
+          return 0;
+        }
       });
-    return httpResult;
+    }
+    return userTaskTypes;
   },
 
   async ModifyOrAddATaskType(taskType) {
