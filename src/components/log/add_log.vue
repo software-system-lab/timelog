@@ -1,4 +1,10 @@
 <template>
+<div>
+  <div v-if="addTaskTypeVisible" id="add-task-type-popup" class="overlay">
+    <div class="popup">
+      <AddType @close="closePopup" @saved="update"/>
+    </div>
+  </div>
   <el-card>
     <div slot="header" class="clearfix">
       <h2>Add a Log</h2>
@@ -8,13 +14,14 @@
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
       <el-form-item label="TaskType" prop="TaskTypeID">
-        <el-select v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
-          <el-option
-            v-for="item in TaskTypeList"
-            :key="item.TaskTypeID"
-            :label="item.TaskTypeName"
-            :value="item.TaskTypeID">
-          </el-option>
+        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose" @visible-change="taskTypeVisibleChanged">
+          <el-option-group>
+            <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
+            </el-option>
+          </el-option-group>
+          <el-option-group>
+            <el-option key="AddTaskType" label="Add a new type" :value="0" />
+          </el-option-group>
         </el-select>
       </el-form-item>
       <el-form-item label="Start Time">
@@ -50,14 +57,21 @@
     <el-button type="danger" icon="el-icon-close" @click="cancel">Cancel</el-button>
     <el-button type="primary" icon="el-icon-edit" @click="submit">Add</el-button>
   </el-card>
+</div>
 </template>
 
 <script>
 import { Vue, Component } from 'vue-property-decorator'
 import moment from 'moment'
 import logService from '@/services/LogService.js'
+import AddType from '@/components/log/add_type.vue'
 
-@Component
+
+@Component({
+  components: {
+    AddType
+  }
+})
 export default class AddLog extends Vue {
   // Data members
   TaskTypeList = window.TaskTypeList
@@ -100,6 +114,7 @@ export default class AddLog extends Vue {
     }],
   }
   endDateOption = {}
+  addTaskTypeVisible = false
 
 
   // Life cycle
@@ -169,5 +184,24 @@ export default class AddLog extends Vue {
   errorMsg() {
     this.$message.error('Log Added Fail!Please Retry')
   }
+
+  openPopup() {
+    this.addTaskTypeVisible = true
+  }
+
+  closePopup() {
+    this.addTaskTypeVisible = false
+  }
+
+  update(newTaskTypeID) {
+    this.closePopup()
+  }
+
+  taskTypeVisibleChanged(visible) {
+    if (!visible && this.$refs['taskTypeSelector'].value == 0) {
+      this.openPopup()
+    }
+  }
+
 }
 </script>
