@@ -1,18 +1,14 @@
 kind: secret
 name: timelog_docker_user
-data:
 ---
 kind: secret
 name: timelog_docker_passwd
-data:
 ---
 kind: secret
 name: rancher_cluster_token
-data:
 ---
 kind: secret
 name: rancher_host
-data: https://ssl-rancher.csie.ntut.edu.tw/k8s/clusters/local
 ---
 kind: pipeline
 type: docker
