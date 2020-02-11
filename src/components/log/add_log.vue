@@ -14,14 +14,14 @@
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
       <el-form-item label="TaskType" prop="TaskTypeID">
-        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose" @visible-change="">
+        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
           <el-option-group>
             <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
             </el-option>
           </el-option-group>
           <el-option-group>
             <el-option key="AddTaskType" id="addlog-dropdown-button-newtype">
-              <el-button @click="taskTypeVisibleChanged">New Type</el-button>
+              <el-button @click="createNewType">New Type</el-button>
             </el-option>
           </el-option-group>
         </el-select>
@@ -195,14 +195,12 @@ export default class AddLog extends Vue {
     this.addTaskTypeVisible = false
   }
 
-  update(newTaskTypeID) {
+  update(newTaskTypeName) {
     this.closePopup()
   }
 
-  taskTypeVisibleChanged(visible) {
-    // if (!visible && this.$refs['taskTypeSelector'].value == 0) {
-      this.openPopup()
-    // }
+  createNewType() {
+    this.openPopup()
   }
 
 }

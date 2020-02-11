@@ -3,7 +3,7 @@
   <img src="../../static/image/timelog.png" alt="logo">
   <img alt="profile img" :src="this.profilePicture" class="img-circle" />
   <h4>{{this.profileName}}</h4>
-  <el-menu-item index="1" @click="addLog">
+  <el-menu-item index="1" @click="addLog" type="danger">
     <i class="el-icon-document-add"></i>
     <span slot="title">New</span>
   </el-menu-item>
@@ -78,4 +78,5 @@ img {
 a {
   text-decoration: none;
 }
+
 </style>
