@@ -58,7 +58,7 @@ steps:
       from_secret:
         rancher_cluster_token
   commands:
-  - cd kustomize/base
+  - cd kustomize/beta
   - kustomize edit set image nightlord851108/timelog:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
   - kustomize build . | kubectl apply --server=$${RANCHER_HOST}  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-beta -f -
   trigger:
@@ -78,7 +78,7 @@ steps:
       from_secret:
         rancher_cluster_token
   commands:
-  - cd kustomize/base
+  - cd kustomize/production
   - kustomize edit set image nightlord851108/timelog:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
   - kustomize build . | kubectl apply --server=$${RANCHER_HOST}  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-production -f -
   trigger:
