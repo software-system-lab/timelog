@@ -5,7 +5,7 @@
 ![](static/image/timelog.png)
 
 Timelog is a web app for users to record how they use time.
-It have been developed by Node.js and MySQL.
+It have been developed by Vue.js and Node.js.
 
 ## How to use
 ### Sever
