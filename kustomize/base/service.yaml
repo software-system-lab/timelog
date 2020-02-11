@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: timelog-production
+  name: timelog
 spec:
   type: ClusterIP
   selector:
-    app: timelog-production
+    app: timelog
   ports:
   - name: http
     port: 80

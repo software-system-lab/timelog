@@ -18,3 +18,5 @@ backup/*
 *.ntvs*
 *.njsproj
 *.sln
+
+secret*.yaml

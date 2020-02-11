@@ -47,11 +47,11 @@ module.exports = class {
     this.router.post("/GetUserLogs", async (req, res) => {
       try {
         let result = await _LogProvider.GetUserLogsBySearch(req.body);
-        let dbProjectList = await _LogProvider.GetUserProjects(req.body.UserID);
-        if (result !== 'no data' && dbProjectList !== 'no data')
+        let dbTaskTypeList = await _LogProvider.GetUserTaskTypes(req.body.UserID);
+        if (result !== 'no data' && dbTaskTypeList !== 'no data')
           result.forEach(x => {
-            let project = dbProjectList.find(y => x.ProjectID == y.ProjectID)
-            x.ProjectName = project !== undefined ? project.ProjectName : '';
+            let taskType = dbTaskTypeList.find(y => x.TaskTypeID == y.TaskTypeID)
+            x.TaskTypeName = taskType !== undefined ? taskType.TaskTypeName : '';
           })
         res.send(result);
       } catch (err) {
@@ -71,9 +71,9 @@ module.exports = class {
     });
 
     ////tag
-    this.router.post("/GetUserProjects", async (req, res) => {
+    this.router.post("/GetUserTaskTypes", async (req, res) => {
       try {
-        let result = await _LogProvider.GetUserProjects(req.body.UserID);
+        let result = await _LogProvider.GetUserTaskTypes(req.body.UserID);
         result = result.filter(x => x.IsDeleted == 0);
         res.send(result);
       } catch (err) {
@@ -82,9 +82,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/ModifyOrAddAProject", async (req, res) => {
+    this.router.post("/ModifyOrAddATaskType", async (req, res) => {
       try {
-        let result = await _LogProvider.ModifyOrAddAProject(req.body);
+        let result = await _LogProvider.ModifyOrAddATaskType(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -92,9 +92,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/DeleteAProject", async (req, res) => {
+    this.router.post("/DeleteATaskType", async (req, res) => {
       try {
-        let result = await _LogProvider.DeleteAProject(req.body.ProjectID);
+        let result = await _LogProvider.DeleteATaskType(req.body.TaskTypeID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -114,21 +114,21 @@ module.exports = class {
     });
 
     ////analysis
-    this.router.post("/projectTimeByIteration", async (req, res) => {
+    this.router.post("/taskTypeTimeByIteration", async (req, res) => {
       try {
         const body = req.body
-        const projects = await this.logService.getProjectTimeByIteration(req.body.UserID, req.body.IterationID)
-        res.send(projects)
+        const taskTypes = await this.logService.getTaskTypeTimeByIteration(req.body.UserID, req.body.IterationID)
+        res.send(taskTypes)
       } catch (err) {
         console.log(err);
         res.send(400);
       }
     });
 
-    this.router.post('/projectTime', async (req, res) => {
+    this.router.post('/taskTypeTime', async (req, res) => {
       const body = req.body
-      const projects = await this.logService.getProjectTimeByDuration(body.UserID, body.StartDate, body.EndDate)
-      res.send(projects)
+      const taskTypes = await this.logService.getTaskTypeTimeByDuration(body.UserID, body.StartDate, body.EndDate)
+      res.send(taskTypes)
     })
   }
 }

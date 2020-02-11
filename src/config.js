@@ -6,6 +6,6 @@ export default {
     version: 'v3.1'
   },
   apiDest: {
-    host: 'ssl-timelog.csie.ntut.edu.tw'
+    host: "ssl-timelog.csie.ntut.edu.tw"
   }
 }
