@@ -1,11 +1,11 @@
 export default {
   FBLogin: {
-    appId: 173981473481566,
+    appId: 216015235921191,
     cookie: true,
     xfbml: true,
     version: 'v3.1'
   },
   apiDest: {
-    host: 'localhost'
+    host: 'ssl-timelog.csie.ntut.edu.tw'
   }
 }
