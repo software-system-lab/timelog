@@ -52,4 +52,3 @@ spec:
                 secretKeyRef:
                   key: FB_SECRET
                   name: db-secrets
-              protocol: TCP
