@@ -7,7 +7,6 @@
 Timelog is a web app for users to record their time usage.
 It have been developed by Vue.js and Node.js.
 
-test
 ## Quick Start
 1. Clone the project
 
