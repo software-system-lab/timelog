@@ -16,18 +16,18 @@ module.exports = class {
     for (var i = 0; i < publishList.length; ++i) {
       const data = publishList[i]
       const userProfile = await this.profileProvider.getUserProfileByUserID(data.UserID)
-      const projectList = (await this.logService.getProjectTimeByDuration(data.UserID, data.StartDate, moment(data.EndDate).add(1, "days").format("YYYY-MM-DD"))).filter(project => !project.IsPrivate)
+      const taskTypeList = (await this.logService.getTaskTypeTimeByDuration(data.UserID, data.StartDate, moment(data.EndDate).add(1, "days").format("YYYY-MM-DD"))).filter(taskType => !taskType.IsPrivate)
 
       var total = 0
-      projectList.forEach(project => {
-        total += project.TimeLength
+      taskTypeList.forEach(taskType => {
+        total += taskType.TimeLength
       })
       userDataList.push({
         name: userProfile.UserName,
         duration: data.StartDate + " ~ " + data.EndDate,
         total: total,
         update: moment(data.UpdateTime).format("YYYY-MM-DD hh:mm"),
-        projectList: projectList
+        taskTypeList: taskTypeList
       })
     }
     return userDataList

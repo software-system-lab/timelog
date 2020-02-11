@@ -1,16 +1,29 @@
 <template>
+<div>
+  <div v-if="addTaskTypeVisible" id="add-task-type-popup" class="overlay">
+    <div class="popup">
+      <AddType @close="closePopup" @saved="update"/>
+    </div>
+  </div>
   <el-card>
     <div slot="header" class="clearfix">
       <h2>Add a Log</h2>
     </div>
     <el-form ref="form" :model="logData" :rules="formRules" label-width="110px" :label-position="'right'">
-      <el-form-item label="Title?" prop="Title">
+      <el-form-item label="Title" prop="Title">
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
       <el-form-item label="TaskType" prop="TaskTypeID">
-        <el-select v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
-          <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
-          </el-option>
+        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
+          <el-option-group>
+            <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
+            </el-option>
+          </el-option-group>
+          <el-option-group>
+            <el-option key="AddTaskType" id="addlog-dropdown-button-newtype">
+              <el-button @click="createNewType">New Type</el-button>
+            </el-option>
+          </el-option-group>
         </el-select>
       </el-form-item>
       <el-form-item label="Start Time">
@@ -46,17 +59,24 @@
     <el-button type="danger" icon="el-icon-close" @click="cancel">Cancel</el-button>
     <el-button type="primary" icon="el-icon-edit" @click="submit">Add</el-button>
   </el-card>
+</div>
 </template>
 
 <script>
 import { Vue, Component } from 'vue-property-decorator'
 import moment from 'moment'
 import logService from '@/services/LogService.js'
+import AddType from '@/components/log/add_type.vue'
 
-@Component
+
+@Component({
+  components: {
+    AddType
+  }
+})
 export default class AddLog extends Vue {
   // Data members
-  TaskTypeList = window.TaskTypesList
+  TaskTypeList = window.TaskTypeList
   logData = this.emptyLog()
   formRules = {
     Title: [{
@@ -65,7 +85,7 @@ export default class AddLog extends Vue {
       trigger: 'blur'
     }],
     TaskTypeID: [{
-      required: false,
+      required: true,
       message: 'Check Here!',
       trigger: 'blur'
     }],
@@ -96,6 +116,7 @@ export default class AddLog extends Vue {
     }],
   }
   endDateOption = {}
+  addTaskTypeVisible = false
 
 
   // Life cycle
@@ -165,5 +186,38 @@ export default class AddLog extends Vue {
   errorMsg() {
     this.$message.error('Log Added Fail!Please Retry')
   }
+
+  openPopup() {
+    this.addTaskTypeVisible = true
+  }
+
+  closePopup() {
+    this.addTaskTypeVisible = false
+  }
+
+  update(newTaskTypeName) {
+    this.closePopup()
+  }
+
+  createNewType() {
+    this.openPopup()
+  }
+
 }
 </script>
+
+<style scoped>
+#addlog-dropdown-button-newtype {
+  background-color: #ffffff;
+  height: 40px;
+}
+
+#addlog-dropdown-button-newtype>button {
+  height: 100%;
+  width: 100%;
+}
+
+#addlog-dropdown-button-newtype:hover {
+  background-color: #ffffff;
+}
+</style>

@@ -8,7 +8,7 @@ export default {
   async AddALog(logData) {
     let postData = {
       UserID: window.Profile.UserID,
-      ProjectID: logData.ProjectID,
+      TaskTypeID: logData.TaskTypeID,
       Title: logData.Title,
       StartTime: moment(logData.StartDate + ' ' + logData.StartTime).format('YYYY-MM-DD HH:mm'),
       EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
@@ -21,7 +21,7 @@ export default {
     let postData = {
       LogID: logData.LogID,
       UserID: window.Profile.UserID,
-      ProjectID: logData.ProjectID,
+      TaskTypeID: logData.TaskTypeID,
       Title: logData.Title,
       StartTime: moment(logData.StartDate + ' ' + logData.StartTime).format('YYYY-MM-DD HH:mm'),
       EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
@@ -70,57 +70,69 @@ export default {
     return httpResult
   },
 
-  //Project
-  async GetUserProjects() {
-    return HTTP.post(`/Log/GetUserProjects`, {
+  //TaskType
+  async GetUserTaskTypes() {
+    let userTaskTypes = await HTTP.post(`/Log/GetUserTaskTypes`, {
       UserID: window.Profile.UserID
     });
+    if (userTaskTypes != "no data"){
+      userTaskTypes.sort(function(a, b){
+        if (b.TaskTypeName === "others"){
+          return -1;
+        } else if(a.TaskTypeName === "others"){
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    }
+    return userTaskTypes;
   },
 
-  async ModifyOrAddAProject(project) {
+  async ModifyOrAddATaskType(taskType) {
     let postData = {
       UserID: window.Profile.UserID,
-      ProjectID: project.ProjectID,
-      ProjectName: project.ProjectName,
-      IsPrivate: project.IsPrivate,
-      IsEnable: project.IsEnable
+      TaskTypeID: taskType.TaskTypeID,
+      TaskTypeName: taskType.TaskTypeName,
+      IsPrivate: taskType.IsPrivate,
+      IsEnable: taskType.IsEnable
     };
-    return HTTP.post(`/Log/ModifyOrAddAProject`, postData);
+    return HTTP.post(`/Log/ModifyOrAddATaskType`, postData);
   },
 
-  async DeleteAProject(projectID) {
+  async DeleteATaskType(taskTypeID) {
     let postData = {
-      ProjectID: projectID
+      TaskTypeID: taskTypeID
     };
-    return HTTP.post(`/Log/DeleteAProject`, postData);
+    return HTTP.post(`/Log/DeleteATaskType`, postData);
   },
 
   //target
-  async ModifyOrAddAGoal(project, iterationID) {
+  async ModifyOrAddAGoal(taskType, iterationID) {
     let postData = {
       UserID: window.Profile.UserID,
       IterationID: iterationID,
-      ProjectID: project.ProjectID,
-      GoalHour: project.GoalHour,
+      TaskTypeID: taskType.TaskTypeID,
+      GoalHour: taskType.GoalHour,
     };
     return HTTP.post(`/Log/ModifyOrAddAGoal`, postData);
   },
 
   //analysis
-  async projectTimeByIteration(userID, IterationID) {
+  async taskTypeTimeByIteration(userID, IterationID) {
     let postData = {
       UserID: userID,
       IterationID: IterationID,
     };
-    return HTTP.post(`/Log/projectTimeByIteration`, postData);
+    return HTTP.post(`/Log/taskTypeTimeByIteration`, postData);
   },
 
-  async projectTime(userID, startDate, endDate) {
+  async taskTypeTime(userID, startDate, endDate) {
     let postData = {
       UserID: userID,
       StartDate: moment(startDate).format('YYYY-MM-DD'),
       EndDate: moment(endDate).add(1, 'd').format('YYYY-MM-DD')
     }
-    return HTTP.post(`/Log/projectTime`, postData);
+    return HTTP.post(`/Log/taskTypeTime`, postData);
   }
 }

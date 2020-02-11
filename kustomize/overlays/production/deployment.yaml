@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timelog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timelog
+  template:
+    metadata:
+      annotations:
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"timelog-production-loadbalancer","kind":"LoadBalancer","name":"http","protocol":"TCP"}]]'
+      labels:
+        app: timelog
+    spec:
+      containers:
+        - name: timelog
+          image: nightlord851108/timelog
+          imagePullPolicy: Always
+          ports:
+            - name: timelog-http
+              containerPort: 80
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: MYSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_HOST
+                  name: timelog-env-production
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: timelog-env-production
+            - name: MYSQL_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWD
+                  name: timelog-env-production
+            - name: MYSQL_DB
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_DB
+                  name: timelog-env-production
+            - name: FB_ID
+              valueFrom:
+                secretKeyRef:
+                  key: FB_ID
+                  name: timelog-env-production
+            - name: FB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: FB_SECRET
+                  name: timelog-env-production

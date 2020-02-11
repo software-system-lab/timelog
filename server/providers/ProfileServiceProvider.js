@@ -115,7 +115,7 @@ module.exports = class {
     if (dbResult.length > 0) {
       return dbResult[0];
     }
-    return "no data";
+    return {iterationID: null};
   }
 
   async EditIteration(data) {

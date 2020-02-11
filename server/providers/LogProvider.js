@@ -7,16 +7,16 @@ module.exports = class {
 
   ////log
   async AddALog(data) {
-    var cmd = "INSERT INTO `log` (`UserID`, `ProjectID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
-    let dbResult = await DB.query(cmd, [data.UserID, data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description]);
+    var cmd = "INSERT INTO `log` (`UserID`, `TaskTypeID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
+    let dbResult = await DB.query(cmd, [data.UserID, data.TaskTypeID, data.Title, data.StartTime, data.EndTime, data.Description]);
     if (dbResult)
       return true;
     return false;
   }
 
   async ModifyALog(data) {
-    var cmd = "UPDATE `log` SET `ProjectID` = ?, `Title` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `LogID` = ?";
-    let dbResult = await DB.query(cmd, [data.ProjectID, data.Title, data.StartTime, data.EndTime, data.Description, data.LogID]);
+    var cmd = "UPDATE `log` SET `TaskTypeID` = ?, `Title` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `LogID` = ?";
+    let dbResult = await DB.query(cmd, [data.TaskTypeID, data.Title, data.StartTime, data.EndTime, data.Description, data.LogID]);
     if (dbResult)
       return true;
     return false;
@@ -66,30 +66,30 @@ module.exports = class {
     return "no data";
   }
 
-  ////projects
-  async GetUserProjects(userID) {
-    var cmd = "SELECT * FROM `project` WHERE `UserID` = ? AND `IsDeleted` = ?";
+  ////task types
+  async GetUserTaskTypes(userID) {
+    var cmd = "SELECT * FROM `task_type` WHERE `UserID` = ? AND `IsDeleted` = ?";
     let dbResult = await DB.query(cmd, [userID, false]);
     return dbResult;
   }
 
-  async ModifyOrAddAProject(data) {
+  async ModifyOrAddATaskType(data) {
     var dbResult;
-    if (data.ProjectID == null) {
-      var cmd = "INSERT INTO `project` (`UserID`, `ProjectName`, `IsPrivate`, `IsEnable`) VALUES (?, ?, ?, ?);";
-      dbResult = await DB.query(cmd, [data.UserID, data.ProjectName, data.IsPrivate, data.IsEnable]);
+    if (data.TaskTypeID == null) {
+      var cmd = "INSERT INTO `task_type` (`UserID`, `TaskTypeName`, `IsPrivate`, `IsEnable`) VALUES (?, ?, ?, ?);";
+      dbResult = await DB.query(cmd, [data.UserID, data.TaskTypeName, data.IsPrivate, data.IsEnable]);
     } else {
-      var cmd = "UPDATE `project` SET `ProjectName` = ?, `IsPrivate` = ?, `IsEnable` = ? WHERE `ProjectID` = ?;";
-      dbResult = await DB.query(cmd, [data.ProjectName, data.IsPrivate, data.IsEnable, data.ProjectID]);
+      var cmd = "UPDATE `task_type` SET `TaskTypeName` = ?, `IsPrivate` = ?, `IsEnable` = ? WHERE `TaskTypeID` = ?;";
+      dbResult = await DB.query(cmd, [data.TaskTypeName, data.IsPrivate, data.IsEnable, data.TaskTypeID]);
     }
     if (dbResult)
       return true;
     return false;
   }
 
-  async DeleteAProject(projectID) {
-    var cmd = "UPDATE `project` SET `IsDeleted` = ? WHERE `ProjectID` = ?;";
-    let dbResult = await DB.query(cmd, [true, projectID]);
+  async DeleteATaskType(taskTypeID) {
+    var cmd = "UPDATE `task_type` SET `IsDeleted` = ? WHERE `TaskTypeID` = ?;";
+    let dbResult = await DB.query(cmd, [true, taskTypeID]);
     if (dbResult)
       return true;
     return false;
@@ -105,8 +105,8 @@ module.exports = class {
   }
 
   async ModifyOrAddAGoal(data) {
-    var cmd = "INSERT INTO `goal` (`IterationID`, `ProjectID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
-    let dbResult = await DB.query(cmd, [data.IterationID, data.ProjectID, data.GoalHour, data.GoalHour]);
+    var cmd = "INSERT INTO `goal` (`IterationID`, `TaskTypeID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
+    let dbResult = await DB.query(cmd, [data.IterationID, data.TaskTypeID, data.GoalHour, data.GoalHour]);
     if (dbResult)
       return true;
     return false;

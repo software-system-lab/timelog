@@ -19,7 +19,7 @@
         </el-row>
         <el-divider></el-divider>
         <el-row>
-          <el-button @click="newIteration" icon="el-icon-document-add">NewIteration</el-button>
+          <el-button @click="newIteration" icon="el-icon-document-add">New Iteration</el-button>
         </el-row>
       </el-col>
       <el-col :md="12" :sm="24" id="board-duration-datepicker">
