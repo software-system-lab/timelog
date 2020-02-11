@@ -3,36 +3,39 @@
   <img src="../../static/image/timelog.png" alt="logo">
   <img alt="profile img" :src="this.profilePicture" class="img-circle" />
   <h4>{{this.profileName}}</h4>
-  <el-menu-item index="1" @click="addLog" type="danger">
+  <el-button icon="el-icon-document-add" type="danger" round plain @click="addLog" id="add-button">
+    New
+  </el-button>
+  <!-- <el-menu-item index="1" @click="addLog">
     <i class="el-icon-document-add"></i>
     <span slot="title">New</span>
-  </el-menu-item>
+  </el-menu-item> -->
   <router-link :to="{ name: 'Board'}">
-    <el-menu-item index="2">
+    <el-menu-item index="1">
       <i class="el-icon-edit"></i>
       <span slot="title">Board</span>
     </el-menu-item>
   </router-link>
   <router-link :to="{ name: 'History'}">
-    <el-menu-item index="3">
+    <el-menu-item index="2">
       <i class="el-icon-document"></i>
       <span slot="title">History</span>
     </el-menu-item>
   </router-link>
   <router-link :to="{ name: 'Setting'}">
-    <el-menu-item index="4">
+    <el-menu-item index="3">
       <i class="el-icon-setting"></i>
       <span slot="title">Setting</span>
     </el-menu-item>
   </router-link>
   <router-link :to="{ name: 'Publish'}">
-    <el-menu-item index="5">
+    <el-menu-item index="4">
       <i class="el-icon-view"></i>
       <span slot="title">Publish</span>
     </el-menu-item>
   </router-link>
   <!-- <router-link :to="{ name: 'Team'}">
-    <el-menu-item index="6">
+    <el-menu-item index="5">
       <i class="el-icon-custom"></i>
       <span slot="title">Team</span>
     </el-menu-item>
@@ -78,5 +81,10 @@ img {
 a {
   text-decoration: none;
 }
+
+#add-button {
+  margin-bottom: 10px;
+}
+
 
 </style>
