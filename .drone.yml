@@ -64,7 +64,6 @@ steps:
   trigger:
     branch:
     - beta
-    - cicd
     event:
     - push
 
@@ -84,6 +83,7 @@ steps:
   trigger:
     branch:
     - master
+    - cicd
     event:
     - push
 
