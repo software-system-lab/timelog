@@ -5,13 +5,13 @@
 ![](static/image/timelog.png)
 
 Timelog is a web app for users to record how they use time.
-It have been developed by node.js and mySQL.
+It have been developed by Node.js and MySQL.
 
 ## How to use
 ### Sever
 1. Clone the project
 
-2. In terminal,cd to the root folder of this project
+2. In terminal, cd to the root folder of this project
 
 ```
 $ cd /path/to/timelog
