@@ -4,10 +4,10 @@
 
 ![](static/image/timelog.png)
 
-Timelog is a web app for users to record how they use time.
+Timelog is a web app for users to record their time usage.
 It have been developed by Vue.js and Node.js.
 
-## How to use
+## Quick Start
 ### Sever
 1. Clone the project
 
@@ -20,7 +20,7 @@ $ npm run build
 $ node server.js
 ```
 
-4. Server will starts.
+4. Server starts.
 
 If NODE_ENV is production
 ```
@@ -33,7 +33,7 @@ warning: please use IANA standard timezone format ('Etc/GMT-8')
 Server running at http://0.0.0.0:5000/
 ```
 
-## Website
+## Quick View
 
 ### login
 ![](/UI/assets/sampleLogin.png)
