@@ -4,7 +4,7 @@
 
 ![](static/image/timelog.png)
 
-timelog is a web app for users to record how they use time.
+Timelog is a web app for users to record how they use time.
 It have been developed by node.js and mySQL.
 
 ## How to use
