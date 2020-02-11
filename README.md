@@ -12,7 +12,7 @@ It have been developed by Vue.js and Node.js.
 
 2. Setup config files in `src/config.js` and server/config.js`.
 
-3. In terminal,use node command to run timelog Server
+3. Build and start
 ```
 $ npm install
 $ npm run build
