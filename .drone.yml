@@ -20,10 +20,22 @@ steps:
   commands:
   - npm install
 
-- name: Build static web
+- name: Build production web
   image: node:10.16.3
   commands:
-  - npm run build
+  - npm run build --mode production
+  when:
+    branch:
+    - master
+    - cicd
+
+- name: Build beta web
+  image: node:10.16.3
+  commands:
+  - npm run build --mode beta
+  when:
+    branch:
+    - beta
 
 - name: Publish
   image: plugins/docker

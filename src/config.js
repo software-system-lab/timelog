@@ -1,11 +1,11 @@
 export default {
   FBLogin: {
-    appId: process.env.VUE_APP_FBID,
+    appId: 216015235921191,
     cookie: true,
     xfbml: true,
     version: 'v3.1'
   },
   apiDest: {
-    host: process.env.VUE_APP_API_HOST
+    host: "ssl-timelog.csie.ntut.edu.tw"
   }
 }
