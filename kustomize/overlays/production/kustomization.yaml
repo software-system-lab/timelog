@@ -1,5 +1,10 @@
 resources:
   - ../../base
-  - secret
 patchesStrategicMerge:
   - deployment.yaml
+  - secret/sealed_fbid.yaml
+  - secret/sealed_fbsecret.yaml
+  - secret/sealed_mysqldb.yaml
+  - secret/sealed_mysqlhost.yaml
+  - secret/sealed_mysqlpasswd.yaml
+  - secret/sealed_mysqluser.yaml
