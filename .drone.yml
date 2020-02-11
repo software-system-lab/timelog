@@ -12,7 +12,7 @@ name: rancher_host
 ---
 kind: pipeline
 type: docker
-name: Timelog
+name: Build
 
 steps:
 - name: Install node modules
@@ -35,6 +35,19 @@ steps:
     password:
       from_secret: timelog_docker_passwd
 
+trigger:
+  branch:
+  - master
+  - beta
+  - cicd
+  event:
+  - push
+---
+kind: pipeline
+type: docker
+name: Deployment
+
+steps:
 - name: Deploy Beta
   image: nightlord851108/kustomize
   environment:
@@ -51,6 +64,7 @@ steps:
   trigger:
     branch:
     - beta
+    - cicd
     event:
     - push
 
@@ -73,9 +87,5 @@ steps:
     event:
     - push
 
-trigger:
-  branch:
-  - master
-  - cicd
-  event:
-  - push
+depends_on:
+  - Build
