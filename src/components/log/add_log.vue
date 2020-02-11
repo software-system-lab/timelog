@@ -14,13 +14,15 @@
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
       <el-form-item label="TaskType" prop="TaskTypeID">
-        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose" @visible-change="taskTypeVisibleChanged">
+        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose" @visible-change="">
           <el-option-group>
             <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
             </el-option>
           </el-option-group>
           <el-option-group>
-            <el-option key="AddTaskType" label="Add a new type" :value="0" />
+            <el-option key="AddTaskType" id="addlog-dropdown-button-newtype">
+              <el-button @click="taskTypeVisibleChanged">New Type</el-button>
+            </el-option>
           </el-option-group>
         </el-select>
       </el-form-item>
@@ -198,10 +200,26 @@ export default class AddLog extends Vue {
   }
 
   taskTypeVisibleChanged(visible) {
-    if (!visible && this.$refs['taskTypeSelector'].value == 0) {
+    // if (!visible && this.$refs['taskTypeSelector'].value == 0) {
       this.openPopup()
-    }
+    // }
   }
 
 }
 </script>
+
+<style scoped>
+#addlog-dropdown-button-newtype {
+  background-color: #ffffff;
+  height: 40px;
+}
+
+#addlog-dropdown-button-newtype>button {
+  height: 100%;
+  width: 100%;
+}
+
+#addlog-dropdown-button-newtype:hover {
+  background-color: #ffffff;
+}
+</style>
