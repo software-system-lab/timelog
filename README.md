@@ -8,7 +8,6 @@ Timelog is a web app for users to record their time usage.
 It have been developed by Vue.js and Node.js.
 
 ## Quick Start
-### Sever
 1. Clone the project
 
 2. Setup config files in `src/config.js` and server/config.js`.
