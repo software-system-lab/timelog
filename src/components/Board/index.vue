@@ -1,20 +1,20 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <Iteration
-    @update="changeIteration"
+  <TimeBox
+    @update="changeTimeBox"
     @updateGoal="getTaskTypesData"
     @displayByDate="displayByDate"
-    :iterationInfo="iterationInfo"
+    :timeBoxInfo="timeBoxInfo"
     :taskTypeList="taskTypeList"
-    ref="iteration"/>
+    ref="timeBox"/>
   <br>
   <SpentTime :taskTypeList="taskTypeList" ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"
     :taskTypeList="taskTypeList"
-    @setting="openIterationSetting"
+    @setting="openTimeBoxSetting"
     ref='goal'/>
 </div>
 </template>
@@ -22,7 +22,7 @@
 <script>
 import { LogView } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
-import Iteration from '@/components/Board/iteration/index.vue'
+import TimeBox from '@/components/Board/timeBox/index.vue'
 import SpentTime from '@/components/Board/spent_time.vue'
 import Goal from '@/components/Board/goal.vue'
 import logService from '@/services/LogService.js'
@@ -30,34 +30,34 @@ import profileService from '@/services/ProfileService.js'
 
 @Component({
   components: {
-    Iteration,
+    TimeBox,
     SpentTime,
     Goal
   }
 })
 export default class Board extends LogView {
   // Data members
-  iterationInfo = {
-    iterationID: null
+  timeBoxInfo = {
+    timeBoxID: null
   }
   taskTypeList = []
-  iterationSetting = false
+  timeBoxSetting = false
   goalDisplay = true
 
 
   // Life cycle
   async created() {
-    const iterationID = await profileService.getCurrentIteration()
-    this.iterationInfo = await profileService.GetIterationById(iterationID)
+    const timeBoxID = await profileService.getCurrentTimeBox()
+    this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
     this.getTaskTypesData()
-    this.$refs.iteration.iterationDate()
+    this.$refs.timeBox.timeBoxDate()
   }
 
 
   // Methods
   async getTaskTypeList() {
     const userID = window.Profile.UserID
-    let result = await logService.taskTypeTimeByIteration(userID, this.iterationInfo.IterationID)
+    let result = await logService.taskTypeTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
     if (result != "no data") {
       this.taskTypeList = result
     }
@@ -71,26 +71,26 @@ export default class Board extends LogView {
   update() {
     this.goalDisplay = true
     this.getTaskTypesData()
-    this.$refs.iteration.update()
+    this.$refs.timeBox.update()
   }
 
-  async changeIteration(iterationID) {
-    this.iterationInfo = await profileService.GetIterationById(iterationID)
+  async changeTimeBox(timeBoxID) {
+    this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
     this.update()
   }
 
-  openIterationSetting() {
-    this.iterationSetting = true
+  openTimeBoxSetting() {
+    this.timeBoxSetting = true
   }
 
-  closeIterationSetting() {
-    this.iterationSetting = false
+  closeTimeBoxSetting() {
+    this.timeBoxSetting = false
     this.update()
   }
 
   async displayByDate(date) {
     this.goalDisplay = false
-    this.iterationInfo.IterationID = ""
+    this.timeBoxInfo.TimeBoxID = ""
     const userID = window.Profile.UserID
     this.taskTypeList = await logService.taskTypeTime(userID, date.start, date.end)
     this.$refs.spentTime.update(this.taskTypeList)
@@ -103,7 +103,7 @@ export default class Board extends LogView {
   width: 90%
 }
 
-#iteration-setting {
+#time-box-setting {
   position: relative;
   right: -45%;
   top: 20px

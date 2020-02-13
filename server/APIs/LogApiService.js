@@ -114,10 +114,10 @@ module.exports = class {
     });
 
     ////analysis
-    this.router.post("/taskTypeTimeByIteration", async (req, res) => {
+    this.router.post("/taskTypeTimeByTimeBox", async (req, res) => {
       try {
         const body = req.body
-        const taskTypes = await this.logService.getTaskTypeTimeByIteration(req.body.UserID, req.body.IterationID)
+        const taskTypes = await this.logService.getTaskTypeTimeByTimeBox(req.body.UserID, req.body.TimeBoxID)
         res.send(taskTypes)
       } catch (err) {
         console.log(err);

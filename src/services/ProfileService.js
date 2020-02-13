@@ -41,61 +41,61 @@ export default {
     return HTTP.post(`/Profile/GetTeammates`, req);
   },
 
-  //Iteration
-  async ChangeIteration(iterationID) {
+  //TimeBox
+  async ChangeTimeBox(timeBoxID) {
     let req = {
-      IterationID: iterationID,
+      TimeBoxID: timeBoxID,
       UserID: window.Profile.UserID
     };
-    return await HTTP.post(`/Profile/ChangeIteration`, req);
+    return await HTTP.post(`/Profile/ChangeTimeBox`, req);
   },
 
-  async GetIterations() {
+  async GetTimeBoxes() {
     let req = {
       UserID: window.Profile.UserID
     };
-    return (await HTTP.post(`/Profile/GetIterations`, req)).reverse();
+    return (await HTTP.post(`/Profile/GetTimeBoxes`, req)).reverse();
   },
 
-  async GetIterationById(id) {
+  async GetTimeBoxById(id) {
     let req = {
-      IterationID: id
+      TimeBoxID: id
     };
-    return await HTTP.post(`/Profile/GetIterationById`, req);
+    return await HTTP.post(`/Profile/GetTimeBoxById`, req);
   },
 
-  async ModifyOrAddAIteration(rowData) {
+  async ModifyOrAddATimeBox(rowData) {
     let req = {
-      IterationID: rowData.IterationID,
-      IterationName: rowData.IterationName,
+      TimeBoxID: rowData.TimeBoxID,
+      TimeBoxName: rowData.TimeBoxName,
       UserID: window.Profile.UserID,
       StartDate: moment(rowData.StartDate).format('YYYY-MM-DD'),
       EndDate: moment(rowData.EndDate).format('YYYY-MM-DD'),
       Content: rowData.Content
     };
-    const result =  await HTTP.post(`/Profile/EditIteration`, req);
-    return result.IterationID
+    const result =  await HTTP.post(`/Profile/EditTimeBox`, req);
+    return result.TimeBoxID
   },
 
-  async DeleteAIteration(rowData) {
+  async DeleteATimeBox(rowData) {
     let req = {
-      IterationID: rowData.IterationID,
+      TimeBoxID: rowData.TimeBoxID,
     };
-    return await HTTP.post(`/Profile/DeleteAIteration`, req);
+    return await HTTP.post(`/Profile/DeleteATimeBox`, req);
   },
 
-  async getCurrentIteration() {
+  async getCurrentTimeBox() {
     let req = {
       UserID: window.Profile.UserID
     }
-    const result = await HTTP.post('/Profile/iteration/current', req);
-    return result.IterationID
+    const result = await HTTP.post('/Profile/timeBox/current', req);
+    return result.TimeBoxID
   },
 
-  async getCurrentIterationRange() {
+  async getCurrentTimeBoxRange() {
     let req = {
       UserID: window.Profile.UserID
     }
-    return await HTTP.post('/Profile/iteration/currentRange', req);
+    return await HTTP.post('/Profile/timeBox/currentRange', req);
   }
 }

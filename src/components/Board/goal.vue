@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <div slot="header" class="clearfix">
-      <h2>My Iteration Target</h2>
+      <h2>My Time Box Target</h2>
     </div>
     <TargetBase
       v-if="taskType.TaskTypeID != null && taskType.GoalHour > 0"

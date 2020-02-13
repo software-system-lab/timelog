@@ -5,28 +5,28 @@ const moment = require('moment');
 const _profileProvider = new ProfileProvider();
 const _logProvider = new LogProvider();
 
-async function getCurrentIteration(userID) {
-  let iterationList = await _profileProvider.GetIterations(userID)
+async function getCurrentTimeBox(userID) {
+  let timeBoxList = await _profileProvider.GetTimeBoxes(userID)
   let result = null
   const now = new moment(Date.now())
-  iterationList.forEach(iteration => {
-    const start = new moment(iteration.StartDate)
-    const end = new moment(iteration.EndDate).add(1, 'days')
-    const update = new moment(iteration.UpdateTime)
+  timeBoxList.forEach(timeBox => {
+    const start = new moment(timeBox.StartDate)
+    const end = new moment(timeBox.EndDate).add(1, 'days')
+    const update = new moment(timeBox.UpdateTime)
     if (now.isAfter(start) && now.isBefore(end) && (result === null || moment(result.UpdateTime).isBefore(update))) {
-      result = iteration
+      result = timeBox
     }
   })
 
   if (result === null) {
-    iterationList.forEach(iteration => {
-      const end = new moment(iteration.EndDate).add(1, 'days')
-      if (now.isAfter(end) && (result === null || end.isAfter(moment(iteration.EndDate)))) {
-        result = iteration
+    timeBoxList.forEach(timeBox => {
+      const end = new moment(timeBox.EndDate).add(1, 'days')
+      if (now.isAfter(end) && (result === null || end.isAfter(moment(timeBox.EndDate)))) {
+        result = timeBox
       }
     })
   }
-  return result ? result.IterationID : null;
+  return result ? result.TimeBoxID : null;
 }
 
 module.exports = class {
@@ -40,7 +40,7 @@ module.exports = class {
     this.router.post("/GetProfile", async function(req, res) {
       try {
         let result = await _profileProvider.GetUserProfile(req.body.FBID);
-        let currentIterationInfo = await _logProvider.QueryIterationByIterationID(result.CurrentIterationID);
+        let currentTimeBoxInfo = await _logProvider.QueryTimeBoxByTimeBoxID(result.CurrentTimeBoxID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -107,10 +107,10 @@ module.exports = class {
       }
     });
 
-    ////iteration
-    this.router.post("/GetIterations", async function(req, res) {
+    ////timeBox
+    this.router.post("/GetTimeBoxes", async function(req, res) {
       try {
-        let result = await _profileProvider.GetIterations(req.body.UserID);
+        let result = await _profileProvider.GetTimeBoxes(req.body.UserID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -118,9 +118,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/GetIterationByID", async function(req, res) {
+    this.router.post("/GetTimeBoxByID", async function(req, res) {
       try {
-        let result = await _profileProvider.GetIterationByID(req.body.IterationID);
+        let result = await _profileProvider.GetTimeBoxByID(req.body.TimeBoxID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -128,12 +128,12 @@ module.exports = class {
       }
     });
 
-    this.router.post("/EditIteration", async function(req, res) {
+    this.router.post("/EditTimeBox", async function(req, res) {
       try {
-        let result = await _profileProvider.EditIteration(req.body);
+        let result = await _profileProvider.EditTimeBox(req.body);
         if (result) {
-          const iterationID = await getCurrentIteration(req.body.UserID)
-          res.send({IterationID: iterationID})
+          const timeBoxID = await getCurrentTimeBox(req.body.UserID)
+          res.send({TimeBoxID: timeBoxID})
         } else {
           res.send(400);
         }
@@ -143,9 +143,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/DeleteIteration", async function(req, res) {
+    this.router.post("/DeleteTimeBox", async function(req, res) {
       try {
-        let result = await _profileProvider.DeleteIteration(req.body.SprintID);
+        let result = await _profileProvider.DeleteTimeBox(req.body.SprintID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -153,9 +153,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/ChangeIteration", async function(req, res) {
+    this.router.post("/ChangeTimeBox", async function(req, res) {
       try {
-        let result = await _profileProvider.ChangeIteration(req.body);
+        let result = await _profileProvider.ChangeTimeBox(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -163,20 +163,20 @@ module.exports = class {
       }
     })
 
-    this.router.post("/iteration/current", async function(req, res) {
+    this.router.post("/timeBox/current", async function(req, res) {
       if (!req.body.UserID) {
         res.send(400);
       }
-      const iterationID = await getCurrentIteration(req.body.UserID)
-      res.status(200).send({ IterationID: iterationID })
+      const timeBoxID = await getCurrentTimeBox(req.body.UserID)
+      res.status(200).send({ TimeBoxID: timeBoxID })
     })
 
-    this.router.post("/iteration/currentRange", async function(req, res) {
+    this.router.post("/timeBox/currentRange", async function(req, res) {
       if (!req.body.UserID) {
         res.send(400)
       }
-      const iterationID = await getCurrentIteration(req.body.UserID)
-      res.send(await _profileProvider.GetIterationByID(iterationID))
+      const timeBoxID = await getCurrentTimeBox(req.body.UserID)
+      res.send(await _profileProvider.GetTimeBoxByID(timeBoxID))
     })
   }
 }

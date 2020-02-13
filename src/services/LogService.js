@@ -108,10 +108,10 @@ export default {
   },
 
   //target
-  async ModifyOrAddAGoal(taskType, iterationID) {
+  async ModifyOrAddAGoal(taskType, timeBoxID) {
     let postData = {
       UserID: window.Profile.UserID,
-      IterationID: iterationID,
+      TimeBoxID: timeBoxID,
       TaskTypeID: taskType.TaskTypeID,
       GoalHour: taskType.GoalHour,
     };
@@ -119,12 +119,12 @@ export default {
   },
 
   //analysis
-  async taskTypeTimeByIteration(userID, IterationID) {
+  async taskTypeTimeByTimeBox(userID, TimeBoxID) {
     let postData = {
       UserID: userID,
-      IterationID: IterationID,
+      TimeBoxID: TimeBoxID,
     };
-    return HTTP.post(`/Log/taskTypeTimeByIteration`, postData);
+    return HTTP.post(`/Log/taskTypeTimeByTimeBox`, postData);
   },
 
   async taskTypeTime(userID, startDate, endDate) {

@@ -3,8 +3,8 @@
     <el-card>
       <div slot='header'>
         <h2>Goal Setting</h2>
-        <h3>Iteration: {{ iterationInfo.IterationName }}</h3>
-        <h3>Duration: {{ iterationInfo.StartDate }} ~ {{ iterationInfo.EndDate }}</h3>
+        <h3>Time Box: {{ timeBoxInfo.TimeBoxName }}</h3>
+        <h3>Duration: {{ timeBoxInfo.StartDate }} ~ {{ timeBoxInfo.EndDate }}</h3>
       </div>
       <el-row>
         <el-table :data="goalList" sortable="true">
@@ -39,7 +39,7 @@ import logService from '@/services/LogService.js'
 
 @Component({
   props: {
-    iterationInfo: Object,
+    timeBoxInfo: Object,
     taskTypeList: Array,
     visible: Boolean
   }
@@ -64,7 +64,7 @@ export default class GoalDialog extends Vue {
 
   async ModifyOrAdd(data) {
     data.IsEdit = false;
-    let result = await logService.ModifyOrAddAGoal(data, this.iterationInfo.IterationID)
+    let result = await logService.ModifyOrAddAGoal(data, this.timeBoxInfo.TimeBoxID)
     if (result) {
       this.$emit("goalEdit", data)
     }

@@ -6,7 +6,7 @@ module.exports = class {
     this.logProvider = new LogProvider()
   }
 
-  async getTaskTypeTimeByIteration(userID, iterationID) {
+  async getTaskTypeTimeByTimeBox(userID, timeBoxID) {
     var taskTypes = await this.getTaskTypeList(userID);
 
     taskTypes.forEach(taskType => {
@@ -14,7 +14,7 @@ module.exports = class {
       taskType.IsEdit = false;
     });
 
-    let targets = await this.logProvider.QueryGoalByIteration({UserID: userID, IterationID: iterationID});
+    let targets = await this.logProvider.QueryGoalByTimeBox({UserID: userID, TimeBoxID: timeBoxID});
     if (targets != "no data") {
       targets.forEach(x => {
         let proj = taskTypes.find(y => y.taskTypeID == x.taskTypeID);
@@ -23,7 +23,7 @@ module.exports = class {
       })
     }
 
-    let logs = await this.logProvider.GetUserLogsByIterationID(userID, iterationID);
+    let logs = await this.logProvider.GetUserLogsByTimeBoxID(userID, timeBoxID);
 
     this.getTaskTypesTime(logs, taskTypes)
     return taskTypes

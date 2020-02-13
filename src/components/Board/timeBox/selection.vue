@@ -1,6 +1,6 @@
 <template>
-  <el-select v-model="iterationInfo.IterationID" clearable placeholder="Select" @change="onSelect">
-    <el-option v-for="(it, idx) in iterationList" :key="idx" :label="it.IterationName" :value="it.IterationID">
+  <el-select v-model="timeBoxInfo.TimeBoxID" clearable placeholder="Select" @change="onSelect">
+    <el-option v-for="(it, idx) in timeBoxList" :key="idx" :label="it.TimeBoxName" :value="it.TimeBoxID">
     </el-option>
   </el-select>
 </template>
@@ -12,12 +12,12 @@ import profileService from '@/services/ProfileService.js'
 
 @Component({
   props: {
-    iterationInfo: Object
+    timeBoxInfo: Object
   }
 })
 export default class Selection extends LogComponent {
   // Data members
-  iterationList = []
+  timeBoxList = []
 
 
   // Life cycle
@@ -28,11 +28,11 @@ export default class Selection extends LogComponent {
 
   // Methods
   async update() {
-    this.iterationList = await profileService.GetIterations()
+    this.timeBoxList = await profileService.GetTimeBoxes()
   }
 
-  async onSelect(iterationID) {
-    this.$emit("selected", iterationID)
+  async onSelect(timeBoxID) {
+    this.$emit("selected", timeBoxID)
   }
 }
 </script>

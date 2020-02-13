@@ -83,7 +83,7 @@ export default class History extends LogView {
   }]
 
   logIDtoModify = null
-  IterationList = window.SprintList
+  TimeBoxList = window.SprintList
   dialogFormVisible = false
   rowData = []
   KeywordToSearch = ''
@@ -99,10 +99,10 @@ export default class History extends LogView {
   }
 
   async mounted() {
-    const currentIteration = await profileService.getCurrentIterationRange()
-    if (currentIteration) {
-      this.StartSearchDate = moment(currentIteration.StartDate)
-      this.EndSearchDate = moment(currentIteration.EndDate)
+    const currentTimeBox = await profileService.getCurrentTimeBoxRange()
+    if (currentTimeBox) {
+      this.StartSearchDate = moment(currentTimeBox.StartDate)
+      this.EndSearchDate = moment(currentTimeBox.EndDate)
     }
 
     this.QueryLogs()

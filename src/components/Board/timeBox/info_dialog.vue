@@ -2,24 +2,24 @@
   <el-dialog :visible="visible" :before-close="closeDialog" @open="openHandler">
     <el-card>
       <div slot='header'>
-        <span>Iteration Info</span>
+        <span>Time Box Info</span>
       </div>
-      <el-form ref="form" :model="iterationForm" label-width="110px" :label-position="'right'">
+      <el-form ref="form" :model="timeBoxForm" label-width="110px" :label-position="'right'">
         <el-form-item label="Start Date" prop="StartDate">
-          <el-date-picker v-model="iterationForm.StartDate" type="date" placeholder="Start Date"></el-date-picker>
+          <el-date-picker v-model="timeBoxForm.StartDate" type="date" placeholder="Start Date"></el-date-picker>
         </el-form-item>
         <el-form-item label="End Date" prop="EndDate">
-          <el-date-picker v-model="iterationForm.EndDate" type="date" placeholder="End Date" :picker-options="endDateOption"></el-date-picker>
+          <el-date-picker v-model="timeBoxForm.EndDate" type="date" placeholder="End Date" :picker-options="endDateOption"></el-date-picker>
         </el-form-item>
-        <el-form-item label="Name" prop="IterationName">
-          <el-input v-model="iterationForm.IterationName"></el-input>
+        <el-form-item label="Name" prop="TimeBoxName">
+          <el-input v-model="timeBoxForm.TimeBoxName"></el-input>
         </el-form-item>
         <el-form-item label="Goal" prop="Content">
-          <el-input type="textarea" v-model="iterationForm.Content" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
+          <el-input type="textarea" v-model="timeBoxForm.Content" :autosize="{ minRows: 4, maxRows: 8}"></el-input>
         </el-form-item>
       </el-form>
       <el-button type="danger" icon="el-icon-close" @click="closeDialog">Cancel</el-button>
-      <el-button type="primary" icon="el-icon-edit" @click="saveIteration">Save</el-button>
+      <el-button type="primary" icon="el-icon-edit" @click="saveTimeBox">Save</el-button>
     </el-card>
   </el-dialog>
 </template>
@@ -32,21 +32,21 @@ import profileService from '@/services/ProfileService.js'
 
 @Component({
   props: {
-    iterationInfo: Object,
+    timeBoxInfo: Object,
     visible: Boolean,
     isNew: Boolean
   }
 })
 export default class InfoDialog extends LogComponent {
   // Data members
-  iterationForm = this.newForm()
+  timeBoxForm = this.newForm()
   endDateOption = {}
 
 
   // Life cycle
   created() {
     this.endDateOption.disabledDate = time => {
-      if (moment(this.iterationForm.StartDate) > moment(time.getTime())) {
+      if (moment(this.timeBoxForm.StartDate) > moment(time.getTime())) {
         return true
       }
       return false
@@ -56,12 +56,12 @@ export default class InfoDialog extends LogComponent {
 
   // Methods
   update() {
-    this.iterationForm = this.iterationInfo
+    this.timeBoxForm = this.timeBoxInfo
   }
 
   openHandler() {
     if (this.isNew) {
-      this.iterationForm = this.newForm();
+      this.timeBoxForm = this.newForm();
     } else {
       this.update();
     }
@@ -69,8 +69,8 @@ export default class InfoDialog extends LogComponent {
 
   newForm() {
     return {
-      IterationID: null,
-      IterationName: '',
+      TimeBoxID: null,
+      TimeBoxName: '',
       StartDate: new moment(),
       EndDate: new moment().add(7, 'days'),
       Content: ''
@@ -82,8 +82,8 @@ export default class InfoDialog extends LogComponent {
     this.$emit('close', "info_dialog");
   }
 
-  async saveIteration() {
-    let result = await profileService.ModifyOrAddAIteration(this.iterationForm)
+  async saveTimeBox() {
+    let result = await profileService.ModifyOrAddATimeBox(this.timeBoxForm)
     if (result) {
       this.$message({
         message: 'successed!',
@@ -92,7 +92,7 @@ export default class InfoDialog extends LogComponent {
       this.closeDialog();
       this.$emit("update", result);
     } else {
-      this.$message.error('Failed to save iteration info! Please Retry!');
+      this.$message.error('Failed to save time box info! Please Retry!');
     }
   }
 }

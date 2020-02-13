@@ -104,29 +104,29 @@ module.exports = class {
     return "no data";
   }
 
-  async GetIterations(userID) {
-    var cmd = "SELECT * FROM `iteration` WHERE `UserID` = ?";
+  async GetTimeBoxes(userID) {
+    var cmd = "SELECT * FROM `time_box` WHERE `UserID` = ?";
     return await DB.query(cmd, [userID])
   }
 
-  async GetIterationByID(iterationID) {
-    let cmd = "SELECT * FROM `iteration` WHERE `IterationID` = ?";
-    let dbResult = await DB.query(cmd, [iterationID]);
+  async GetTimeBoxByID(timeBoxID) {
+    let cmd = "SELECT * FROM `time_box` WHERE `TimeBoxID` = ?";
+    let dbResult = await DB.query(cmd, [timeBoxID]);
     if (dbResult.length > 0) {
       return dbResult[0];
     }
-    return {iterationID: null};
+    return {timeBoxID: null};
   }
 
-  async EditIteration(data) {
+  async EditTimeBox(data) {
     var cmd;
     var params = [];
-    if (data.IterationID === null) {
-      cmd = "INSERT INTO `iteration` (`UserID`, `IterationName`, `StartDate`, `EndDate`, `Content`) VALUES (?, ?, ?, ?, ?); ";
-      params.push(data.UserID, data.IterationName, data.StartDate, data.EndDate, data.Content);
+    if (data.TimeBoxID === null) {
+      cmd = "INSERT INTO `time_box` (`UserID`, `TimeBoxName`, `StartDate`, `EndDate`, `Content`) VALUES (?, ?, ?, ?, ?); ";
+      params.push(data.UserID, data.TimeBoxName, data.StartDate, data.EndDate, data.Content);
     } else {
-      cmd = "UPDATE `iteration` SET `IterationName` = ?, `StartDate` = ?, `EndDate` = ?, `Content` = ?, `UpdateTime` = ? WHERE `IterationID` = ?";
-      params.push(data.IterationName, data.StartDate, data.EndDate, data.Content, new Date, data.IterationID);
+      cmd = "UPDATE `time_box` SET `TimeBoxName` = ?, `StartDate` = ?, `EndDate` = ?, `Content` = ?, `UpdateTime` = ? WHERE `TimeBoxID` = ?";
+      params.push(data.TimeBoxName, data.StartDate, data.EndDate, data.Content, new Date, data.TimeBoxID);
     }
     let dbResult = await DB.query(cmd, params);
     if (!dbResult) {
@@ -135,9 +135,9 @@ module.exports = class {
     return true
   }
 
-  async ChangeIteration(data) {
-    let cmd = "UPDATE `user` SET `CurrentIterationID` = ? WHERE `UserID` = ?";
-    let dbResult = await DB.query(cmd, [data.IterationID, data.UserID]);
+  async ChangeTimeBox(data) {
+    let cmd = "UPDATE `user` SET `CurrentTimeBoxID` = ? WHERE `UserID` = ?";
+    let dbResult = await DB.query(cmd, [data.TimeBoxID, data.UserID]);
     if (dbResult.length > 0)
       return true;
     return false;

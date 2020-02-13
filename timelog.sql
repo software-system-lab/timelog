@@ -34,15 +34,15 @@ USE `newtimelog`;
 
 CREATE TABLE `goal` (
   `GoalID` bigint(20) NOT NULL,
-  `IterationID` bigint(20) NOT NULL,
+  `TimeBoxID` bigint(20) NOT NULL,
   `ProjectID` bigint(20) NOT NULL,
   `GoalHour` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 資料表的關聯 `goal`:
---   `IterationID`
---       `iteration` -> `IterationID`
+--   `TimeBoxID`
+--       `time_box` -> `TimeBoxID`
 --   `ProjectID`
 --       `project` -> `ProjectID`
 --
@@ -50,15 +50,15 @@ CREATE TABLE `goal` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `iteration`
+-- 資料表結構 `time_box`
 --
 -- 建立時間: 2019 年 06 月 15 日 09:39
 --
 
-CREATE TABLE `iteration` (
-  `IterationID` bigint(20) NOT NULL,
+CREATE TABLE `time_box` (
+  `TimeBoxID` bigint(20) NOT NULL,
   `UserID` bigint(20) NOT NULL,
-  `IterationName` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `TimeBoxName` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `StartDate` date NOT NULL,
   `EndDate` date NOT NULL,
   `Content` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `iteration` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- 資料表的關聯 `iteration`:
+-- 資料表的關聯 `time_box`:
 --   `UserID`
 --       `user` -> `UserID`
 --
@@ -157,14 +157,14 @@ CREATE TABLE `user` (
   `UserName` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `Mail` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `Phone` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `CurrentIterationID` bigint(20) NOT NULL,
+  `CurrentTimeBoxID` bigint(20) NOT NULL,
   `IsDeleted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 資料表的關聯 `user`:
---   `CurrentIterationID`
---       `iteration` -> `IterationID`
+--   `CurrentTimeBoxID`
+--       `time_box` -> `TimeBoxID`
 --
 
 -- --------------------------------------------------------
@@ -199,15 +199,15 @@ CREATE TABLE `userteammapping` (
 --
 ALTER TABLE `goal`
   ADD PRIMARY KEY (`GoalID`),
-  ADD KEY `GoalIterationID` (`IterationID`),
+  ADD KEY `GoalTimeBoxID` (`TimeBoxID`),
   ADD KEY `GoalProjecttID` (`ProjectID`);
 
 --
--- 資料表索引 `iteration`
+-- 資料表索引 `time_box`
 --
-ALTER TABLE `iteration`
-  ADD PRIMARY KEY (`IterationID`),
-  ADD KEY `IterationUserID` (`UserID`);
+ALTER TABLE `time_box`
+  ADD PRIMARY KEY (`TimeBoxID`),
+  ADD KEY `TimeBoxUserID` (`UserID`);
 
 --
 -- 資料表索引 `log`
@@ -237,7 +237,7 @@ ALTER TABLE `team`
 ALTER TABLE `user`
   ADD PRIMARY KEY (`UserID`),
   ADD UNIQUE KEY `AccountID` (`AccountID`),
-  ADD KEY `IterationID` (`CurrentIterationID`);
+  ADD KEY `TimeBoxID` (`CurrentTimeBoxID`);
 
 --
 -- 資料表索引 `userteammapping`
@@ -258,10 +258,10 @@ ALTER TABLE `goal`
   MODIFY `GoalID` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- 使用資料表 AUTO_INCREMENT `iteration`
+-- 使用資料表 AUTO_INCREMENT `time_box`
 --
-ALTER TABLE `iteration`
-  MODIFY `IterationID` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `time_box`
+  MODIFY `TimeBoxID` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用資料表 AUTO_INCREMENT `log`
@@ -301,14 +301,14 @@ ALTER TABLE `userteammapping`
 -- 資料表的 Constraints `goal`
 --
 ALTER TABLE `goal`
-  ADD CONSTRAINT `GoalIterationID` FOREIGN KEY (`IterationID`) REFERENCES `iteration` (`IterationID`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `GoalTimeBoxID` FOREIGN KEY (`TimeBoxID`) REFERENCES `time_box` (`TimeBoxID`) ON UPDATE NO ACTION,
   ADD CONSTRAINT `GoalProjecttID` FOREIGN KEY (`ProjectID`) REFERENCES `project` (`ProjectID`) ON UPDATE NO ACTION;
 
 --
--- 資料表的 Constraints `iteration`
+-- 資料表的 Constraints `time_box`
 --
-ALTER TABLE `iteration`
-  ADD CONSTRAINT `IterationUserID` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON UPDATE NO ACTION;
+ALTER TABLE `time_box`
+  ADD CONSTRAINT `TimeBoxUserID` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON UPDATE NO ACTION;
 
 --
 -- 資料表的 Constraints `log`
@@ -333,7 +333,7 @@ ALTER TABLE `team`
 -- 資料表的 Constraints `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `IterationID` FOREIGN KEY (`CurrentIterationID`) REFERENCES `iteration` (`IterationID`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `TimeBoxID` FOREIGN KEY (`CurrentTimeBoxID`) REFERENCES `time_box` (`TimeBoxID`) ON UPDATE CASCADE;
 
 --
 -- 資料表的 Constraints `userteammapping`

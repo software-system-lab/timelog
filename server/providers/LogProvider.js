@@ -38,9 +38,9 @@ module.exports = class {
     return "no data";;
   }
 
-  async GetUserLogsByIterationID(userID, iterationID) {
-    var cmd = "SELECT * FROM `log`, `iteration` WHERE `log`.`UserID` = ? AND `log`.`StartTime` >= `iteration`.`StartDate` AND `log`.`EndTime` <= DATE_ADD(`iteration`.`EndDate`, INTERVAL 1 DAY) AND `IterationID` = ? AND `log`.`IsDeleted` = ?";
-    let dbResult = await DB.query(cmd, [userID, iterationID, false]);
+  async GetUserLogsByTimeBoxID(userID, timeBoxID) {
+    var cmd = "SELECT * FROM `log`, `time_box` WHERE `log`.`UserID` = ? AND `log`.`StartTime` >= `time_box`.`StartDate` AND `log`.`EndTime` <= DATE_ADD(`time_box`.`EndDate`, INTERVAL 1 DAY) AND `TimeBoxID` = ? AND `log`.`IsDeleted` = ?";
+    let dbResult = await DB.query(cmd, [userID, timeBoxID, false]);
     return dbResult;
   }
 
@@ -96,26 +96,26 @@ module.exports = class {
   }
 
   //target
-  async QueryGoalByIteration(data) {
-    var cmd = "SELECT * FROM `goal` WHERE `IterationID` =? ;";
-    let dbResult = await DB.query(cmd, [data.IterationID]);
+  async QueryGoalByTimeBox(data) {
+    var cmd = "SELECT * FROM `goal` WHERE `TimeBoxID` =? ;";
+    let dbResult = await DB.query(cmd, [data.TimeBoxID]);
     if (dbResult.length > 0)
       return dbResult;
     return "no data";
   }
 
   async ModifyOrAddAGoal(data) {
-    var cmd = "INSERT INTO `goal` (`IterationID`, `TaskTypeID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
-    let dbResult = await DB.query(cmd, [data.IterationID, data.TaskTypeID, data.GoalHour, data.GoalHour]);
+    var cmd = "INSERT INTO `goal` (`TimeBoxID`, `TaskTypeID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
+    let dbResult = await DB.query(cmd, [data.TimeBoxID, data.TaskTypeID, data.GoalHour, data.GoalHour]);
     if (dbResult)
       return true;
     return false;
   }
 
-  //// Iteration
-  async QueryIterationByIterationID(iterationID) {
-    var cmd = "SELECT * FROM `iteration` WHERE iterationID = ?";
-    let dbResult = await DB.query(cmd, [iterationID]);
+  //// TimeBox
+  async QueryTimeBoxByTimeBoxID(timeBoxID) {
+    var cmd = "SELECT * FROM `time_box` WHERE timeBoxID = ?";
+    let dbResult = await DB.query(cmd, [timeBoxID]);
     if (dbResult.length != 0)
       return dbResult;
     return "no data"
