@@ -30,7 +30,7 @@
         <el-table-column label="" align="left">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-plus" v-if="scope.row.TaskTypeID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
-            <el-button type="primary" icon="el-icon-edit" v-else circle @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button type="primary" icon="el-icon-edit" v-else circle :disabled="scope.row.TaskTypeName === 'others'" @click="ModifyOrAdd(scope.row)"></el-button>
             <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.TaskTypeID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
           </template>
         </el-table-column>

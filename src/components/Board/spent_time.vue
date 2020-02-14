@@ -74,8 +74,7 @@ export default class SpentTime extends LogComponent {
         this.pieData.labels.push("Other TaskTypes")
         this.pieData.datasets[0].data.push(this.taskTypeList[i].TimeLength.toFixed(0))
       } else {
-        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.taskTypeList[i].TimeLength).toFixed(
-          0)
+        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.taskTypeList[i].TimeLength).toFixed(0)
       }
       this.pieData.datasets[0].timeLength += this.taskTypeList[i].TimeLength
     }
@@ -129,7 +128,9 @@ export default class SpentTime extends LogComponent {
                 const time = parseInt(t[0]) * 3600000 + parseInt(t[1]) * 60000
                 sum += time
               })
-              var currentValue = dataset.data[tooltipItem.index].replace('.', ':')
+
+              var value = parseFloat(dataset.data[tooltipItem.index])
+              var currentValue = parseInt(value) + ":" + (value%1)*60
               return " " + data.labels[tooltipItem.index] + ": " + currentValue
               label += Math.round(tooltipItem.yLabel * 100) / 100
               return label

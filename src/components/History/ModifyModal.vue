@@ -157,6 +157,7 @@ export default class ModifyModal extends Vue {
       if (valid) {
         this.LogForm.StartDate = moment(this.LogForm.StartDate).format('YYYY-MM-DD')
         this.LogForm.EndDate = moment(this.LogForm.EndDate).format('YYYY-MM-DD')
+
         let result = await _logService.ModifyALog(this.LogForm)
         if (result) {
           this.$message({
