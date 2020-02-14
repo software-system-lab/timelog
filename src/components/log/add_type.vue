@@ -3,15 +3,15 @@
     <div slot="header" class="clearfix">
       <h2>Add a Task Type</h2>
     </div>
-    <el-form ref="form" :rules="formRules" :model="taskTypeData" label-width="110px" :label-position="'right'">
+    <el-form ref="form" :rules="formRules" :model="activityData" label-width="110px" :label-position="'right'">
       <el-form-item label="Name" prop="Name" >
-        <el-input v-model="taskTypeData.Name" placeholder="Task Type Name"></el-input>
+        <el-input v-model="activityData.Name" placeholder="Task Type Name"></el-input>
       </el-form-item>
       <el-form-item label="Enable" prop="IsEnable">
-        <el-switch v-model="taskTypeData.IsEnable"/>
+        <el-switch v-model="activityData.IsEnable"/>
       </el-form-item>
       <el-form-item label="Name" prop="IsPrivate">
-        <el-switch v-model="taskTypeData.IsPrivate"/>
+        <el-switch v-model="activityData.IsPrivate"/>
       </el-form-item>
     </el-form>
     <el-button type="danger" icon="el-icon-close" @click="cancel">Cancel</el-button>
@@ -27,7 +27,7 @@ import _logService from '@/services/LogService.js'
 @Component
 export default class AddType extends Vue {
   // Data members
-  taskTypeData = {
+  activityData = {
     Name: "",
     IsEnable: true,
     IsPrivate: false
@@ -49,54 +49,54 @@ export default class AddType extends Vue {
       trigger: 'blur'
     }]
   }
-  taskTypeList = window.TaskTypeList
+  activityList = window.ActivityList
 
   // Methods
   async submit() {
     this.$refs['form'].validate(async (valid) => {
       if (valid) {
-        var DuplicatedTaskType = this.taskTypeList.find(x => x.TaskTypeName == this.taskTypeData.Name)
-        if (DuplicatedTaskType) {
+        var DuplicatedActivity = this.activityList.find(x => x.ActivityName == this.activityData.Name)
+        if (DuplicatedActivity) {
           this.$message.error('Duplicate name!')
           return
         }
-        let taskType = {
-          TaskTypeID: null,
-          TaskTypeName: this.taskTypeData.Name,
-          IsPrivate: this.taskTypeData.IsPrivate,
-          IsEnable: this.taskTypeData.IsEnable
+        let activity = {
+          ActivityID: null,
+          ActivityName: this.activityData.Name,
+          IsPrivate: this.activityData.IsPrivate,
+          IsEnable: this.activityData.IsEnable
         }
-        let result = await _logService.ModifyOrAddATaskType(taskType)
+        let result = await _logService.ModifyOrAddAnActivity(activity)
         if (result) {
           this.$message({
             message: 'successed!',
             type: 'success'
           })
-          this.QueryTaskTypes()
-          this.$emit("saved", this.taskTypeData.Name)
+          this.QueryActivities()
+          this.$emit("saved", this.activityData.Name)
         } else {
-          this.$message.error('Fail to add/modify the taskType! Please Retry')
+          this.$message.error('Fail to add/modify the activity! Please Retry')
         }
       }
     })
   }
 
-  async QueryTaskTypes() {
-    let taskTypeList = await _logService.GetUserTaskTypes()
+  async QueryActivities() {
+    let activityList = await _logService.GetUserActivities()
 
     //clear list
-    window.TaskTypeList.length = 0
+    window.ActivityList.length = 0
 
-    if (taskTypeList == "no data")
+    if (activityList == "no data")
       this.$message({
-        message: 'no TaskType data!',
+        message: 'no activity data!',
         type: 'warning'
       })
     else {
-      taskTypeList.forEach(x => {
-        window.TaskTypeList.push({
-          TaskTypeID: x.TaskTypeID,
-          TaskTypeName: x.TaskTypeName,
+      activityList.forEach(x => {
+        window.ActivityList.push({
+          ActivityID: x.ActivityID,
+          ActivityName: x.ActivityName,
           IsPrivate: x.IsPrivate ? true : false,
           IsEnable: x.IsEnable ? true : false
         })
@@ -106,7 +106,7 @@ export default class AddType extends Vue {
 
   cancel() {
     this.$refs['form'].clearValidate()
-    this.taskTypeName = ""
+    this.activityName = ""
     this.$emit("close")
   }
 

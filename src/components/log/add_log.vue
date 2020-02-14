@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="addTaskTypeVisible" id="add-task-type-popup" class="overlay">
+  <div v-if="addActivityVisible" id="add-task-type-popup" class="overlay">
     <div class="popup">
       <AddType @close="closePopup" @saved="update"/>
     </div>
@@ -13,14 +13,14 @@
       <el-form-item label="Title" prop="Title">
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
-      <el-form-item label="TaskType" prop="TaskTypeID">
-        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
+      <el-form-item label="Activity" prop="ActivityID">
+        <el-select ref="activitySelector" v-model="logData.ActivityID" filterable reserve-keyword placeholder="Choose">
           <el-option-group>
-            <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
+            <el-option v-for="item in ActivityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
             </el-option>
           </el-option-group>
           <el-option-group>
-            <el-option key="AddTaskType" id="addlog-dropdown-button-newtype">
+            <el-option key="AddActivity" id="addlog-dropdown-button-newtype">
               <el-button @click="createNewType">New Type</el-button>
             </el-option>
           </el-option-group>
@@ -76,7 +76,7 @@ import AddType from '@/components/log/add_type.vue'
 })
 export default class AddLog extends Vue {
   // Data members
-  TaskTypeList = window.TaskTypeList
+  ActivityList = window.ActivityList
   logData = this.emptyLog()
   formRules = {
     Title: [{
@@ -84,7 +84,7 @@ export default class AddLog extends Vue {
       message: 'Check Here!',
       trigger: 'blur'
     }],
-    TaskTypeID: [{
+    ActivityID: [{
       required: true,
       message: 'Check Here!',
       trigger: 'blur'
@@ -117,7 +117,7 @@ export default class AddLog extends Vue {
   }
   startDateOption = {}
   endDateOption = {}
-  addTaskTypeVisible = false
+  addActivityVisible = false
 
 
   // Life cycle
@@ -174,7 +174,7 @@ export default class AddLog extends Vue {
   emptyLog() {
     return {
       Title: '',
-      TaskTypeID: null,
+      ActivityID: null,
       StartTime: new moment().add(-1, 'hours').format('HH:mm'),
       EndTime: new moment().format('HH:mm'),
       StartDate: new moment().add(-1, 'hours').format('YYYY-MM-DD'),
@@ -195,14 +195,14 @@ export default class AddLog extends Vue {
   }
 
   openPopup() {
-    this.addTaskTypeVisible = true
+    this.addActivityVisible = true
   }
 
   closePopup() {
-    this.addTaskTypeVisible = false
+    this.addActivityVisible = false
   }
 
-  update(newTaskTypeName) {
+  update(newActivityName) {
     this.closePopup()
   }
 

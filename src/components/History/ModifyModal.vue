@@ -7,9 +7,9 @@
     <el-form-item label="What you do?" prop="Title">
       <el-input v-model="LogForm.Title"></el-input>
     </el-form-item>
-    <el-form-item label="TaskType" prop="TaskTypeID">
-      <el-select v-model="LogForm.TaskTypeID" filterable reserve-keyword placeholder="Choose">
-        <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
+    <el-form-item label="Activity" prop="ActivityID">
+      <el-select v-model="LogForm.ActivityID" filterable reserve-keyword placeholder="Choose">
+        <el-option v-for="item in ActivityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
         </el-option>
       </el-select>
     </el-form-item>
@@ -66,7 +66,7 @@ import moment from 'moment'
 export default class ModifyModal extends Vue {
   // Data members
   LogForm = this.initLogForm()
-  TaskTypeList = window.TaskTypeList
+  ActivityList = window.ActivityList
   endDateOption = {}
   formRules = {
     Title: [{
@@ -74,7 +74,7 @@ export default class ModifyModal extends Vue {
       message: 'Check Here!',
       trigger: 'blur'
     }],
-    TaskTypeID: [{
+    ActivityID: [{
       required: false,
       message: 'Check Here!',
       trigger: 'blur'

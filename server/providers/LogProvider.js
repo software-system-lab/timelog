@@ -7,16 +7,16 @@ module.exports = class {
 
   ////log
   async AddALog(data) {
-    var cmd = "INSERT INTO `log` (`UserID`, `TaskTypeID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
-    let dbResult = await DB.query(cmd, [data.UserID, data.TaskTypeID, data.Title, data.StartTime, data.EndTime, data.Description]);
+    var cmd = "INSERT INTO `log` (`UserID`, `ActivityID`, `Title`, `StartTime`, `EndTime`, `Description`) VALUES (?, ?, ?, ?, ?, ?);";
+    let dbResult = await DB.query(cmd, [data.UserID, data.ActivityID, data.Title, data.StartTime, data.EndTime, data.Description]);
     if (dbResult)
       return true;
     return false;
   }
 
   async ModifyALog(data) {
-    var cmd = "UPDATE `log` SET `TaskTypeID` = ?, `Title` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `LogID` = ?";
-    let dbResult = await DB.query(cmd, [data.TaskTypeID, data.Title, data.StartTime, data.EndTime, data.Description, data.LogID]);
+    var cmd = "UPDATE `log` SET `ActivityID` = ?, `Title` = ?, `StartTime` = ?, `EndTime` = ?, `Description` = ? WHERE `LogID` = ?";
+    let dbResult = await DB.query(cmd, [data.ActivityID, data.Title, data.StartTime, data.EndTime, data.Description, data.LogID]);
     if (dbResult)
       return true;
     return false;
@@ -67,29 +67,29 @@ module.exports = class {
   }
 
   ////task types
-  async GetUserTaskTypes(userID) {
-    var cmd = "SELECT * FROM `task_type` WHERE `UserID` = ? AND `IsDeleted` = ?";
+  async GetUserActivities(userID) {
+    var cmd = "SELECT * FROM `activity` WHERE `UserID` = ? AND `IsDeleted` = ?";
     let dbResult = await DB.query(cmd, [userID, false]);
     return dbResult;
   }
 
-  async ModifyOrAddATaskType(data) {
+  async ModifyOrAddAnActivity(data) {
     var dbResult;
-    if (data.TaskTypeID == null) {
-      var cmd = "INSERT INTO `task_type` (`UserID`, `TaskTypeName`, `IsPrivate`, `IsEnable`) VALUES (?, ?, ?, ?);";
-      dbResult = await DB.query(cmd, [data.UserID, data.TaskTypeName, data.IsPrivate, data.IsEnable]);
+    if (data.ActivityID == null) {
+      var cmd = "INSERT INTO `activity` (`UserID`, `ActivityName`, `IsPrivate`, `IsEnable`) VALUES (?, ?, ?, ?);";
+      dbResult = await DB.query(cmd, [data.UserID, data.ActivityName, data.IsPrivate, data.IsEnable]);
     } else {
-      var cmd = "UPDATE `task_type` SET `TaskTypeName` = ?, `IsPrivate` = ?, `IsEnable` = ? WHERE `TaskTypeID` = ?;";
-      dbResult = await DB.query(cmd, [data.TaskTypeName, data.IsPrivate, data.IsEnable, data.TaskTypeID]);
+      var cmd = "UPDATE `activity` SET `ActivityName` = ?, `IsPrivate` = ?, `IsEnable` = ? WHERE `ActivityID` = ?;";
+      dbResult = await DB.query(cmd, [data.ActivityName, data.IsPrivate, data.IsEnable, data.ActivityID]);
     }
     if (dbResult)
       return true;
     return false;
   }
 
-  async DeleteATaskType(taskTypeID) {
-    var cmd = "UPDATE `task_type` SET `IsDeleted` = ? WHERE `TaskTypeID` = ?;";
-    let dbResult = await DB.query(cmd, [true, taskTypeID]);
+  async DeleteAnActivity(activityID) {
+    var cmd = "UPDATE `activity` SET `IsDeleted` = ? WHERE `ActivityID` = ?;";
+    let dbResult = await DB.query(cmd, [true, activityID]);
     if (dbResult)
       return true;
     return false;
@@ -105,8 +105,8 @@ module.exports = class {
   }
 
   async ModifyOrAddAGoal(data) {
-    var cmd = "INSERT INTO `goal` (`TimeBoxID`, `TaskTypeID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
-    let dbResult = await DB.query(cmd, [data.TimeBoxID, data.TaskTypeID, data.GoalHour, data.GoalHour]);
+    var cmd = "INSERT INTO `goal` (`TimeBoxID`, `ActivityID`, `GoalHour`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GoalHour` = ?;";
+    let dbResult = await DB.query(cmd, [data.TimeBoxID, data.ActivityID, data.GoalHour, data.GoalHour]);
     if (dbResult)
       return true;
     return false;
