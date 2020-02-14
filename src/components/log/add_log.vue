@@ -29,12 +29,12 @@
       <el-form-item label="Start Time">
         <el-col :md="12" :sm="24">
           <el-form-item prop="StartDate">
-            <el-date-picker v-model="logData.StartDate" type="date" placeholder="Start Date" align="'center'"></el-date-picker>
+            <el-date-picker v-model="logData.StartDate" type="date" placeholder="Start Date" :picker-options="startDateOption" align="'center'"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :md="12" :sm="24">
           <el-form-item prop="StartTime">
-            <el-time-picker v-model="logData.StartTime" format="HH:mm" value-format="HH:mm">
+            <el-time-picker v-model="logData.StartTime" format="HH:mm" value-format="HH:mm" :picker-options='startTimeOption'>
             </el-time-picker>
           </el-form-item>
         </el-col>
@@ -115,17 +115,15 @@ export default class AddLog extends Vue {
       trigger: 'blur'
     }],
   }
+  startDateOption = {}
   endDateOption = {}
   addTaskTypeVisible = false
 
 
   // Life cycle
   created() {
-    this.endDateOption.disabledDate = time => {
-      if (moment(this.logData.StartDate) > moment(time.getTime()))
-        return true
-      return false
-    }
+    this.startDateOption.disabledDate = time => moment(this.logData.EndDate) < moment(time.getTime())
+    this.endDateOption.disabledDate = time => moment(this.logData.StartDate) > moment(time.getTime())
   }
 
 
@@ -134,6 +132,15 @@ export default class AddLog extends Vue {
     if (this.logData.StartDate == this.logData.EndDate) {
       return {
         selectableRange: this.logData.StartTime + ':00 - 23:59:59'
+      }
+    }
+    return
+  }
+
+  get startTimeOption() {
+    if (this.logData.StartDate == this.logData.EndDate) {
+      return {
+        selectableRange: '00:00:00 - ' + this.logData.EndTime + ':00'
       }
     }
     return
