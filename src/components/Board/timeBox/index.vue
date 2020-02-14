@@ -13,8 +13,8 @@
             <Selection @selected="timeBoxSelected" :timeBoxInfo="timeBoxInfo" ref="selection"/>
           </el-col>
           <el-col :md="6" :sm="24">
-              <el-button :disabled="timeBoxInfo.TimeBoxID === ''" @click="edit" class="time-box-button">Edit</el-button>
-              <el-button :disabled="timeBoxInfo.TimeBoxID === ''" @click="setGoal" class="time-box-button">Goal</el-button>
+              <el-button :disabled="timeBoxInfo.TimeBoxID === undefined" @click="edit" class="time-box-button">Edit</el-button>
+              <el-button :disabled="timeBoxInfo.TimeBoxID === undefined" @click="setGoal" class="time-box-button">Goal</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>

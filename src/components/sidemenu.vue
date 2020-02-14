@@ -68,6 +68,12 @@ export default class Sidemenu extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.el-menu {
+  height: calc(100% - 30px);
+  margin-top: 30px;
+}
+
 img {
   width: 80px;
   display: block;
