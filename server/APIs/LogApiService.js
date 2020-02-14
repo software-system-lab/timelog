@@ -47,11 +47,11 @@ module.exports = class {
     this.router.post("/GetUserLogs", async (req, res) => {
       try {
         let result = await _LogProvider.GetUserLogsBySearch(req.body);
-        let dbTaskTypeList = await _LogProvider.GetUserTaskTypes(req.body.UserID);
-        if (result !== 'no data' && dbTaskTypeList !== 'no data')
+        let dbActivityList = await _LogProvider.GetUserActivities(req.body.UserID);
+        if (result !== 'no data' && dbActivityList !== 'no data')
           result.forEach(x => {
-            let taskType = dbTaskTypeList.find(y => x.TaskTypeID == y.TaskTypeID)
-            x.TaskTypeName = taskType !== undefined ? taskType.TaskTypeName : '';
+            let activity = dbActivityList.find(y => x.ActivityID == y.ActivityID)
+            x.ActivityName = activity !== undefined ? activity.ActiviryName : '';
           })
         res.send(result);
       } catch (err) {
@@ -71,9 +71,9 @@ module.exports = class {
     });
 
     ////tag
-    this.router.post("/GetUserTaskTypes", async (req, res) => {
+    this.router.post("/GetUserActivities", async (req, res) => {
       try {
-        let result = await _LogProvider.GetUserTaskTypes(req.body.UserID);
+        let result = await _LogProvider.GetUserActivities(req.body.UserID);
         result = result.filter(x => x.IsDeleted == 0);
         res.send(result);
       } catch (err) {
@@ -82,9 +82,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/ModifyOrAddATaskType", async (req, res) => {
+    this.router.post("/ModifyOrAddAnActivity", async (req, res) => {
       try {
-        let result = await _LogProvider.ModifyOrAddATaskType(req.body);
+        let result = await _LogProvider.ModifyOrAddAnActivity(req.body);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -92,9 +92,9 @@ module.exports = class {
       }
     });
 
-    this.router.post("/DeleteATaskType", async (req, res) => {
+    this.router.post("/DeleteAnActivity", async (req, res) => {
       try {
-        let result = await _LogProvider.DeleteATaskType(req.body.TaskTypeID);
+        let result = await _LogProvider.DeleteAnActivity(req.body.ActivityID);
         res.send(result);
       } catch (err) {
         console.log(err);
@@ -114,21 +114,21 @@ module.exports = class {
     });
 
     ////analysis
-    this.router.post("/taskTypeTimeByTimeBox", async (req, res) => {
+    this.router.post("/ActivityTimeByTimeBox", async (req, res) => {
       try {
         const body = req.body
-        const taskTypes = await this.logService.getTaskTypeTimeByTimeBox(req.body.UserID, req.body.TimeBoxID)
-        res.send(taskTypes)
+        const activities = await this.logService.getActivityTimeByTimeBox(req.body.UserID, req.body.TimeBoxID)
+        res.send(activities)
       } catch (err) {
         console.log(err);
         res.send(400);
       }
     });
 
-    this.router.post('/taskTypeTime', async (req, res) => {
+    this.router.post('/activityTime', async (req, res) => {
       const body = req.body
-      const taskTypes = await this.logService.getTaskTypeTimeByDuration(body.UserID, body.StartDate, body.EndDate)
-      res.send(taskTypes)
+      const activities = await this.logService.getActivityTimeByDuration(body.UserID, body.StartDate, body.EndDate)
+      res.send(activities)
     })
   }
 }

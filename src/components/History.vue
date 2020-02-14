@@ -26,9 +26,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="TaskType" label="TaskType" align="left" :filters="taskTypeFilters" :filter-method="filterTaskType">
+          <el-table-column prop="Activity" label="Activity" align="left" :filters="activityFilters" :filter-method="filterActivity">
             <template slot-scope="scope">
-              {{scope.row.TaskTypeName ? scope.row.TaskTypeName : "Other Events"}}
+              {{scope.row.ActivityName ? scope.row.ActivityName : "Other Events"}}
             </template>
           </el-table-column>
 
@@ -75,9 +75,9 @@ export default class History extends LogView {
   // Data members
   logList = []
 
-  taskTypeList = window.TaskTypeList
+  activityList = window.Activity
 
-  taskTypeFilters = [{
+  activityFilters = [{
     text: 'Untitled Events',
     value: null
   }]
@@ -92,9 +92,9 @@ export default class History extends LogView {
 
   // Life cycle
   beforeCreated() {
-    this.taskTypeList.push({
-      TaskTypeName: "Untitled Events",
-      TaskTypeID: ""
+    this.activityList.push({
+      ActivityName: "Untitled Events",
+      ActivityID: ""
     })
   }
 
@@ -107,22 +107,22 @@ export default class History extends LogView {
 
     this.QueryLogs()
 
-    //taskTypeFilters
+    //activityFilters
     //clear list
-    this.taskTypeFilters.length = 0
-    this.taskTypeList.forEach(x => {
-      this.taskTypeFilters.push({
-        value: x.TaskTypeID? x.TaskTypeID.toString(): null,
-        text: x.TaskTypeName,
+    this.activityFilters.length = 0
+    this.activityList.forEach(x => {
+      this.activityFilters.push({
+        value: x.ActivityID? x.ActivityID.toString(): null,
+        text: x.ActivityName,
       })
     })
   }
 
 
   // Methods
-  filterTaskType(value, row) {
+  filterActivity(value, row) {
     var flag = false
-    if (row.TaskTypeID == value) {
+    if (row.ActivityID == value) {
       flag = true
     }
     return flag

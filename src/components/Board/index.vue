@@ -3,17 +3,17 @@
   <h1>Dash Board</h1>
   <TimeBox
     @update="changeTimeBox"
-    @updateGoal="getTaskTypesData"
+    @updateGoal="getActivitiesData"
     @displayByDate="displayByDate"
     :timeBoxInfo="timeBoxInfo"
-    :taskTypeList="taskTypeList"
+    :activityList="activityList"
     ref="timeBox"/>
   <br>
-  <SpentTime :taskTypeList="taskTypeList" ref="spentTime"/>
+  <SpentTime :activityList="activityList" ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"
-    :taskTypeList="taskTypeList"
+    :activityList="activityList"
     @setting="openTimeBoxSetting"
     ref='goal'/>
 </div>
@@ -40,7 +40,7 @@ export default class Board extends LogView {
   timeBoxInfo = {
     timeBoxID: null
   }
-  taskTypeList = []
+  activityList = []
   timeBoxSetting = false
   goalDisplay = true
 
@@ -49,28 +49,28 @@ export default class Board extends LogView {
   async created() {
     const timeBoxID = await profileService.getCurrentTimeBox()
     this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
-    this.getTaskTypesData()
+    this.getActivitiesData()
     this.$refs.timeBox.timeBoxDate()
   }
 
 
   // Methods
-  async getTaskTypeList() {
+  async getActivityList() {
     const userID = window.Profile.UserID
-    let result = await logService.taskTypeTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
+    let result = await logService.activityTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
     if (result != "no data") {
-      this.taskTypeList = result
+      this.activityList = result
     }
   }
 
-  async getTaskTypesData() {
-    await this.getTaskTypeList()
-    this.$refs.spentTime.update(this.taskTypeList)
+  async getActivitiesData() {
+    await this.getActivityList()
+    this.$refs.spentTime.update(this.activityList)
   }
 
   update() {
     this.goalDisplay = true
-    this.getTaskTypesData()
+    this.getActivitiesData()
     this.$refs.timeBox.update()
   }
 
@@ -92,8 +92,8 @@ export default class Board extends LogView {
     this.goalDisplay = false
     this.timeBoxInfo.TimeBoxID = ""
     const userID = window.Profile.UserID
-    this.taskTypeList = await logService.taskTypeTime(userID, date.start, date.end)
-    this.$refs.spentTime.update(this.taskTypeList)
+    this.activityList = await logService.activityTime(userID, date.start, date.end)
+    this.$refs.spentTime.update(this.activityList)
   }
 }
 </script>

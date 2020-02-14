@@ -3,15 +3,15 @@
   <el-col :md="12" :sm="24">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <h2>My TaskTypes</h2>
+        <h2>My Activities</h2>
       </div>
-      <el-table :data="taskTypeList" sortable="true">
+      <el-table :data="activityList" sortable="true">
 
-        <el-table-column prop="TaskTypeName" label="Name" align="left">
+        <el-table-column prop="ActivityName" label="Name" align="left">
           <template slot-scope="scope">
-            <el-input v-if="scope.row.TaskTypeID == null" placeholder="Add a new taskType" minlength="1" v-model="scope.row.TaskTypeName">
+            <el-input v-if="scope.row.ActivityID == null" placeholder="Add a new activity" minlength="1" v-model="scope.row.ActivityName">
             </el-input>
-            <el-input v-else :disabled="scope.row.InputDisabled" minlength="1" v-model="scope.row.TaskTypeName">
+            <el-input v-else :disabled="scope.row.InputDisabled" minlength="1" v-model="scope.row.ActivityName">
             </el-input>
           </template>
         </el-table-column>
@@ -29,9 +29,9 @@
         </el-table-column>
         <el-table-column label="" align="left">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.TaskTypeID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.ActivityID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
             <el-button type="primary" icon="el-icon-edit" v-else circle @click="ModifyOrAdd(scope.row)"></el-button>
-            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.TaskTypeID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
+            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.ActivityID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,51 +72,51 @@ import _profileService from '../services/ProfileService.js'
 @Component
 export default class Setting extends Vue {
   // Data members
-  taskTypeList = []
+  activityList = []
   UserForm = {}
   IsProfileEdit = false
 
 
   // Life cycle
   async created() {
-    this.QueryTaskTypes()
+    this.QueryActivities()
     this.QueryUserProfile()
   }
 
 
   // Methods
-  async QueryTaskTypes() {
-    let taskTypeList = await _logService.GetUserTaskTypes()
+  async QueryActivities() {
+    let activityList = await _logService.GetUserActivities()
 
     //clear list
-    this.taskTypeList.length = 0
-    window.TaskTypeList.length = 0
-    // input to add taskType
-    this.taskTypeList.push({
-      TaskTypeID: null,
-      TaskTypeName: '',
+    this.activityList.length = 0
+    window.ActivityList.length = 0
+    // input to add activity
+    this.activityList.push({
+      ActivityID: null,
+      ActivityName: '',
       InputDisabled: false,
       IsPrivate: false,
       IsEnable: true
     })
 
-    if (taskTypeList == "no data")
+    if (activityList == "no data")
       this.$message({
-        message: 'no TaskType data!',
+        message: 'no activity data!',
         type: 'warning'
       })
     else {
-      taskTypeList.forEach(x => {
-        this.taskTypeList.push({
-          TaskTypeID: x.TaskTypeID,
-          TaskTypeName: x.TaskTypeName,
+      activityList.forEach(x => {
+        this.activityList.push({
+          ActivityID: x.ActivityID,
+          ActivityName: x.ActivityName,
           IsPrivate: x.IsPrivate ? true : false,
           IsEnable: x.IsEnable ? true : false,
           InputDisabled: true
         })
-        window.TaskTypeList.push({
-          TaskTypeID: x.TaskTypeID,
-          TaskTypeName: x.TaskTypeName,
+        window.ActivityList.push({
+          ActivityID: x.ActivityID,
+          ActivityName: x.ActivityName,
           IsPrivate: x.IsPrivate ? true : false,
           IsEnable: x.IsEnable ? true : false
         })
@@ -129,31 +129,31 @@ export default class Setting extends Vue {
     this.QueryUserProfile()
   }
 
-  async ModifyOrAdd(taskType) {
-    if (taskType.InputDisabled == true) {
-      if (taskType.TaskTypeID) //not new taskType
-        taskType.InputDisabled = false
+  async ModifyOrAdd(activity) {
+    if (activity.InputDisabled == true) {
+      if (activity.ActivityID) //not new activity
+        activity.InputDisabled = false
     } else {
-      if (taskType.TaskTypeName.length < 1) {
-        this.$message.error('Name of taskType cannot be null!')
+      if (activity.ActivityName.length < 1) {
+        this.$message.error('Name of activity cannot be null!')
         return
       }
 
-      var DuplicatedTaskType = this.taskTypeList.find(x => x.TaskTypeName == taskType.TaskTypeName && x.TaskTypeID != null && x.TaskTypeID != taskType.TaskTypeID)
-      if (DuplicatedTaskType) {
+      var DuplicatedActivity = this.activityList.find(x => x.ActivityName == activity.ActivityName && x.ActivityID != null && x.ActivityID != activity.ActivityID)
+      if (DuplicatedActivity) {
         this.$message.error('Duplicate name!')
         return
       }
 
-      let result = await _logService.ModifyOrAddATaskType(taskType)
+      let result = await _logService.ModifyOrAddAnActivity(activity)
       if (result) {
         this.$message({
           message: 'successed!',
           type: 'success'
         })
-        this.QueryTaskTypes()
+        this.QueryActivities()
       } else {
-        this.$message.error('Fail to add/modify the taskType! Please Retry')
+        this.$message.error('Fail to add/modify the activity! Please Retry')
       }
     }
   }
@@ -184,16 +184,16 @@ export default class Setting extends Vue {
   }
 
   async Delete(data) {
-    let result = await _logService.DeleteATaskType(data.TaskTypeID)
+    let result = await _logService.DeleteAnActivity(data.ActivityID)
     if (result) {
       this.$message({
         message: 'successed!',
         type: 'success'
       })
       this.IsProfileEdit = false
-      this.QueryTaskTypes()
+      this.QueryActivities()
     } else {
-      this.$message.error('Fail to delete the taskType! Please Retry')
+      this.$message.error('Fail to delete the activity! Please Retry')
     }
   }
 

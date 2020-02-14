@@ -8,9 +8,9 @@
       </div>
       <el-row>
         <el-table :data="goalList" sortable="true">
-          <el-table-column prop="TaskType Name" label="TaskType">
+          <el-table-column prop="Activity Name" label="Activity">
             <template slot-scope="scope">
-              {{scope.row.TaskTypeName}}
+              {{scope.row.ActivityName}}
             </template>
           </el-table-column>
           <el-table-column prop="GoalHour" label="Goal(Hour)">
@@ -40,20 +40,20 @@ import logService from '@/services/LogService.js'
 @Component({
   props: {
     timeBoxInfo: Object,
-    taskTypeList: Array,
+    activityList: Array,
     visible: Boolean
   }
 })
 export default class GoalDialog extends Vue {
   // Data members
-  goalList = window.TaskTypeList
+  goalList = window.ActivityList
 
   // Methods
   openHandler() {
     this.goalList = []
-    this.taskTypeList.forEach(taskType => {
-      if (taskType.TaskTypeID != null) {
-        this.goalList.push(JSON.parse(JSON.stringify(taskType)))
+    this.activityList.forEach(activity => {
+      if (activity.ActivityID != null) {
+        this.goalList.push(JSON.parse(JSON.stringify(activity)))
       }
     })
   }
@@ -71,11 +71,11 @@ export default class GoalDialog extends Vue {
   }
 
   cancelGoal(data) {
-    this.taskTypeList.forEach(taskType => {
-      if (taskType.TaskTypeID === data.TaskTypeID) {
+    this.ActivityList.forEach(activity => {
+      if (activity.ActivityID === data.ActivityID) {
         const keyList = Object.keys(data)
         keyList.forEach(key => {
-          data[key] = taskType[key]
+          data[key] = activity[key]
         })
       }
     })

@@ -48,7 +48,7 @@
       <el-button type="warning" @click="publish">Publish</el-button>
     </el-row>
     <InfoDialog :visible="infoDialogActive" :timeBoxInfo="timeBoxInfo" :isNew="isNew" @update="timeBoxSelected" @close="closeDialog" ref="infoDialog"/>
-    <GoalDialog :visible="goalDialogActive" :timeBoxInfo="timeBoxInfo" :taskTypeList="taskTypeList" @goalEdit="goalEdit" @close="closeDialog" />
+    <GoalDialog :visible="goalDialogActive" :timeBoxInfo="timeBoxInfo" :activityList="activityList" @goalEdit="goalEdit" @close="closeDialog" />
   </el-card>
 </template>
 
@@ -69,7 +69,7 @@ import publishService from '@/services/publish_service.js'
   },
   props: {
     timeBoxInfo: Object,
-    taskTypeList: Array
+    activityList: Array
   }
 })
 export default class TimeBox extends LogComponent {

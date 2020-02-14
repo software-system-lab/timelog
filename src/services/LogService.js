@@ -8,7 +8,7 @@ export default {
   async AddALog(logData) {
     let postData = {
       UserID: window.Profile.UserID,
-      TaskTypeID: logData.TaskTypeID,
+      ActivityID: logData.ActivityID,
       Title: logData.Title,
       StartTime: moment(logData.StartDate + ' ' + logData.StartTime).format('YYYY-MM-DD HH:mm'),
       EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
@@ -21,7 +21,7 @@ export default {
     let postData = {
       LogID: logData.LogID,
       UserID: window.Profile.UserID,
-      TaskTypeID: logData.TaskTypeID,
+      ActivityID: logData.ActivityID,
       Title: logData.Title,
       StartTime: moment(logData.StartDate + ' ' + logData.StartTime).format('YYYY-MM-DD HH:mm'),
       EndTime: moment(logData.EndDate + ' ' + logData.EndTime).format('YYYY-MM-DD HH:mm'),
@@ -70,69 +70,69 @@ export default {
     return httpResult
   },
 
-  //TaskType
-  async GetUserTaskTypes() {
-    let userTaskTypes = await HTTP.post(`/Log/GetUserTaskTypes`, {
+  //Activity
+  async GetUserActivities() {
+    let userActivities = await HTTP.post(`/Log/GetUserActivities`, {
       UserID: window.Profile.UserID
     });
-    if (userTaskTypes != "no data"){
-      userTaskTypes.sort(function(a, b){
-        if (b.TaskTypeName === "others"){
+    if (userActivities != "no data"){
+      userActivities.sort(function(a, b){
+        if (b.ActivityName === "others"){
           return -1;
-        } else if(a.TaskTypeName === "others"){
+        } else if(a.ActivityName === "others"){
           return 1;
         } else {
           return 0;
         }
       });
     }
-    return userTaskTypes;
+    return userActivities;
   },
 
-  async ModifyOrAddATaskType(taskType) {
+  async ModifyOrAddAnActivity(activity) {
     let postData = {
       UserID: window.Profile.UserID,
-      TaskTypeID: taskType.TaskTypeID,
-      TaskTypeName: taskType.TaskTypeName,
-      IsPrivate: taskType.IsPrivate,
-      IsEnable: taskType.IsEnable
+      ActivityID: activity.ActivityID,
+      ActivityName: activity.ActivityName,
+      IsPrivate: activity.IsPrivate,
+      IsEnable: activity.IsEnable
     };
-    return HTTP.post(`/Log/ModifyOrAddATaskType`, postData);
+    return HTTP.post(`/Log/ModifyOrAddAnActivity`, postData);
   },
 
-  async DeleteATaskType(taskTypeID) {
+  async DeleteAnActivity(activityID) {
     let postData = {
-      TaskTypeID: taskTypeID
+      ActivityID: activityID
     };
-    return HTTP.post(`/Log/DeleteATaskType`, postData);
+    return HTTP.post(`/Log/DeleteAnActivity`, postData);
   },
 
   //target
-  async ModifyOrAddAGoal(taskType, timeBoxID) {
+  async ModifyOrAddAGoal(activity, timeBoxID) {
     let postData = {
       UserID: window.Profile.UserID,
       TimeBoxID: timeBoxID,
-      TaskTypeID: taskType.TaskTypeID,
-      GoalHour: taskType.GoalHour,
+      ActivityID: activity.ActivityID,
+      GoalHour: activity.GoalHour,
     };
     return HTTP.post(`/Log/ModifyOrAddAGoal`, postData);
   },
 
   //analysis
-  async taskTypeTimeByTimeBox(userID, TimeBoxID) {
+  async activityTimeByTimeBox(userID, TimeBoxID) {
     let postData = {
       UserID: userID,
       TimeBoxID: TimeBoxID,
     };
-    return HTTP.post(`/Log/taskTypeTimeByTimeBox`, postData);
+    return HTTP.post(`/Log/activityTimeByTimeBox`, postData);
   },
 
-  async taskTypeTime(userID, startDate, endDate) {
+  async activityTime(userID, startDate, endDate) {
     let postData = {
       UserID: userID,
       StartDate: moment(startDate).format('YYYY-MM-DD'),
       EndDate: moment(endDate).add(1, 'd').format('YYYY-MM-DD')
     }
-    return HTTP.post(`/Log/taskTypeTime`, postData);
+    return HTTP.post(`/Log/activityTime`, postData);
   }
 }

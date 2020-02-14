@@ -4,10 +4,10 @@
       <h2>My Time Box Target</h2>
     </div>
     <TargetBase
-      v-if="taskType.TaskTypeID != null && taskType.GoalHour > 0"
-      v-for="taskType in taskTypeList"
-      :key="taskType.TaskTypeID"
-      :taskType="taskType"></TargetBase>
+      v-if="activity.ActivityID != null && activity.GoalHour > 0"
+      v-for="activity in activityList"
+      :key="activity.ActivityID"
+      :activity="activity"></TargetBase>
   </el-card>
 </template>
 
@@ -21,7 +21,7 @@ import TargetBase from '@/components/Board/TargetBase'
     TargetBase
   },
   props: {
-    taskTypeList: Array
+    activityList: Array
   }
 })
 export default class Goal extends LogComponent {}

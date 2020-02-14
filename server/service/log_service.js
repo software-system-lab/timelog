@@ -6,18 +6,18 @@ module.exports = class {
     this.logProvider = new LogProvider()
   }
 
-  async getTaskTypeTimeByTimeBox(userID, timeBoxID) {
-    var taskTypes = await this.getTaskTypeList(userID);
+  async getActivityTimeByTimeBox(userID, timeBoxID) {
+    var activities = await this.getActivityList(userID);
 
-    taskTypes.forEach(taskType => {
-      taskType.GoalHour = null;
-      taskType.IsEdit = false;
+    activities.forEach(activity => {
+      activity.GoalHour = null;
+      activity.IsEdit = false;
     });
 
     let targets = await this.logProvider.QueryGoalByTimeBox({UserID: userID, TimeBoxID: timeBoxID});
     if (targets != "no data") {
       targets.forEach(x => {
-        let proj = taskTypes.find(y => y.taskTypeID == x.taskTypeID);
+        let proj = activities.find(y => y.activityID == x.activityID);
         if (proj != undefined)
           proj.GoalHour = x.GoalHour;
       })
@@ -25,46 +25,46 @@ module.exports = class {
 
     let logs = await this.logProvider.GetUserLogsByTimeBoxID(userID, timeBoxID);
 
-    this.getTaskTypesTime(logs, taskTypes)
-    return taskTypes
+    this.getActivitiesTime(logs, activities)
+    return activities
   }
 
-  async getTaskTypeTimeByDuration(userID, startDate, endDate) {
-    var taskTypes = await this.getTaskTypeList(userID);
+  async getActivityTimeByDuration(userID, startDate, endDate) {
+    var activities = await this.getActivityList(userID);
     let logs = await this.logProvider.GetUserLogsByRange(userID, startDate, endDate)
-    this.getTaskTypesTime(logs, taskTypes)
-    return taskTypes
+    this.getActivitiesTime(logs, activities)
+    return activities
   }
 
-  async getTaskTypeList(userID) {
-    let dbTaskTypes = await this.logProvider.GetUserTaskTypes(userID);
-    var taskTypes = [];
+  async getActivityList(userID) {
+    let dbActivities = await this.logProvider.GetUserActivities(userID);
+    var activities = [];
 
-    if (dbTaskTypes != 'no data')
-      taskTypes = dbTaskTypes;
-    taskTypes.push({
-      TaskTypeID: null,
-      TaskTypeName: 'Untitled Events'
+    if (dbActivities != 'no data')
+      activities = dbActivities;
+    activities.push({
+      ActivityID: null,
+      ActivityName: 'Untitled Events'
     });
-    return taskTypes
+    return activities
   }
 
-  async getTaskTypesTime(logs, taskTypes) {
-    taskTypes.forEach(taskType => {
-      taskType.TimeLength = 0;
+  async getActivitiesTime(logs, activities) {
+    activities.forEach(activity => {
+      activity.TimeLength = 0;
     })
 
     logs.forEach(log => {
-      log.TaskTypeID
-      let xx = taskTypes.find(y => y.TaskTypeID == log.TaskTypeID);
+      log.ActivityID
+      let xx = activities.find(y => y.ActivityID == log.ActivityID);
       if (xx != undefined)
         xx.TimeLength += moment(log.EndTime) - moment(log.StartTime);
     });
 
-    if (taskTypes[taskTypes.length - 1].TimeLength === 0) {
-      taskTypes.pop()
+    if (activities[activities.length - 1].TimeLength === 0) {
+      activities.pop()
     }
     //sort by TimeLength DESC
-    taskTypes.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
+    activities.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
   }
 }
