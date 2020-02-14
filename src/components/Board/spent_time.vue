@@ -74,12 +74,8 @@ export default class SpentTime extends LogComponent {
         this.pieData.labels.push("Other Activities")
         this.pieData.datasets[0].data.push(this.activityList[i].TimeLength.toFixed(0))
       } else {
-<<<<<<< HEAD
-        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.taskTypeList[i].TimeLength).toFixed(0)
-=======
         this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.activityList[i].TimeLength).toFixed(
           0)
->>>>>>> 86e8748aa4ff24573f3be573d050d395308ff315
       }
       this.pieData.datasets[0].timeLength += this.activityList[i].TimeLength
     }
