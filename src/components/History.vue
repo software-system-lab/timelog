@@ -68,7 +68,7 @@ import profileService from '@/services/ProfileService.js'
 
 @Component({
   components: {
-    ModifyHistoryModal,
+    ModifyHistoryModal
   }
 })
 export default class History extends LogView {
@@ -87,18 +87,18 @@ export default class History extends LogView {
   dialogFormVisible = false
   rowData = []
   KeywordToSearch = ''
-  StartSearchDate = new moment().add(-7, 'days').format('YYYY-MM-DD')
-  EndSearchDate = new moment().format('YYYY-MM-DD')
+  StartSearchDate = moment().add(-7, 'days').format('YYYY-MM-DD')
+  EndSearchDate = moment().format('YYYY-MM-DD')
 
   // Life cycle
-  beforeCreated() {
+  beforeCreated () {
     this.activityList.push({
-      ActivityName: "Untitled Events",
-      ActivityID: ""
+      ActivityName: 'Untitled Events',
+      ActivityID: ''
     })
   }
 
-  async mounted() {
+  async mounted () {
     const currentTimeBox = await profileService.getCurrentTimeBoxRange()
     if (currentTimeBox) {
       this.StartSearchDate = moment(currentTimeBox.StartDate)
@@ -107,47 +107,43 @@ export default class History extends LogView {
 
     this.QueryLogs()
 
-    //activityFilters
-    //clear list
+    // activityFilters
+    // clear list
     this.activityFilters.length = 0
     this.activityList.forEach(x => {
       this.activityFilters.push({
-        value: x.ActivityID? x.ActivityID.toString(): null,
-        text: x.ActivityName,
+        value: x.ActivityID ? x.ActivityID.toString() : null,
+        text: x.ActivityName
       })
     })
   }
 
-
   // Methods
-  filterActivity(value, row) {
+  filterActivity (value, row) {
     var flag = false
-    if (row.ActivityID == value) {
+    if (row.ActivityID === value) {
       flag = true
     }
     return flag
   }
 
-  Edit(rowData) {
+  Edit (rowData) {
     this.logIDtoModify = rowData.LogID
     this.dialogFormVisible = true
   }
 
-  async closeModal() {
+  async closeModal () {
     this.logIDtoModify = null
     this.QueryLogs()
     this.dialogFormVisible = false
   }
 
-  async QueryLogs() {
-    let result = await _logService.GetUserLogs(this.KeywordToSearch, new moment(this.StartSearchDate), new moment(this.EndSearchDate))
-    if (result != "no data")
-      this.logList = result
-    else
-      this.logList = []
+  async QueryLogs () {
+    const result = await _logService.GetUserLogs(this.KeywordToSearch, moment(this.StartSearchDate), moment(this.EndSearchDate))
+    if (result !== 'no data') { this.logList = result } else { this.logList = [] }
   }
 
-  update() {
+  update () {
     this.QueryLogs()
   }
 }

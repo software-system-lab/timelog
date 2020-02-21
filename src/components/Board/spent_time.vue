@@ -32,9 +32,9 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { LogComponent } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
-import moment from 'moment'
 import Chart from 'chart.js'
 
 @Component({
@@ -49,19 +49,17 @@ export default class SpentTime extends LogComponent {
   activityList = []
   pieData = this.initPieData()
 
-
   // Life cycle
-  async mounted() {
-    this.ctx = $("#Chart");
+  async mounted () {
+    this.ctx = $('#Chart')
     if (this.ActivityList) {
       this.activityList = this.ActivityList
       this.setPieChart()
     }
   }
 
-
   // Methods
-  serializePieData() {
+  serializePieData () {
     this.pieData = this.initPieData()
     this.pieData.labels.length = 0
     this.pieData.datasets[0].data.length = 0
@@ -70,8 +68,8 @@ export default class SpentTime extends LogComponent {
       if (i < maxLabelNums) {
         this.pieData.labels.push(this.activityList[i].ActivityName)
         this.pieData.datasets[0].data.push(this.activityList[i].TimeLength.toFixed(0))
-      } else if (i == maxLabelNums) {
-        this.pieData.labels.push("Other Activities")
+      } else if (i === maxLabelNums) {
+        this.pieData.labels.push('Other Activities')
         this.pieData.datasets[0].data.push(this.activityList[i].TimeLength.toFixed(0))
       } else {
         this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.activityList[i].TimeLength).toFixed(
@@ -80,13 +78,13 @@ export default class SpentTime extends LogComponent {
       this.pieData.datasets[0].timeLength += this.activityList[i].TimeLength
     }
 
-    //data to hour
+    // data to hour
     for (let i = 0; i < this.pieData.datasets[0].data.length; i++) {
       this.pieData.datasets[0].data[i] = (this.pieData.datasets[0].data[i] / 3600000).toFixed(2)
     }
   }
 
-  initPieData() {
+  initPieData () {
     return {
       labels: [],
       datasets: [{
@@ -105,7 +103,7 @@ export default class SpentTime extends LogComponent {
     }
   }
 
-  generatePieChart() {
+  generatePieChart () {
     if (this.pieChart) {
       this.pieChart.destroy()
     }
@@ -122,19 +120,10 @@ export default class SpentTime extends LogComponent {
           callbacks: {
             label: (tooltipItem, data) => {
               var dataset = data.datasets[tooltipItem.datasetIndex]
-              //計算總和
-              var sum = 0
-              dataset.data.forEach(data => {
-                const t = data.split('.')
-                const time = parseInt(t[0]) * 3600000 + parseInt(t[1]) * 60000
-                sum += time
-              })
 
               var value = parseFloat(dataset.data[tooltipItem.index])
-              var currentValue = parseInt(value) + ":" + (value%1)*60
-              return " " + data.labels[tooltipItem.index] + ": " + currentValue
-              label += Math.round(tooltipItem.yLabel * 100) / 100
-              return label
+              var currentValue = parseInt(value) + ':' + (value % 1) * 60
+              return ' ' + data.labels[tooltipItem.index] + ': ' + currentValue
             }
           }
         }
@@ -142,30 +131,29 @@ export default class SpentTime extends LogComponent {
     })
   }
 
-  paddingLeft(str, len) {
+  paddingLeft (str, len) {
     if (str.toString().length >= len) {
       return str
-    }
-    else {
+    } else {
       return this.paddingLeft('0' + str, len)
     }
   }
 
-  getHour(time) {
-    return this.paddingLeft(Math.floor(time / 3600000),2)
+  getHour (time) {
+    return this.paddingLeft(Math.floor(time / 3600000), 2)
   }
 
-  getMinute(time) {
+  getMinute (time) {
     return this.paddingLeft((time %
-    3600000 / 60 / 1000).toFixed(0),2)
+    3600000 / 60 / 1000).toFixed(0), 2)
   }
 
-  setPieChart() {
+  setPieChart () {
     this.serializePieData()
     this.generatePieChart()
   }
 
-  update(activityList) {
+  update (activityList) {
     this.activityList = activityList
     this.setPieChart()
   }

@@ -76,19 +76,17 @@ export default class Setting extends Vue {
   UserForm = {}
   IsProfileEdit = false
 
-
   // Life cycle
-  async created() {
+  async created () {
     this.QueryActivities()
     this.QueryUserProfile()
   }
 
-
   // Methods
-  async QueryActivities() {
-    let activityList = await _logService.GetUserActivities()
+  async QueryActivities () {
+    const activityList = await _logService.GetUserActivities()
 
-    //clear list
+    // clear list
     this.activityList.length = 0
     window.ActivityList.length = 0
     // input to add activity
@@ -100,52 +98,53 @@ export default class Setting extends Vue {
       IsEnable: true
     })
 
-    if (activityList == "no data")
+    if (activityList === 'no data') {
       this.$message({
         message: 'no activity data!',
         type: 'warning'
       })
-    else {
+    } else {
       activityList.forEach(x => {
         this.activityList.push({
           ActivityID: x.ActivityID,
           ActivityName: x.ActivityName,
-          IsPrivate: x.IsPrivate ? true : false,
-          IsEnable: x.IsEnable ? true : false,
+          IsPrivate: !!x.IsPrivate,
+          IsEnable: !!x.IsEnable,
           InputDisabled: true
         })
         window.ActivityList.push({
           ActivityID: x.ActivityID,
           ActivityName: x.ActivityName,
-          IsPrivate: x.IsPrivate ? true : false,
-          IsEnable: x.IsEnable ? true : false
+          IsPrivate: !!x.IsPrivate,
+          IsEnable: !!x.IsEnable
         })
       })
     }
   }
 
-  cancel() {
+  cancel () {
     this.IsProfileEdit = false
     this.QueryUserProfile()
   }
 
-  async ModifyOrAdd(activity) {
-    if (activity.InputDisabled == true) {
-      if (activity.ActivityID) //not new activity
+  async ModifyOrAdd (activity) {
+    if (activity.InputDisabled === true) {
+      if (activity.ActivityID) {
         activity.InputDisabled = false
+      }
     } else {
       if (activity.ActivityName.length < 1) {
         this.$message.error('Name of activity cannot be null!')
         return
       }
 
-      var DuplicatedActivity = this.activityList.find(x => x.ActivityName == activity.ActivityName && x.ActivityID != null && x.ActivityID != activity.ActivityID)
+      var DuplicatedActivity = this.activityList.find(x => x.ActivityName === activity.ActivityName && x.ActivityID !== null && x.ActivityID !== activity.ActivityID)
       if (DuplicatedActivity) {
         this.$message.error('Duplicate name!')
         return
       }
 
-      let result = await _logService.ModifyOrAddAnActivity(activity)
+      const result = await _logService.ModifyOrAddAnActivity(activity)
       if (result) {
         this.$message({
           message: 'successed!',
@@ -158,7 +157,7 @@ export default class Setting extends Vue {
     }
   }
 
-  async QueryUserProfile() {
+  async QueryUserProfile () {
     window.Profile = await _profileService.GetProfile()
     this.UserForm = {
       UserID: window.Profile.UserID,
@@ -169,8 +168,8 @@ export default class Setting extends Vue {
     }
   }
 
-  async EditUserProfile() {
-    let result = await _profileService.EditUserProfile(this.UserForm)
+  async EditUserProfile () {
+    const result = await _profileService.EditUserProfile(this.UserForm)
     if (result) {
       this.$message({
         message: 'successed!',
@@ -183,8 +182,8 @@ export default class Setting extends Vue {
     }
   }
 
-  async Delete(data) {
-    let result = await _logService.DeleteAnActivity(data.ActivityID)
+  async Delete (data) {
+    const result = await _logService.DeleteAnActivity(data.ActivityID)
     if (result) {
       this.$message({
         message: 'successed!',
@@ -197,6 +196,6 @@ export default class Setting extends Vue {
     }
   }
 
-  update() {}
+  update () {}
 }
 </script>

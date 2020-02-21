@@ -1,5 +1,5 @@
 const express = require('express')
-const http = require('http')
+require('http')
 const bodyParser = require('body-parser')
 const history = require('connect-history-api-fallback')
 
@@ -20,19 +20,19 @@ app.use(bodyParser.urlencoded({
 
 // router-sub directory separation
 var ProfileRouter = express.Router()
-new ProfileApis(ProfileRouter)
+ProfileApis(ProfileRouter)
 app.use('/api/Profile', ProfileRouter)
 
 var LogRouter = express.Router()
-new LogApis(LogRouter)
+LogApis(LogRouter)
 app.use('/api/Log', LogRouter)
 
 var TeamRouter = express.Router()
-new TeamApis(TeamRouter)
+TeamApis(TeamRouter)
 app.use('/api/team', TeamRouter)
 
 var PublishRouter = express.Router()
-new PublishApis(PublishRouter)
+PublishApis(PublishRouter)
 app.use('/api/publish', PublishRouter)
 
 // Middleware for serving '/dist' directory

@@ -3,11 +3,12 @@
     <div slot="header" class="clearfix">
       <h2>My Time Box Target</h2>
     </div>
-    <TargetBase
-      v-if="activity.ActivityID != null && activity.GoalHour > 0"
-      v-for="activity in activityList"
-      :key="activity.ActivityID"
-      :activity="activity"></TargetBase>
+    <div v-if="activity.ActivityID != null && activity.GoalHour > 0">
+      <TargetBase
+        v-for="activity in activityList"
+        :key="activity.ActivityID"
+        :activity="activity"></TargetBase>
+    </div>
   </el-card>
 </template>
 

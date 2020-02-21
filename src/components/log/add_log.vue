@@ -68,7 +68,6 @@ import moment from 'moment'
 import logService from '@/services/LogService.js'
 import AddType from '@/components/log/add_type.vue'
 
-
 @Component({
   components: {
     AddType
@@ -113,51 +112,47 @@ export default class AddLog extends Vue {
       required: false,
       message: 'Check Here!',
       trigger: 'blur'
-    }],
+    }]
   }
+
   startDateOption = {}
   endDateOption = {}
   addActivityVisible = false
 
-
   // Life cycle
-  created() {
+  created () {
     this.startDateOption.disabledDate = time => moment(this.logData.EndDate) < moment(time.getTime())
     this.endDateOption.disabledDate = time => moment(this.logData.StartDate) > moment(time.getTime())
   }
 
-
   // Computed
-  get endTimeOption() {
-    if (this.logData.StartDate == this.logData.EndDate) {
+  get endTimeOption () {
+    if (this.logData.StartDate === this.logData.EndDate) {
       return {
         selectableRange: this.logData.StartTime + ':00 - 23:59:59'
       }
     }
-    return
   }
 
-  get startTimeOption() {
-    if (this.logData.StartDate == this.logData.EndDate) {
+  get startTimeOption () {
+    if (this.logData.StartDate === this.logData.EndDate) {
       return {
         selectableRange: '00:00:00 - ' + this.logData.EndTime + ':00'
       }
     }
-    return
   }
 
-
   // Methods
-  async submit() {
-    this.$refs['form'].validate(async (valid) => {
+  async submit () {
+    this.$refs.form.validate(async (valid) => {
       if (valid) {
         this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
         this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
-        let result = await logService.AddALog(this.logData);
+        const result = await logService.AddALog(this.logData)
         if (result) {
           this.successMsg()
           this.cancel()
-          this.$emit("saved")
+          this.$emit('saved')
         } else {
           this.errorMsg()
         }
@@ -165,51 +160,50 @@ export default class AddLog extends Vue {
     })
   }
 
-  cancel() {
-    this.$refs['form'].clearValidate()
+  cancel () {
+    this.$refs.form.clearValidate()
     this.logData = this.emptyLog()
-    this.$emit("close")
+    this.$emit('close')
   }
 
-  emptyLog() {
+  emptyLog () {
     return {
       Title: '',
       ActivityID: null,
-      StartTime: new moment().add(-1, 'hours').format('HH:mm'),
-      EndTime: new moment().format('HH:mm'),
-      StartDate: new moment().add(-1, 'hours').format('YYYY-MM-DD'),
-      EndDate: new moment().format('YYYY-MM-DD'),
+      StartTime: moment().add(-1, 'hours').format('HH:mm'),
+      EndTime: moment().format('HH:mm'),
+      StartDate: moment().add(-1, 'hours').format('YYYY-MM-DD'),
+      EndDate: moment().format('YYYY-MM-DD'),
       Description: ''
     }
   }
 
-  successMsg() {
+  successMsg () {
     this.$message({
       message: 'Log Added!',
       type: 'success'
     })
   }
 
-  errorMsg() {
+  errorMsg () {
     this.$message.error('Log Added Fail!Please Retry')
   }
 
-  openPopup() {
+  openPopup () {
     this.addActivityVisible = true
   }
 
-  closePopup() {
+  closePopup () {
     this.addActivityVisible = false
   }
 
-  update(newActivityName) {
+  update (newActivityName) {
     this.closePopup()
   }
 
-  createNewType() {
+  createNewType () {
     this.openPopup()
   }
-
 }
 </script>
 
