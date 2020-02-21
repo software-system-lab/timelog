@@ -8,7 +8,8 @@ import LoginedLayout from '../components/LoginedLayout.vue'
 
 Vue.use(Router)
 
-const AppRoutes = [{
+const AppRoutes = [
+  {
     path: '/login',
     name: 'login',
     component: Login,
