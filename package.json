@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "lint-server": "eslint ./server/**/*.js"
+    "lint-server": "eslint ./server/**/*.js",
+    "lint-all": "yarn run lint-server && yarn run lint"
   },
   "dependencies": {
     "chart.js": "^2.9.3",
