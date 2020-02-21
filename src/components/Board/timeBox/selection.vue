@@ -19,20 +19,18 @@ export default class Selection extends LogComponent {
   // Data members
   timeBoxList = []
 
-
   // Life cycle
-  created() {
+  created () {
     this.update()
   }
 
-
   // Methods
-  async update() {
-    this.timeBoxList = await profileService.GetTimeBoxes()
+  async update () {
+    this.timeBoxList = (await profileService.GetTimeBoxes()).reverse()
   }
 
-  async onSelect(timeBoxID) {
-    this.$emit("selected", timeBoxID)
+  async onSelect (timeBoxID) {
+    this.$emit('selected', timeBoxID)
   }
 }
 </script>

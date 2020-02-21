@@ -5,9 +5,8 @@
 </template>
 
 <script>
-import Config from "./config.js"
 export default {
-  name: 'App',
+  name: 'App'
 }
 </script>
 

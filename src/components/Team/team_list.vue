@@ -23,22 +23,22 @@
 </template>
 
 <script>
-import TeamButtons from "@/components/Team/button.vue";
+import TeamButtons from '@/components/Team/button.vue'
 import ProfileService from '@/services/ProfileService.js'
 export default {
   components: {
     TeamButtons
   },
-  data() {
+  data () {
     return {
       teamlist: []
     }
   },
-  async created() {
+  async created () {
     this.teamlist = await ProfileService.GetTeamList(window.Profile.UserID)
   },
   methods: {
-    teamDetail(id) {
+    teamDetail (id) {
       this.$router.push({
         name: 'Team - content',
         params: {

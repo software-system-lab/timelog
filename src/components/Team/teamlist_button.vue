@@ -9,9 +9,9 @@ export default {
     css: String
   },
   methods: {
-    toTeamlist() {
+    toTeamlist () {
       this.$router.push({
-        name: "Team - team list"
+        name: 'Team - team list'
       })
     }
   }

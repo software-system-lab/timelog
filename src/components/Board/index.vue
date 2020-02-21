@@ -40,57 +40,56 @@ export default class Board extends LogView {
   timeBoxInfo = {
     timeBoxID: null
   }
+
   activityList = []
   timeBoxSetting = false
   goalDisplay = true
 
-
   // Life cycle
-  async created() {
+  async created () {
     const timeBoxID = await profileService.getCurrentTimeBox()
     this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
     this.getActivitiesData()
     this.$refs.timeBox.timeBoxDate()
   }
 
-
   // Methods
-  async getActivityList() {
+  async getActivityList () {
     const userID = window.Profile.UserID
-    let result = await logService.activityTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
-    if (result != "no data") {
+    const result = await logService.activityTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
+    if (result !== 'no data') {
       this.activityList = result
     }
   }
 
-  async getActivitiesData() {
+  async getActivitiesData () {
     await this.getActivityList()
     this.$refs.spentTime.update(this.activityList)
   }
 
-  update() {
+  update () {
     this.goalDisplay = true
     this.getActivitiesData()
     this.$refs.timeBox.update()
   }
 
-  async changeTimeBox(timeBoxID) {
+  async changeTimeBox (timeBoxID) {
     this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
     this.update()
   }
 
-  openTimeBoxSetting() {
+  openTimeBoxSetting () {
     this.timeBoxSetting = true
   }
 
-  closeTimeBoxSetting() {
+  closeTimeBoxSetting () {
     this.timeBoxSetting = false
     this.update()
   }
 
-  async displayByDate(date) {
+  async displayByDate (date) {
     this.goalDisplay = false
-    this.timeBoxInfo.TimeBoxID = ""
+    this.timeBoxInfo.TimeBoxID = ''
     const userID = window.Profile.UserID
     this.activityList = await logService.activityTime(userID, date.start, date.end)
     this.$refs.spentTime.update(this.activityList)

@@ -15,7 +15,7 @@
       <el-form-item label="Team Code">
         <el-input v-model="joinTeamCode"></el-input>
       </el-form-item>
-      <el-button type="primary" @click='joinTeam' :disabled='!completed'> Join
+      <el-button type="primary" @click="joinTeam" :disabled="!completed"> Join
       </el-button>
     </el-form>
   </el-main>
@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import TeamlistButton from "@/components/Team/teamlist_button.vue";
-import TeamButtons from "@/components/Team/button.vue";
+import TeamlistButton from '@/components/Team/teamlist_button.vue'
+import TeamButtons from '@/components/Team/button.vue'
 import _teamService from '@/services/TeamService.js'
 
 export default {
@@ -32,33 +32,33 @@ export default {
     TeamlistButton,
     TeamButtons
   },
-  data() {
+  data () {
     return {
-      joinTeamName: "",
-      joinTeamCode: ""
-    };
+      joinTeamName: '',
+      joinTeamCode: ''
+    }
   },
   computed: {
-    completed() {
-      return this.joinTeamName !== "" && this.joinTeamCode !== ""
+    completed () {
+      return this.joinTeamName !== '' && this.joinTeamCode !== ''
     }
   },
   methods: {
-    async joinTeam() {
-      let result = await _teamService.joinTeam(this.joinTeamName, this.joinTeamCode);
+    async joinTeam () {
+      const result = await _teamService.joinTeam(this.joinTeamName, this.joinTeamCode)
       if (result && result.TeamID) {
         this.$router.push({
-          name: "Team - content",
+          name: 'Team - content',
           params: {
             id: result.TeamID
           }
         })
       } else {
-        vueRoot.$message({
+        window.vueRoot.$message({
           showClose: true,
           message: 'Unable to join the team',
           type: 'error'
-        });
+        })
       }
     }
   }

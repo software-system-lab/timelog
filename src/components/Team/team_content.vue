@@ -15,11 +15,11 @@
 </el-container>
 </template>
 <script>
-import TeamlistButton from "@/components/Team/teamlist_button.vue";
-import TeamButtons from "@/components/Team/button.vue";
-import Teammate from "@/components/Team/teammate.vue";
-import _profileService from "@/services/ProfileService.js";
-import _teamService from "@/services/TeamService.js";
+import TeamlistButton from '@/components/Team/teamlist_button.vue'
+import TeamButtons from '@/components/Team/button.vue'
+import Teammate from '@/components/Team/teammate.vue'
+import _profileService from '@/services/ProfileService.js'
+import _teamService from '@/services/TeamService.js'
 
 export default {
   components: {
@@ -27,16 +27,16 @@ export default {
     TeamButtons,
     Teammate
   },
-  data() {
+  data () {
     return {
-      teamName: "",
+      teamName: '',
       teammatesInfo: []
     }
   },
-  async created() {
-    const teamID = this.$route.params.id;
+  async created () {
+    const teamID = this.$route.params.id
     this.teamName = await _teamService.getTeamName(teamID)
-    this.teammatesInfo = await _profileService.GetTeammates(teamID);
+    this.teammatesInfo = await _profileService.GetTeammates(teamID)
   }
 }
 </script>

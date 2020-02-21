@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import TeamlistButton from "@/components/Team/teamlist_button.vue";
-import TeamButtons from "@/components/Team/button.vue";
+import TeamlistButton from '@/components/Team/teamlist_button.vue'
+import TeamButtons from '@/components/Team/button.vue'
 import _teamService from '@/services/TeamService.js'
 
 export default {
@@ -32,34 +32,34 @@ export default {
     TeamlistButton,
     TeamButtons
   },
-  data() {
+  data () {
     return {
-      createTeamName: "",
-      createTeamCode: ""
-    };
+      createTeamName: '',
+      createTeamCode: ''
+    }
   },
   computed: {
-    completed() {
-      return this.createTeamName !== "" && this.createTeamCode !== ""
+    completed () {
+      return this.createTeamName !== '' && this.createTeamCode !== ''
     }
   },
   methods: {
-    async createTeam() {
-      const result = await _teamService.createTeam(this.createTeamName, this.createTeamCode);
+    async createTeam () {
+      const result = await _teamService.createTeam(this.createTeamName, this.createTeamCode)
 
       if (result && result.TeamID) {
         this.$router.push({
-          name: "Team - content",
+          name: 'Team - content',
           params: {
             id: result.TeamID
           }
         })
       } else {
-        vueRoot.$message({
+        window.vueRoot.$message({
           showClose: true,
           message: 'Team Name invalid or used',
           type: 'error'
-        });
+        })
       }
     }
   }

@@ -4,98 +4,98 @@ import moment from 'moment'
  * Profile APIs
  */
 export default {
-  ////personal
-  GetProfile() {
-    return HTTP.post(`/Profile/GetProfile`, {
+  // personal
+  GetProfile () {
+    return HTTP.post('/Profile/GetProfile', {
       FBID: window.FBProfile.id
-    });
+    })
   },
 
-  async Login(FBID, userAccessToken) {
-    let req = {
+  Login (FBID, userAccessToken) {
+    const req = {
       FBID,
       userAccessToken
-    };
-    return HTTP.post(`/Profile/Login`, req);
+    }
+    return HTTP.post('/Profile/Login', req)
   },
 
-  async Register(userData, userAccessToken) {
-    let postData = userData;
-    postData.UserAccessToken = userAccessToken;
-    return HTTP.post(`/Profile/Register`, postData);
+  Register (userData, userAccessToken) {
+    const postData = userData
+    postData.UserAccessToken = userAccessToken
+    return HTTP.post('/Profile/Register', postData)
   },
 
-  async EditUserProfile(data) {
-    return HTTP.post(`/Profile/EditUserProfile`, data);
+  EditUserProfile (data) {
+    return HTTP.post('/Profile/EditUserProfile', data)
   },
 
-  async GetTeamList(UserID) {
-    return HTTP.get(`/Profile/GetTeamList?id=${UserID}`);
+  GetTeamList (UserID) {
+    return HTTP.get(`/Profile/GetTeamList?id=${UserID}`)
   },
 
-  ////teams
-  async GetTeammates(teamID) {
-    let req = {
+  // teams
+  GetTeammates (teamID) {
+    const req = {
       TeamID: teamID
-    };
-    return HTTP.post(`/Profile/GetTeammates`, req);
+    }
+    return HTTP.post('/Profile/GetTeammates', req)
   },
 
-  //TimeBox
-  async ChangeTimeBox(timeBoxID) {
-    let req = {
+  // TimeBox
+  ChangeTimeBox (timeBoxID) {
+    const req = {
       TimeBoxID: timeBoxID,
       UserID: window.Profile.UserID
-    };
-    return await HTTP.post(`/Profile/ChangeTimeBox`, req);
+    }
+    return HTTP.post('/Profile/ChangeTimeBox', req)
   },
 
-  async GetTimeBoxes() {
-    let req = {
+  GetTimeBoxes () {
+    const req = {
       UserID: window.Profile.UserID
-    };
-    return (await HTTP.post(`/Profile/GetTimeBoxes`, req)).reverse();
+    }
+    return HTTP.post('/Profile/GetTimeBoxes', req)
   },
 
-  async GetTimeBoxById(id) {
-    let req = {
+  GetTimeBoxById (id) {
+    const req = {
       TimeBoxID: id
-    };
-    return await HTTP.post(`/Profile/GetTimeBoxById`, req);
+    }
+    return HTTP.post('/Profile/GetTimeBoxById', req)
   },
 
-  async ModifyOrAddATimeBox(rowData) {
-    let req = {
+  async ModifyOrAddATimeBox (rowData) {
+    const req = {
       TimeBoxID: rowData.TimeBoxID,
       TimeBoxName: rowData.TimeBoxName,
       UserID: window.Profile.UserID,
       StartDate: moment(rowData.StartDate).format('YYYY-MM-DD'),
       EndDate: moment(rowData.EndDate).format('YYYY-MM-DD'),
       Content: rowData.Content
-    };
-    const result =  await HTTP.post(`/Profile/EditTimeBox`, req);
+    }
+    const result = await HTTP.post('/Profile/EditTimeBox', req)
     return result.TimeBoxID
   },
 
-  async DeleteATimeBox(rowData) {
-    let req = {
-      TimeBoxID: rowData.TimeBoxID,
-    };
-    return await HTTP.post(`/Profile/DeleteATimeBox`, req);
+  DeleteATimeBox (rowData) {
+    const req = {
+      TimeBoxID: rowData.TimeBoxID
+    }
+    return HTTP.post('/Profile/DeleteATimeBox', req)
   },
 
-  async getCurrentTimeBox() {
-    let req = {
+  async getCurrentTimeBox () {
+    const req = {
       UserID: window.Profile.UserID
     }
-    const result = await HTTP.post('/Profile/timeBox/current', req);
+    const result = await HTTP.post('/Profile/timeBox/current', req)
     return result.TimeBoxID
   },
 
-  async getCurrentTimeBoxRange() {
-    let req = {
+  getCurrentTimeBoxRange () {
+    const req = {
       UserID: window.Profile.UserID
     }
-    return await HTTP.post('/Profile/timeBox/currentRange', req);
+    return HTTP.post('/Profile/timeBox/currentRange', req)
   }
 }

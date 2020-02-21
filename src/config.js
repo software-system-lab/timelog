@@ -6,6 +6,6 @@ export default {
     version: 'v3.1'
   },
   apiDest: {
-    host: "localhost"
+    host: 'localhost'
   }
 }
