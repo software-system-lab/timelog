@@ -7,7 +7,6 @@
 
 <script>
 import { Vue, Component } from 'vue-property-decorator'
-import _logService from '../../services/LogService.js'
 
 @Component({
   props: {
@@ -16,30 +15,27 @@ import _logService from '../../services/LogService.js'
 })
 export default class TargetBase extends Vue {
   // Computed
-  get ActivityProgressPercentage() {
+  get ActivityProgressPercentage () {
     var result = 0
-    if (this.activity.GoalHour != null)
-      result = Number((this.activity.TimeLength / (this.activity.GoalHour * 3600000) * 100).toFixed(2))
-    else
-      result = 100
+    if (this.activity.GoalHour != null) { result = Number((this.activity.TimeLength / (this.activity.GoalHour * 3600000) * 100).toFixed(2)) } else { result = 100 }
 
-    if (result > 100)
-      result = 100
+    if (result > 100) { result = 100 }
     return result
   }
 
-  get ActivityProgressColor() {
-    let result = (this.activity.TimeLength / (this.activity.GoalHour * 3600000) * 100).toFixed(2)
-    if (this.activity.GoalHour == null)
-      return '#ff9900' //orange
-    else if (result < 50)
-      return '#e60000' //red
-    else if (result > 100)
-      return '#33cc00' //green
-    return '#0000FF' //blue
+  get ActivityProgressColor () {
+    const result = (this.activity.TimeLength / (this.activity.GoalHour * 3600000) * 100).toFixed(2)
+    if (this.activity.GoalHour == null) {
+      return '#ff9900'
+    } else if (result < 50) {
+      return '#e60000'
+    } else if (result > 100) {
+      return '#33cc00'
+    }
+    return '#0000FF'
   }
 
-  get ActivityProgressStatus() {
+  get ActivityProgressStatus () {
     if (this.activity.GoalHour == null) return 'exception'
   }
 }

@@ -21,17 +21,17 @@
 
 <script>
 import { Vue, Component } from 'vue-property-decorator'
-import moment from 'moment'
 import _logService from '@/services/LogService.js'
 
 @Component
 export default class AddType extends Vue {
   // Data members
   activityData = {
-    Name: "",
+    Name: '',
     IsEnable: true,
     IsPrivate: false
   }
+
   formRules = {
     Name: [{
       required: true,
@@ -49,31 +49,32 @@ export default class AddType extends Vue {
       trigger: 'blur'
     }]
   }
+
   activityList = window.ActivityList
 
   // Methods
-  async submit() {
-    this.$refs['form'].validate(async (valid) => {
+  async submit () {
+    this.$refs.form.validate(async (valid) => {
       if (valid) {
-        var DuplicatedActivity = this.activityList.find(x => x.ActivityName == this.activityData.Name)
+        var DuplicatedActivity = this.activityList.find(x => x.ActivityName === this.activityData.Name)
         if (DuplicatedActivity) {
           this.$message.error('Duplicate name!')
           return
         }
-        let activity = {
+        const activity = {
           ActivityID: null,
           ActivityName: this.activityData.Name,
           IsPrivate: this.activityData.IsPrivate,
           IsEnable: this.activityData.IsEnable
         }
-        let result = await _logService.ModifyOrAddAnActivity(activity)
+        const result = await _logService.ModifyOrAddAnActivity(activity)
         if (result) {
           this.$message({
             message: 'successed!',
             type: 'success'
           })
           this.QueryActivities()
-          this.$emit("saved", this.activityData.Name)
+          this.$emit('saved', this.activityData.Name)
         } else {
           this.$message.error('Fail to add/modify the activity! Please Retry')
         }
@@ -81,43 +82,43 @@ export default class AddType extends Vue {
     })
   }
 
-  async QueryActivities() {
-    let activityList = await _logService.GetUserActivities()
+  async QueryActivities () {
+    const activityList = await _logService.GetUserActivities()
 
-    //clear list
+    // clear list
     window.ActivityList.length = 0
 
-    if (activityList == "no data")
+    if (activityList === 'no data') {
       this.$message({
         message: 'no activity data!',
         type: 'warning'
       })
-    else {
+    } else {
       activityList.forEach(x => {
         window.ActivityList.push({
           ActivityID: x.ActivityID,
           ActivityName: x.ActivityName,
-          IsPrivate: x.IsPrivate ? true : false,
-          IsEnable: x.IsEnable ? true : false
+          IsPrivate: !!x.IsPrivate,
+          IsEnable: !!x.IsEnable
         })
       })
     }
   }
 
-  cancel() {
-    this.$refs['form'].clearValidate()
-    this.activityName = ""
-    this.$emit("close")
+  cancel () {
+    this.$refs.form.clearValidate()
+    this.activityName = ''
+    this.$emit('close')
   }
 
-  successMsg() {
+  successMsg () {
     this.$message({
       message: 'Task Type Added!',
       type: 'success'
     })
   }
 
-  errorMsg() {
+  errorMsg () {
     this.$message.error('Task Type Added Fail!Please Retry')
   }
 }

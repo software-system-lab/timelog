@@ -42,9 +42,8 @@ export default class InfoDialog extends LogComponent {
   timeBoxForm = this.newForm()
   endDateOption = {}
 
-
   // Life cycle
-  created() {
+  created () {
     this.endDateOption.disabledDate = time => {
       if (moment(this.timeBoxForm.StartDate) > moment(time.getTime())) {
         return true
@@ -53,46 +52,45 @@ export default class InfoDialog extends LogComponent {
     }
   }
 
-
   // Methods
-  update() {
+  update () {
     this.timeBoxForm = this.timeBoxInfo
   }
 
-  openHandler() {
+  openHandler () {
     if (this.isNew) {
-      this.timeBoxForm = this.newForm();
+      this.timeBoxForm = this.newForm()
     } else {
-      this.update();
+      this.update()
     }
   }
 
-  newForm() {
+  newForm () {
     return {
       TimeBoxID: null,
       TimeBoxName: '',
-      StartDate: new moment(),
-      EndDate: new moment().add(7, 'days'),
+      StartDate: moment(),
+      EndDate: moment().add(7, 'days'),
       Content: ''
     }
   }
 
-  closeDialog() {
-    this.$refs['form'].resetFields();
-    this.$emit('close', "info_dialog");
+  closeDialog () {
+    this.$refs.form.resetFields()
+    this.$emit('close', 'info_dialog')
   }
 
-  async saveTimeBox() {
-    let result = await profileService.ModifyOrAddATimeBox(this.timeBoxForm)
+  async saveTimeBox () {
+    const result = await profileService.ModifyOrAddATimeBox(this.timeBoxForm)
     if (result) {
       this.$message({
         message: 'successed!',
         type: 'success'
       })
-      this.closeDialog();
-      this.$emit("update", result);
+      this.closeDialog()
+      this.$emit('update', result)
     } else {
-      this.$message.error('Failed to save time box info! Please Retry!');
+      this.$message.error('Failed to save time box info! Please Retry!')
     }
   }
 }

@@ -49,7 +49,7 @@ export default class GoalDialog extends Vue {
   goalList = window.ActivityList
 
   // Methods
-  openHandler() {
+  openHandler () {
     this.goalList = []
     this.activityList.forEach(activity => {
       if (activity.ActivityID != null) {
@@ -58,19 +58,19 @@ export default class GoalDialog extends Vue {
     })
   }
 
-  close() {
-    this.$emit("close", "goal_dialog")
+  close () {
+    this.$emit('close', 'goal_dialog')
   }
 
-  async ModifyOrAdd(data) {
-    data.IsEdit = false;
-    let result = await logService.ModifyOrAddAGoal(data, this.timeBoxInfo.TimeBoxID)
+  async ModifyOrAdd (data) {
+    data.IsEdit = false
+    const result = await logService.ModifyOrAddAGoal(data, this.timeBoxInfo.TimeBoxID)
     if (result) {
-      this.$emit("goalEdit", data)
+      this.$emit('goalEdit', data)
     }
   }
 
-  cancelGoal(data) {
+  cancelGoal (data) {
     this.ActivityList.forEach(activity => {
       if (activity.ActivityID === data.ActivityID) {
         const keyList = Object.keys(data)
@@ -79,7 +79,7 @@ export default class GoalDialog extends Vue {
         })
       }
     })
-    data.IsEdit = false;
+    data.IsEdit = false
   }
 }
 </script>

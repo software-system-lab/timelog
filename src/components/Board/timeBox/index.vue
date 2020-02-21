@@ -81,40 +81,38 @@ export default class TimeBox extends LogComponent {
   pickedDate = []
 
   @Watch('timeBoxInfo')
-  onTimeBoxInfoChange(itr) {
+  onTimeBoxInfoChange (itr) {
     if (itr.TimeBoxID !== null) {
-      this.timeBoxDate();
+      this.timeBoxDate()
     }
   }
 
-
   // Methods
-  update() {
+  update () {
     this.$refs.infoDialog.update()
     this.$refs.selection.update()
     this.timeBoxDate()
   }
 
-  timeBoxDate() {
-    let startDate = new Date(this.timeBoxInfo.StartDate)
-    let endDate = new Date(this.timeBoxInfo.EndDate)
+  timeBoxDate () {
+    const startDate = new Date(this.timeBoxInfo.StartDate)
+    const endDate = new Date(this.timeBoxInfo.EndDate)
     this.pickedDate = [startDate, endDate]
   }
 
-  setEndDateOption() {
+  setEndDateOption () {
     this.endDateOption.disabledDate = time => {
-      if (moment(this.timeBoxInfo.StartDate) > moment(time.getTime()))
-        return true
+      if (moment(this.timeBoxInfo.StartDate) > moment(time.getTime())) { return true }
       return false
     }
   }
 
-  newTimeBox() {
+  newTimeBox () {
     this.isNew = true
     this.infoDialogActive = true
   }
 
-  closeDialog(type) {
+  closeDialog (type) {
     if (type === 'info_dialog') {
       this.infoDialogActive = false
     } else if (type === 'goal_dialog') {
@@ -122,37 +120,37 @@ export default class TimeBox extends LogComponent {
     }
   }
 
-  timeBoxSelected(timeBoxID) {
-    this.$emit("update", timeBoxID)
+  timeBoxSelected (timeBoxID) {
+    this.$emit('update', timeBoxID)
   }
 
-  edit() {
+  edit () {
     this.isNew = false
     this.infoDialogActive = true
   }
 
-  setGoal() {
+  setGoal () {
     this.goalDialogActive = true
   }
 
-  goalEdit() {
-    this.$emit("updateGoal")
+  goalEdit () {
+    this.$emit('updateGoal')
   }
 
-  displayByDate() {
-    this.$emit("displayByDate", {
+  displayByDate () {
+    this.$emit('displayByDate', {
       start: this.pickedDate[0],
       end: this.pickedDate[1]
     })
   }
 
-  async publish() {
-    let result = await publishService.publish(window.Profile.UserID, this.pickedDate[0], this.pickedDate[1])
+  async publish () {
+    const result = await publishService.publish(window.Profile.UserID, this.pickedDate[0], this.pickedDate[1])
     if (result === 'success') {
       this.$message({
         message: 'Log Published!',
         type: 'success'
-      });
+      })
     } else {
       this.$message.error('Failed to publish log.')
     }

@@ -36,17 +36,16 @@ export default class LoginedLayout extends LogComponent {
   // Data members
   addLogVisible = false
 
-
   // Methods
-  openPopup() {
+  openPopup () {
     this.addLogVisible = true
   }
 
-  closePopup() {
+  closePopup () {
     this.addLogVisible = false
   }
 
-  update() {
+  update () {
     this.$refs.view.update()
     this.closePopup()
   }
