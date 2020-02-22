@@ -5,7 +5,7 @@
       <div slot="header" class="clearfix">
         <h2>My Activities</h2>
       </div>
-      <el-table :data="activityList" sortable="true">
+      <el-table :data="$data._activityList" sortable="true">
 
         <el-table-column prop="ActivityName" label="Name" align="left">
           <template slot-scope="scope">
@@ -29,9 +29,9 @@
         </el-table-column>
         <el-table-column label="" align="left">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.TaskTypeID == null" circle @click="ModifyOrAdd(scope.row)"></el-button>
-            <el-button type="primary" icon="el-icon-edit" v-else circle :disabled="scope.row.TaskTypeName === 'others'" @click="ModifyOrAdd(scope.row)"></el-button>
-            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.TaskTypeID!=null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
+            <el-button type="primary" icon="el-icon-plus" v-if="scope.row.ActivityID === null" circle @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button type="primary" icon="el-icon-edit" v-else circle :disabled="scope.row.ActivityName === 'others'" @click="ModifyOrAdd(scope.row)"></el-button>
+            <el-button v-if="(!scope.row.InputDisabled)&&(scope.row.ActivityID !== null)" type="danger" icon="el-icon-delete" circle @click="Delete(scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,61 +65,43 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import _logService from '../services/LogService.js'
 import _profileService from '../services/ProfileService.js'
 
-@Component
+@Component({
+  props: {
+    activityList: Array
+  }
+})
 export default class Setting extends Vue {
   // Data members
-  activityList = []
+  _activityList = []
   UserForm = {}
   IsProfileEdit = false
 
+  @Watch('activityList')
+  onActivityListChange () {
+    this.QueryActivities()
+  }
+
   // Life cycle
   async created () {
-    this.QueryActivities()
-    this.QueryUserProfile()
+    this.update()
   }
 
   // Methods
   async QueryActivities () {
-    const activityList = await _logService.GetUserActivities()
-
     // clear list
-    this.activityList.length = 0
-    window.ActivityList.length = 0
+    this.$data._activityList = JSON.parse(JSON.stringify(this.activityList))
     // input to add activity
-    this.activityList.push({
+    this.$data._activityList.unshift({
       ActivityID: null,
       ActivityName: '',
       InputDisabled: false,
       IsPrivate: false,
       IsEnable: true
     })
-
-    if (activityList === 'no data') {
-      this.$message({
-        message: 'no activity data!',
-        type: 'warning'
-      })
-    } else {
-      activityList.forEach(x => {
-        this.activityList.push({
-          ActivityID: x.ActivityID,
-          ActivityName: x.ActivityName,
-          IsPrivate: !!x.IsPrivate,
-          IsEnable: !!x.IsEnable,
-          InputDisabled: true
-        })
-        window.ActivityList.push({
-          ActivityID: x.ActivityID,
-          ActivityName: x.ActivityName,
-          IsPrivate: !!x.IsPrivate,
-          IsEnable: !!x.IsEnable
-        })
-      })
-    }
   }
 
   cancel () {
@@ -150,7 +132,7 @@ export default class Setting extends Vue {
           message: 'successed!',
           type: 'success'
         })
-        this.QueryActivities()
+        this.$emit('activityUpdate')
       } else {
         this.$message.error('Fail to add/modify the activity! Please Retry')
       }
@@ -190,12 +172,15 @@ export default class Setting extends Vue {
         type: 'success'
       })
       this.IsProfileEdit = false
-      this.QueryActivities()
+      this.$emit('activityUpdate')
     } else {
       this.$message.error('Fail to delete the activity! Please Retry')
     }
   }
 
-  update () {}
+  update () {
+    this.QueryActivities()
+    this.QueryUserProfile()
+  }
 }
 </script>

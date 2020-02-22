@@ -2,7 +2,7 @@
 <div>
   <div v-if="addActivityVisible" id="add-task-type-popup" class="overlay">
     <div class="popup">
-      <AddType @close="closePopup" @saved="update"/>
+      <AddType :activityList="activityList" @close="closePopup" @saved="update"/>
     </div>
   </div>
   <el-card>
@@ -16,11 +16,11 @@
       <el-form-item label="Activity" prop="ActivityID">
         <el-select ref="activitySelector" v-model="logData.ActivityID" filterable reserve-keyword placeholder="Choose">
           <el-option-group>
-            <el-option v-for="item in ActivityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
+            <el-option v-for="item in activityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
             </el-option>
           </el-option-group>
           <el-option-group>
-            <el-option key="AddActivity" id="addlog-dropdown-button-newtype">
+            <el-option key="AddActivity" id="addlog-dropdown-button-newtype" value="">
               <el-button @click="createNewType">New Type</el-button>
             </el-option>
           </el-option-group>
@@ -71,11 +71,13 @@ import AddType from '@/components/log/add_type.vue'
 @Component({
   components: {
     AddType
+  },
+  props: {
+    activityList: Array
   }
 })
 export default class AddLog extends Vue {
   // Data members
-  ActivityList = window.ActivityList
   logData = this.emptyLog()
   formRules = {
     Title: [{
@@ -199,6 +201,7 @@ export default class AddLog extends Vue {
 
   update (newActivityName) {
     this.closePopup()
+    this.$emit('activityUpdate')
   }
 
   createNewType () {

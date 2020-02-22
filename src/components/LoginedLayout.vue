@@ -2,7 +2,7 @@
 <div>
   <div v-if="addLogVisible" id="add-log-popup" class="overlay">
     <div class="popup">
-      <AddLog @close="closePopup" @saved="update"/>
+      <AddLog @close="closePopup" @saved="update" @activityUpdate="updateActivityList" :activityList="activityList"/>
     </div>
   </div>
   <el-container>
@@ -15,7 +15,7 @@
         <el-button slot="reference" class="el-icon-more-outline"></el-button>
       </el-popover>
       <el-main>
-        <router-view ref="view" />
+        <router-view :activityList="activityList" @activityUpdate="updateActivityList" ref="view"/>
       </el-main>
     </el-container>
   </el-container>
@@ -26,6 +26,7 @@
 import { LogComponent } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
 import AddLog from '@/components/log/add_log.vue'
+import _logService from '@/services/LogService.js'
 
 @Component({
   components: {
@@ -35,6 +36,12 @@ import AddLog from '@/components/log/add_log.vue'
 export default class LoginedLayout extends LogComponent {
   // Data members
   addLogVisible = false
+  activityList = []
+
+  // Life cycle
+  created () {
+    this.updateActivityList()
+  }
 
   // Methods
   openPopup () {
@@ -43,6 +50,20 @@ export default class LoginedLayout extends LogComponent {
 
   closePopup () {
     this.addLogVisible = false
+  }
+
+  async updateActivityList () {
+    const activityList = await _logService.GetUserActivities()
+    this.activityList.length = 0
+    activityList.forEach(x => {
+      this.activityList.push({
+        ActivityID: x.ActivityID,
+        ActivityName: x.ActivityName,
+        IsPrivate: !!x.IsPrivate,
+        IsEnable: !!x.IsEnable,
+        InputDisabled: true
+      })
+    })
   }
 
   update () {

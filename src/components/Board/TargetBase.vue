@@ -1,5 +1,5 @@
 <template>
-<el-col :md="6" :sm="6">
+<el-col :md="6" :sm="6" v-if="activity.ActivityID != null && activity.GoalHour > 0">
   <h5>{{activity.ActivityName}}</h5>
   <el-progress type="circle" :percentage="ActivityProgressPercentage" :color="ActivityProgressColor" :status="ActivityProgressStatus"></el-progress>
 </el-col>

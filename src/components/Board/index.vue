@@ -3,13 +3,13 @@
   <h1>Dash Board</h1>
   <TimeBox
     @update="changeTimeBox"
-    @updateGoal="getActivitiesData"
+    @updateGoal="getLogReportData"
     @displayByDate="displayByDate"
     :timeBoxInfo="timeBoxInfo"
     :activityList="activityList"
     ref="timeBox"/>
   <br>
-  <SpentTime :activityList="activityList" ref="spentTime"/>
+  <SpentTime :LogReportData="logReportData" ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"
@@ -21,7 +21,7 @@
 
 <script>
 import { LogView } from '@/components/interface.js'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import TimeBox from '@/components/Board/timeBox/index.vue'
 import SpentTime from '@/components/Board/spent_time.vue'
 import Goal from '@/components/Board/goal.vue'
@@ -33,6 +33,9 @@ import profileService from '@/services/ProfileService.js'
     TimeBox,
     SpentTime,
     Goal
+  },
+  props: {
+    activityList: Array
   }
 })
 export default class Board extends LogView {
@@ -41,35 +44,44 @@ export default class Board extends LogView {
     timeBoxID: null
   }
 
-  activityList = []
   timeBoxSetting = false
   goalDisplay = true
+  logReportData = []
+  selectedDate = null
+
+  @Watch('activityList')
+  onActivityUpdate () {
+    if (this.selectedDate) {
+      this.displayByDate()
+    } else {
+      this.getLogReportData()
+    }
+  }
 
   // Life cycle
   async created () {
     const timeBoxID = await profileService.getCurrentTimeBox()
     this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
-    this.getActivitiesData()
+    this.getLogReportData()
     this.$refs.timeBox.timeBoxDate()
   }
 
   // Methods
-  async getActivityList () {
+  async getLogReportData () {
     const userID = window.Profile.UserID
     const result = await logService.activityTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
     if (result !== 'no data') {
-      this.activityList = result
+      this.logReportData.length = 0
+      result.forEach(x => {
+        this.logReportData.push(x)
+      })
     }
-  }
-
-  async getActivitiesData () {
-    await this.getActivityList()
-    this.$refs.spentTime.update(this.activityList)
+    this.$refs.spentTime.update()
   }
 
   update () {
     this.goalDisplay = true
-    this.getActivitiesData()
+    this.getLogReportData()
     this.$refs.timeBox.update()
   }
 
@@ -89,10 +101,17 @@ export default class Board extends LogView {
 
   async displayByDate (date) {
     this.goalDisplay = false
+    this.selectedDate = date
     this.timeBoxInfo.TimeBoxID = ''
     const userID = window.Profile.UserID
-    this.activityList = await logService.activityTime(userID, date.start, date.end)
-    this.$refs.spentTime.update(this.activityList)
+    const result = await logService.activityTime(userID, date.start, date.end)
+    if (result !== 'no data') {
+      this.logReportData.length = 0
+      result.forEach(x => {
+        this.logReportData.push(x)
+      })
+    }
+    this.$refs.spentTime.update()
   }
 }
 </script>

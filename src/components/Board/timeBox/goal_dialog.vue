@@ -46,7 +46,7 @@ import logService from '@/services/LogService.js'
 })
 export default class GoalDialog extends Vue {
   // Data members
-  goalList = window.ActivityList
+  goalList = this.activityList
 
   // Methods
   openHandler () {

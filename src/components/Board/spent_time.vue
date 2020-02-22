@@ -9,7 +9,7 @@
         </div>
       </el-col>
       <el-col :md="12" :sm="24">
-        <el-table :data="activityList" sortable="true">
+        <el-table :data="logReportData" sortable="true">
           <el-table-column prop="ActivityName" label="Activity">
             <template slot-scope="scope">
               {{scope.row.ActivityName}}
@@ -39,21 +39,21 @@ import Chart from 'chart.js'
 
 @Component({
   props: {
-    ActivityList: Array
+    LogReportData: Array
   }
 })
 export default class SpentTime extends LogComponent {
   // Data members
   ctx = null
   pieChart = null
-  activityList = []
+  logReportData = []
   pieData = this.initPieData()
 
   // Life cycle
   async mounted () {
     this.ctx = $('#Chart')
-    if (this.ActivityList) {
-      this.activityList = this.ActivityList
+    if (this.LogReportData) {
+      this.logReportData = this.LogReportData
       this.setPieChart()
     }
   }
@@ -64,18 +64,18 @@ export default class SpentTime extends LogComponent {
     this.pieData.labels.length = 0
     this.pieData.datasets[0].data.length = 0
     const maxLabelNums = 7
-    for (let i = 0; i < this.activityList.length; i++) {
+    for (let i = 0; i < this.logReportData.length; i++) {
       if (i < maxLabelNums) {
-        this.pieData.labels.push(this.activityList[i].ActivityName)
-        this.pieData.datasets[0].data.push(this.activityList[i].TimeLength.toFixed(0))
+        this.pieData.labels.push(this.logReportData[i].ActivityName)
+        this.pieData.datasets[0].data.push(this.logReportData[i].TimeLength.toFixed(0))
       } else if (i === maxLabelNums) {
         this.pieData.labels.push('Other Activities')
-        this.pieData.datasets[0].data.push(this.activityList[i].TimeLength.toFixed(0))
+        this.pieData.datasets[0].data.push(this.logReportData[i].TimeLength.toFixed(0))
       } else {
-        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.activityList[i].TimeLength).toFixed(
+        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.logReportData[i].TimeLength).toFixed(
           0)
       }
-      this.pieData.datasets[0].timeLength += this.activityList[i].TimeLength
+      this.pieData.datasets[0].timeLength += this.logReportData[i].TimeLength
     }
 
     // data to hour
@@ -153,8 +153,8 @@ export default class SpentTime extends LogComponent {
     this.generatePieChart()
   }
 
-  update (activityList) {
-    this.activityList = activityList
+  update () {
+    this.logReportData = this.LogReportData
     this.setPieChart()
   }
 }

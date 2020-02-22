@@ -9,7 +9,7 @@
     </el-form-item>
     <el-form-item label="Activity" prop="ActivityID">
       <el-select v-model="LogForm.ActivityID" filterable reserve-keyword placeholder="Choose">
-        <el-option v-for="item in ActivityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
+        <el-option v-for="item in activityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
         </el-option>
       </el-select>
     </el-form-item>
@@ -60,13 +60,13 @@ import moment from 'moment'
 @Component({
   props: {
     visible: Boolean,
-    rowDataID: Number
+    rowDataID: Number,
+    activityList: Array
   }
 })
 export default class ModifyModal extends Vue {
   // Data members
   LogForm = this.initLogForm()
-  ActivityList = window.ActivityList
   endDateOption = {}
   formRules = {
     Title: [{

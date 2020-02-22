@@ -54,7 +54,12 @@
       </el-card>
     </el-col>
   </el-row>
-  <ModifyHistoryModal :visible="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
+  <ModifyHistoryModal
+    :visible="dialogFormVisible"
+    :rowDataID="logIDtoModify"
+    :activityList="activityList"
+    @close-modal="closeModal()">
+  </ModifyHistoryModal>
 </div>
 </template>
 
@@ -69,13 +74,14 @@ import profileService from '@/services/ProfileService.js'
 @Component({
   components: {
     ModifyHistoryModal
+  },
+  props: {
+    activityList: Array
   }
 })
 export default class History extends LogView {
   // Data members
   logList = []
-
-  activityList = window.Activity
 
   activityFilters = [{
     text: 'Untitled Events',
@@ -89,14 +95,6 @@ export default class History extends LogView {
   KeywordToSearch = ''
   StartSearchDate = moment().add(-7, 'days').format('YYYY-MM-DD')
   EndSearchDate = moment().format('YYYY-MM-DD')
-
-  // Life cycle
-  beforeCreated () {
-    this.activityList.push({
-      ActivityName: 'Untitled Events',
-      ActivityID: ''
-    })
-  }
 
   async mounted () {
     const currentTimeBox = await profileService.getCurrentTimeBoxRange()

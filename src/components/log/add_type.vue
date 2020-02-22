@@ -23,7 +23,11 @@
 import { Vue, Component } from 'vue-property-decorator'
 import _logService from '@/services/LogService.js'
 
-@Component
+@Component({
+  props: {
+    activityList: Array
+  }
+})
 export default class AddType extends Vue {
   // Data members
   activityData = {
@@ -50,8 +54,6 @@ export default class AddType extends Vue {
     }]
   }
 
-  activityList = window.ActivityList
-
   // Methods
   async submit () {
     this.$refs.form.validate(async (valid) => {
@@ -73,36 +75,12 @@ export default class AddType extends Vue {
             message: 'successed!',
             type: 'success'
           })
-          this.QueryActivities()
           this.$emit('saved', this.activityData.Name)
         } else {
           this.$message.error('Fail to add/modify the activity! Please Retry')
         }
       }
     })
-  }
-
-  async QueryActivities () {
-    const activityList = await _logService.GetUserActivities()
-
-    // clear list
-    window.ActivityList.length = 0
-
-    if (activityList === 'no data') {
-      this.$message({
-        message: 'no activity data!',
-        type: 'warning'
-      })
-    } else {
-      activityList.forEach(x => {
-        window.ActivityList.push({
-          ActivityID: x.ActivityID,
-          ActivityName: x.ActivityName,
-          IsPrivate: !!x.IsPrivate,
-          IsEnable: !!x.IsEnable
-        })
-      })
-    }
   }
 
   cancel () {
