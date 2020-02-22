@@ -26,9 +26,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="TaskType" label="TaskType" align="left" :filters="taskTypeFilters" :filter-method="filterTaskType">
+          <el-table-column prop="Activity" label="Activity" align="left" :filters="activityFilters" :filter-method="filterActivity">
             <template slot-scope="scope">
-              {{scope.row.TaskTypeName ? scope.row.TaskTypeName : "Other Events"}}
+              {{scope.row.ActivityName ? scope.row.ActivityName : "Other Events"}}
             </template>
           </el-table-column>
 
@@ -54,7 +54,12 @@
       </el-card>
     </el-col>
   </el-row>
-  <ModifyHistoryModal :visible="dialogFormVisible" :rowDataID="logIDtoModify" @close-modal="closeModal()"></ModifyHistoryModal>
+  <ModifyHistoryModal
+    :visible="dialogFormVisible"
+    :rowDataID="logIDtoModify"
+    :activityList="activityList"
+    @close-modal="closeModal()">
+  </ModifyHistoryModal>
 </div>
 </template>
 
@@ -68,86 +73,75 @@ import profileService from '@/services/ProfileService.js'
 
 @Component({
   components: {
-    ModifyHistoryModal,
+    ModifyHistoryModal
+  },
+  props: {
+    activityList: Array
   }
 })
 export default class History extends LogView {
   // Data members
   logList = []
 
-  taskTypeList = window.TaskTypeList
-
-  taskTypeFilters = [{
+  activityFilters = [{
     text: 'Untitled Events',
     value: null
   }]
 
   logIDtoModify = null
-  IterationList = window.SprintList
+  TimeBoxList = window.SprintList
   dialogFormVisible = false
   rowData = []
   KeywordToSearch = ''
-  StartSearchDate = new moment().add(-7, 'days').format('YYYY-MM-DD')
-  EndSearchDate = new moment().format('YYYY-MM-DD')
+  StartSearchDate = moment().add(-7, 'days').format('YYYY-MM-DD')
+  EndSearchDate = moment().format('YYYY-MM-DD')
 
-  // Life cycle
-  beforeCreated() {
-    this.taskTypeList.push({
-      TaskTypeName: "Untitled Events",
-      TaskTypeID: ""
-    })
-  }
-
-  async mounted() {
-    const currentIteration = await profileService.getCurrentIterationRange()
-    if (currentIteration) {
-      this.StartSearchDate = moment(currentIteration.StartDate)
-      this.EndSearchDate = moment(currentIteration.EndDate)
+  async mounted () {
+    const currentTimeBox = await profileService.getCurrentTimeBoxRange()
+    if (currentTimeBox) {
+      this.StartSearchDate = moment(currentTimeBox.StartDate)
+      this.EndSearchDate = moment(currentTimeBox.EndDate)
     }
 
     this.QueryLogs()
 
-    //taskTypeFilters
-    //clear list
-    this.taskTypeFilters.length = 0
-    this.taskTypeList.forEach(x => {
-      this.taskTypeFilters.push({
-        value: x.TaskTypeID? x.TaskTypeID.toString(): null,
-        text: x.TaskTypeName,
+    // activityFilters
+    // clear list
+    this.activityFilters.length = 0
+    this.activityList.forEach(x => {
+      this.activityFilters.push({
+        value: x.ActivityID ? x.ActivityID.toString() : null,
+        text: x.ActivityName
       })
     })
   }
 
-
   // Methods
-  filterTaskType(value, row) {
+  filterActivity (value, row) {
     var flag = false
-    if (row.TaskTypeID == value) {
+    if (row.ActivityID === value) {
       flag = true
     }
     return flag
   }
 
-  Edit(rowData) {
+  Edit (rowData) {
     this.logIDtoModify = rowData.LogID
     this.dialogFormVisible = true
   }
 
-  async closeModal() {
+  async closeModal () {
     this.logIDtoModify = null
     this.QueryLogs()
     this.dialogFormVisible = false
   }
 
-  async QueryLogs() {
-    let result = await _logService.GetUserLogs(this.KeywordToSearch, new moment(this.StartSearchDate), new moment(this.EndSearchDate))
-    if (result != "no data")
-      this.logList = result
-    else
-      this.logList = []
+  async QueryLogs () {
+    const result = await _logService.GetUserLogs(this.KeywordToSearch, moment(this.StartSearchDate), moment(this.EndSearchDate))
+    if (result !== 'no data') { this.logList = result } else { this.logList = [] }
   }
 
-  update() {
+  update () {
     this.QueryLogs()
   }
 }

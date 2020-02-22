@@ -4,30 +4,30 @@ const LogService = require('./log_service.js')
 const moment = require('moment')
 
 module.exports = class {
-  constructor() {
+  constructor () {
     this.publishProvider = new PublishProvider()
     this.profileProvider = new ProfileProvider()
     this.logService = new LogService()
   }
 
-  async getUserDataList() {
+  async getUserDataList () {
     const userDataList = []
     const publishList = await this.publishProvider.getAll()
     for (var i = 0; i < publishList.length; ++i) {
       const data = publishList[i]
       const userProfile = await this.profileProvider.getUserProfileByUserID(data.UserID)
-      const taskTypeList = (await this.logService.getTaskTypeTimeByDuration(data.UserID, data.StartDate, moment(data.EndDate).add(1, "days").format("YYYY-MM-DD"))).filter(taskType => !taskType.IsPrivate)
+      const activityList = (await this.logService.getActivityTimeByDuration(data.UserID, data.StartDate, moment(data.EndDate).add(1, 'days').format('YYYY-MM-DD'))).filter(activity => !activity.IsPrivate)
 
       var total = 0
-      taskTypeList.forEach(taskType => {
-        total += taskType.TimeLength
+      activityList.forEach(activity => {
+        total += activity.TimeLength
       })
       userDataList.push({
         name: userProfile.UserName,
-        duration: data.StartDate + " ~ " + data.EndDate,
+        duration: data.StartDate + ' ~ ' + data.EndDate,
         total: total,
-        update: moment(data.UpdateTime).format("YYYY-MM-DD hh:mm"),
-        taskTypeList: taskTypeList
+        update: moment(data.UpdateTime).format('YYYY-MM-DD hh:mm'),
+        activityList: activityList
       })
     }
     return userDataList

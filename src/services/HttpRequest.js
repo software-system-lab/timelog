@@ -1,53 +1,55 @@
-import axios from 'axios';
-import Config from "../config"
+import Config from '@/config'
+import axios from 'axios'
 
 export default {
-  openLoading() {
+  openLoading () {
     window.loading = window.vueRoot.$loading({
       lock: true,
       text: 'Loading...',
       spinner: 'el-icon-loading',
       background: 'rgba(250, 250, 250, 0.7)'
-    });
+    })
   },
-  closeLoading() {
-    window.loading.close();
+  closeLoading () {
+    window.loading.close()
   },
 
-  async get(route) {
-    this.openLoading();
+  async get (route) {
+    this.openLoading()
     try {
-      var response = await axios.get(`https://${Config.apiDest.host}/api${route}`);
+      var response =
+          await axios.get(`https://${Config.apiDest.host}/api${route}`)
     } catch (err) {
-      console.log(err);
-      this.closeLoading();
-      vueRoot.$message({
+      console.log(err)
+      this.closeLoading()
+      window.vueRoot.$message({
         showClose: true,
         message: 'Request failed!',
         type: 'error'
-      });
-      return;
+      })
+      return
     }
-    this.closeLoading();
-    if (response.status == 200)
-      return response.data;
-    return;
+    this.closeLoading()
+    if (response.status === 200) {
+      return response.data
+    }
   },
-  async post(route, data) {
-    this.openLoading();
+  async post (route, data) {
+    this.openLoading()
     try {
-      var response = await axios.post(`https://${Config.apiDest.host}/api${route}`, data);
+      var response =
+          await axios.post(`https://${Config.apiDest.host}/api${route}`, data)
     } catch (err) {
-      console.log(err);
-      this.closeLoading();
-      vueRoot.$message({
+      console.log(err)
+      this.closeLoading()
+      window.vueRoot.$message({
         showClose: true,
         message: 'Request failed!',
         type: 'error'
-      });
-      return;
+      })
+      return
     }
-    this.closeLoading();
-    return response.data;
+    this.closeLoading()
+    return response.data
   }
 }

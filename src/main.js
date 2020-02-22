@@ -1,21 +1,16 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+/* global FB */
+/* eslint one-var: ["error", { var: "always"}] */
 import Vue from 'vue'
-import $ from 'jquery'
 import App from './App'
-import router from './router'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import 'element-ui/lib/theme-chalk/display.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/display.css'
 import locale from 'element-ui/lib/locale/lang/en'
+
+import router from './router'
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */
-
-window.jQuery = $;
-window.$ = $;
-window.Vue = Vue;
-window.router = router;
 
 Vue.use(ElementUI, {
   locale
@@ -23,60 +18,46 @@ Vue.use(ElementUI, {
 
 // facebook login sdk
 (function (d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
+  var js, fjs = d.getElementsByTagName(s)[0]
   if (d.getElementById(id)) {
-    return;
+    return
   }
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://connect.facebook.net/zh-TW/sdk.js";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+  js = d.createElement(s)
+  js.id = id
+  js.src = 'https://connect.facebook.net/zh-TW/sdk.js'
+  fjs.parentNode.insertBefore(js, fjs)
+}(document, 'script', 'facebook-jssdk'))
 
-window.statusChangeCallback = function (response) {
-  let vm = window;
-  if (response.status === 'connected') {
-    vm.authorized = true;
-  } else {
-    window.tempNextPath = location.pathname;
-    next({
-      path: '/login'
-    }); // redirect to login page 
-  }
-}
-
-//路由驗證
-window.router.beforeEach(async (to, from, next) => {
-  // console.log('to=', to.fullPath, '| from=', from.fullPath);
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => {
-      // console.log(record.name, record.meta.requiresAuth);
-      return record.meta.requiresAuth;
-    })) {
+    return record.meta.requiresAuth
+  })) {
     if (window.authorized) {
       // Get FB Login Status 向FB再次驗證
       FB.getLoginStatus(response => {
-        //console.log('next login status', response) 
-        window.statusChangeCallback(response);
+        if (response.status === 'connected') {
+          window.authorized = true
+        } else {
+          window.tempNextPath = location.pathname
+          next({
+            path: '/login'
+          }) // redirect to login page
+        }
       })
-      next();
+      next()
     } else {
-      window.tempNextPath = location.pathname;
+      window.tempNextPath = location.pathname
       next({
         path: '/login'
-      }); // redirect to login page 
+      }) // redirect to login page
     }
   } else {
-    next(); // 不需要驗證則繼續
+    next() // 不需要驗證則繼續
   }
 })
 
 window.vueRoot = new Vue({
   el: '#app',
   router,
-  data() {
-    return{
-
-    }
-  },
-  render: h => h(App),
+  render: h => h(App)
 })

@@ -8,16 +8,17 @@ import LoginedLayout from '../components/LoginedLayout.vue'
 
 Vue.use(Router)
 
-const AppRoutes = [{
+const AppRoutes = [
+  {
     path: '/login',
     name: 'login',
     component: Login,
     meta: {
       requiresAuth: false // 不需驗證
-    },
+    }
   },
   {
-    path: "/Register",
+    path: '/Register',
     name: 'Register',
     meta: {
       requiresAuth: true // 需驗證
@@ -35,17 +36,17 @@ const AppRoutes = [{
       requiresAuth: true // 需驗證
     },
     redirect: {
-      name: "Board"
+      name: 'Board'
     },
-    children: LoginedRoutes,
+    children: LoginedRoutes
   },
   // 當 url path 不符合 router 表的時候，預設轉址到
   {
     path: '/*',
     redirect: '/login'
   }
-];
+]
 
 export default new Router({
-  routes: AppRoutes,
+  routes: AppRoutes
 })

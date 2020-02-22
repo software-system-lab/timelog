@@ -3,14 +3,14 @@
     <el-card>
       <div slot='header'>
         <h2>Goal Setting</h2>
-        <h3>Iteration: {{ iterationInfo.IterationName }}</h3>
-        <h3>Duration: {{ iterationInfo.StartDate }} ~ {{ iterationInfo.EndDate }}</h3>
+        <h3>Time Box: {{ timeBoxInfo.TimeBoxName }}</h3>
+        <h3>Duration: {{ timeBoxInfo.StartDate }} ~ {{ timeBoxInfo.EndDate }}</h3>
       </div>
       <el-row>
         <el-table :data="goalList" sortable="true">
-          <el-table-column prop="TaskType Name" label="TaskType">
+          <el-table-column prop="Activity Name" label="Activity">
             <template slot-scope="scope">
-              {{scope.row.TaskTypeName}}
+              {{scope.row.ActivityName}}
             </template>
           </el-table-column>
           <el-table-column prop="GoalHour" label="Goal(Hour)">
@@ -39,47 +39,47 @@ import logService from '@/services/LogService.js'
 
 @Component({
   props: {
-    iterationInfo: Object,
-    taskTypeList: Array,
+    timeBoxInfo: Object,
+    activityList: Array,
     visible: Boolean
   }
 })
 export default class GoalDialog extends Vue {
   // Data members
-  goalList = window.TaskTypeList
+  goalList = this.activityList
 
   // Methods
-  openHandler() {
+  openHandler () {
     this.goalList = []
-    this.taskTypeList.forEach(taskType => {
-      if (taskType.TaskTypeID != null) {
-        this.goalList.push(JSON.parse(JSON.stringify(taskType)))
+    this.activityList.forEach(activity => {
+      if (activity.ActivityID != null) {
+        this.goalList.push(JSON.parse(JSON.stringify(activity)))
       }
     })
   }
 
-  close() {
-    this.$emit("close", "goal_dialog")
+  close () {
+    this.$emit('close', 'goal_dialog')
   }
 
-  async ModifyOrAdd(data) {
-    data.IsEdit = false;
-    let result = await logService.ModifyOrAddAGoal(data, this.iterationInfo.IterationID)
+  async ModifyOrAdd (data) {
+    data.IsEdit = false
+    const result = await logService.ModifyOrAddAGoal(data, this.timeBoxInfo.TimeBoxID)
     if (result) {
-      this.$emit("goalEdit", data)
+      this.$emit('goalEdit', data)
     }
   }
 
-  cancelGoal(data) {
-    this.taskTypeList.forEach(taskType => {
-      if (taskType.TaskTypeID === data.TaskTypeID) {
+  cancelGoal (data) {
+    this.ActivityList.forEach(activity => {
+      if (activity.ActivityID === data.ActivityID) {
         const keyList = Object.keys(data)
         keyList.forEach(key => {
-          data[key] = taskType[key]
+          data[key] = activity[key]
         })
       }
     })
-    data.IsEdit = false;
+    data.IsEdit = false
   }
 }
 </script>

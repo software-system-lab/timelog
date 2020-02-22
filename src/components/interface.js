@@ -1,7 +1,7 @@
 import { Vue } from 'vue-property-decorator'
 
 export class LogComponent extends Vue {
-  update() {}
+  update () {}
 }
 
 export class LogView extends LogComponent {}
