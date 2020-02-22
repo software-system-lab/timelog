@@ -20,20 +20,25 @@ app.use(bodyParser.urlencoded({
 
 // router-sub directory separation
 var ProfileRouter = express.Router()
-ProfileApis(ProfileRouter)
+const profileAPI = new ProfileApis(ProfileRouter)
 app.use('/api/Profile', ProfileRouter)
 
 var LogRouter = express.Router()
-LogApis(LogRouter)
+const logAPI = new LogApis(LogRouter)
 app.use('/api/Log', LogRouter)
 
 var TeamRouter = express.Router()
-TeamApis(TeamRouter)
+const teamAPI = new TeamApis(TeamRouter)
 app.use('/api/team', TeamRouter)
 
 var PublishRouter = express.Router()
-PublishApis(PublishRouter)
+const publishAPI = new PublishApis(PublishRouter)
 app.use('/api/publish', PublishRouter)
+
+if (!profileAPI || !logAPI || !teamAPI || !publishAPI) {
+  console.log('APIs error!')
+  return 1
+}
 
 // Middleware for serving '/dist' directory
 const staticFileMiddleware = express.static('dist')
