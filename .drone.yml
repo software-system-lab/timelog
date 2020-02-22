@@ -71,10 +71,11 @@ steps:
       from_secret: timelog_docker_user
     password:
       from_secret: timelog_docker_passwd
-  when:
-    branch:
-    - beta
-    - master
+
+when:
+  branch:
+  - beta
+  - master
 
 depends_on:
   - Linter
@@ -121,6 +122,11 @@ steps:
     - master
     event:
     - push
+
+when:
+  branch:
+  - beta
+  - master
 
 depends_on:
   - Build
