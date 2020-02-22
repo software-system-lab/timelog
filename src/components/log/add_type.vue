@@ -1,11 +1,11 @@
 <template>
   <el-card>
     <div slot="header" class="clearfix">
-      <h2>Add a Task Type</h2>
+      <h2>Add an Activity</h2>
     </div>
     <el-form ref="form" :rules="formRules" :model="activityData" label-width="110px" :label-position="'right'">
       <el-form-item label="Name" prop="Name" >
-        <el-input v-model="activityData.Name" placeholder="Task Type Name"></el-input>
+        <el-input v-model="activityData.Name" placeholder="Activity Name"></el-input>
       </el-form-item>
       <el-form-item label="Enable" prop="IsEnable">
         <el-switch v-model="activityData.IsEnable"/>
@@ -91,13 +91,13 @@ export default class AddType extends Vue {
 
   successMsg () {
     this.$message({
-      message: 'Task Type Added!',
+      message: 'Activity Added!',
       type: 'success'
     })
   }
 
   errorMsg () {
-    this.$message.error('Task Type Added Fail!Please Retry')
+    this.$message.error('Adding Activity Failed! Please Retry')
   }
 }
 </script>

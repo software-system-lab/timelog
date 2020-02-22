@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="addActivityVisible" id="add-task-type-popup" class="overlay">
+  <div v-if="addActivityVisible" id="add-activity-popup" class="overlay">
     <div class="popup">
       <AddType :activityList="activityList" @close="closePopup" @saved="update"/>
     </div>
