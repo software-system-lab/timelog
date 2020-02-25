@@ -150,7 +150,18 @@ export default class AddLog extends Vue {
       if (valid) {
         this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
         this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
-        const result = await logService.AddALog(this.logData)
+        let result
+        try {
+          result = await logService.AddALog(this.logData)
+        } catch (errorCode) {
+          if (errorCode === 777) {
+            this.$message.error('Time overlaps')
+          } else {
+            this.$message.error(`Error Code : ${errorCode}`)
+          }
+          return
+        }
+
         if (result) {
           this.successMsg()
           this.cancel()
