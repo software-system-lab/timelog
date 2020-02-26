@@ -1,10 +1,10 @@
-const mysql = require('mysql');
-const Config = require('./config.js');
+const mysql = require('mysql')
+const Config = require('./config.js')
 
 // 與資料庫連線
-const pool = mysql.createPool(Config.DBconnection);
+const pool = mysql.createPool(Config.DBconnection)
 
-let query = function (sql, values) {
+const query = function (sql, values) {
   return new Promise((resolve, reject) => {
     pool.getConnection(function (err, connection) {
       if (err) {
