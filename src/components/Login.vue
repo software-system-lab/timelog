@@ -1,7 +1,7 @@
 <template>
 <div>
   <el-row>
-    <img src="../../static/image/timelog.png" alt="logo">
+    <img src="timelog.png" alt="logo">
   </el-row>
   <el-row>
     <h2>Welcome!</h2>
@@ -18,60 +18,81 @@
 </template>
 
 <script>
+/* global FB */
 import { Vue, Component } from 'vue-property-decorator'
-import Config from "../config.js";
-import _profileService from "../services/ProfileService.js";
-import _logService from "../services/LogService.js";
-import { afterLogin } from "@/services/Login.js"
+import $ from 'jquery'
+import Config from '@/config.js'
+import _profileService from '@/services/ProfileService.js'
+import { afterLogin } from '@/services/Login.js'
 
 @Component
 export default class Login extends Vue {
   // Life cycle
-  mounted() {
-    window.fbAsyncInit = function() {
+  mounted () {
+    window.fbAsyncInit = () => {
       FB.init(Config.FBLogin)
       FB.AppEvents.logPageView()
 
       // Get FB Login Status
       FB.getLoginStatus(async response => {
-        if (response.status === "connected") {
-          var loginResult = await _profileService.Login(
-            response.authResponse.userID,
-            response.authResponse.accessToken
-          )
-          await FB.api("/me?fields=name,id,email", async function(response) {
-            //Get user Profile from FB
-            window.FBProfile = await response;
-            if (loginResult == "logined") {
-              $(".fb-login-button").hide()
-              await afterLogin()
-            } else if (loginResult == "unregistered") {
-              window.authorized = true
-              await FB.api("/me?fields=name,id,email", async function(response) {
-                //Get user Profile from FB
-                window.FBProfile = await response
-                router.push({
-                  name: "Register"
-                })
-              })
+        if (response.status === 'connected') {
+          this.login(response.authResponse)
+        } else if (response.status === 'not_authorized') {
+          FB.login(async res => {
+            if (res.status === 'connected') {
+              this.login(res.authResponse)
             } else {
-              vueRoot.$message({
-                showClose: true,
-                message: "Cannot Login! Please Check Your FB status or internet connection (" +
-                  loginResult +
-                  ")",
-                type: "error"
-              })
+              this.errorMessage()
             }
           })
-        }
-        else {
-          $(".el-icon-loading").hide()
+        } else {
+          $('.el-icon-loading').hide()
           window.userProfile = {}
           window.authorized = false
+          this.errorMessage()
         }
       })
     }
+  }
+
+  errorMessage () {
+    window.vueRoot.$message({
+      showClose: true,
+      message: 'Login failed!',
+      type: 'error'
+    })
+  }
+
+  async login ({ userID, accessToken }) {
+    var loginResult = await _profileService.Login(userID, accessToken)
+    await FB.api('/me?fields=name,id,email', async response => {
+      // Get user Profile from FB
+      window.FBProfile = await response
+      if (loginResult === 'logined') {
+        $('.fb-login-button').hide()
+        await afterLogin()
+        this.$router.push({
+          path: window.tempNextPath
+        })
+      } else if (loginResult === 'unregistered') {
+        window.authorized = true
+        await FB.api('/me?fields=name,id,email', async response => {
+          // Get user Profile from FB
+          window.FBProfile = await response
+          this.$router.push({
+            name: 'Register'
+          })
+        })
+      } else {
+        window.vueRoot.$message({
+          showClose: true,
+          message: 'Cannot Login! Please Check Your FB status or internet connection (' +
+            loginResult +
+            ')',
+          type: 'error'
+        })
+      }
+    })
   }
 }
 </script>

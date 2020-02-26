@@ -10,14 +10,14 @@ export default {
     css: String
   },
   methods: {
-    join() {
+    join () {
       this.$router.push({
-        name: "Team - join team"
+        name: 'Team - join team'
       })
     },
-    create() {
+    create () {
       this.$router.push({
-        name: "Team - create team"
+        name: 'Team - create team'
       })
     }
   }

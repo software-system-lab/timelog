@@ -7,9 +7,9 @@
   </el-col>
   <el-col :md="12" :sm="24">
     <el-table :data="TagAnalysisList" sortable="true">
-      <el-table-column prop="TaskTypeName" label="Tag">
+      <el-table-column prop="ActivityName" label="Tag">
         <template slot-scope="scope">
-          {{scope.row.TaskTypeName}}
+          {{scope.row.ActivityName}}
         </template>
       </el-table-column>
       <el-table-column prop="TimeLength" label="Time Length">
@@ -43,99 +43,99 @@
   </el-collapse-item> -->
 
 <script>
-import _logService from "../../services/LogService.js";
+import $ from 'jquery'
+import Chart from 'chart.js'
+import _logService from '@/services/LogService.js'
 
 export default {
-  props: ["teammate"],
-  data() {
+  props: ['teammate'],
+  data () {
     return {
       Data: {
         labels: [],
-        datasets: [{
-            label: "Spent",
+        datasets: [
+          {
+            label: 'Spent',
             TimeLengthSum: 0,
             data: [],
             backgroundColor: [
-              "rgba(255, 99, 132, 0.8)",
-              "rgba(54, 162, 235, 0.8)",
-              "rgba(255, 206, 86, 0.8)",
-              "rgba(75, 192, 192, 0.8)",
-              "rgba(153, 102, 255, 0.8)",
-              "rgba(255, 145, 64, 0.8)"
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 145, 64, 0.8)'
             ]
           },
           {
-            label: "Target",
+            label: 'Target',
             TargetTimeLengthSum: 0,
             data: [],
             backgroundColor: [
-              "rgba(255, 99, 132, 0.3)",
-              "rgba(54, 162, 235, 0.3)",
-              "rgba(255, 206, 86, 0.3)",
-              "rgba(75, 192, 192, 0.3)",
-              "rgba(153, 102, 255, 0.3)",
-              "rgba(255, 145, 64, 0.3)"
+              'rgba(255, 99, 132, 0.3)',
+              'rgba(54, 162, 235, 0.3)',
+              'rgba(255, 206, 86, 0.3)',
+              'rgba(75, 192, 192, 0.3)',
+              'rgba(153, 102, 255, 0.3)',
+              'rgba(255, 145, 64, 0.3)'
             ]
           }
         ]
       },
       TagAnalysisList: []
-    };
+    }
   },
-  async mounted() {
-    this.QueryTeammateData();
-    var ctx = $(`#${this.teammate.UserID}`);
-    var myChart = new Chart(ctx, {
-      type: "horizontalBar",
+  async mounted () {
+    this.QueryTeammateData()
+    var ctx = $(`#${this.teammate.UserID}`)
+    Chart(ctx, {
+      type: 'horizontalBar',
       data: this.Data,
       options: {
         title: {
           display: true,
-          text: "(min)"
+          text: '(min)'
         }
       }
-    });
+    })
   },
   methods: {
-    async QueryTeammateData() {
-      let result = await _logService.taskTypeTimeByIteration(this.teammate.UserID, this.teammate.CurrentIterationID);
-      if (result != "no data") {
-        this.TagAnalysisList = result;
-        //clear
-        this.Data.labels.length = 0;
-        this.Data.datasets[0].data.length = 0;
+    async QueryTeammateData () {
+      const result = await _logService.activityTimeByTimeBox(this.teammate.UserID, this.teammate.CurrentTimeBoxID)
+      if (result !== 'no data') {
+        this.TagAnalysisList = result
+        // clear
+        this.Data.labels.length = 0
+        this.Data.datasets[0].data.length = 0
         for (let i = 0; i < result.length; i++) {
           if (i < 5) {
-            this.Data.labels.push(result[i].TaskTypeName);
-            this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0));
+            this.Data.labels.push(result[i].ActivityName)
+            this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0))
             this.Data.datasets[1].data.push(
-              result[i].GoalHour != null ?
-              result[i].GoalHour : 0
-            );
-          } else if (i == 5) {
-            this.Data.labels.push("Other Tags");
-            this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0));
+              result[i].GoalHour != null ? result[i].GoalHour : 0
+            )
+          } else if (i === 5) {
+            this.Data.labels.push('Other Tags')
+            this.Data.datasets[0].data.push((result[i].TimeLength / 3600000).toFixed(0))
             this.Data.datasets[1].data.push(
-              result[i].GoalHour != null ?
-              result[i].GoalHour : 0
-            );
+              result[i].GoalHour != null ? result[i].GoalHour : 0
+            )
           } else {
             this.Data.datasets[0].data[5] = ((
-              parseInt(this.Data.datasets[0].data[5]) + result[i].TimeLength) / 3600000).toFixed(0);
+              parseInt(this.Data.datasets[0].data[5]) + result[i].TimeLength) / 3600000).toFixed(0)
             this.Data.datasets[1].data[5] +=
-              result[i].GoalHour != null ?
-              result[i].GoalHour : 0;
+              result[i].GoalHour != null ? result[i].GoalHour : 0
           }
-          this.Data.datasets[0].TimeLengthSum += parseInt((result[i].TimeLength).toFixed(0));
+          this.Data.datasets[0].TimeLengthSum += parseInt((result[i].TimeLength).toFixed(0))
           this.Data.datasets[1].TargetTimeLengthSum +=
-            result[i].GoalHour;
+            result[i].GoalHour
         }
       }
     },
-    paddingLeft(str, len) {
-      if (str.toString().length >= len) return str;
-      else return this.paddingLeft("0" + str, len);
+    paddingLeft (str, len) {
+      if (str.toString().length >= len) return str
+      else return this.paddingLeft('0' + str, len)
     }
   }
-};
+}
 </script>

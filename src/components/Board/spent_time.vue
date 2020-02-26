@@ -9,10 +9,10 @@
         </div>
       </el-col>
       <el-col :md="12" :sm="24">
-        <el-table :data="taskTypeList" sortable="true">
-          <el-table-column prop="TaskTypeName" label="TaskType">
+        <el-table :data="logReportData" sortable="true">
+          <el-table-column prop="ActivityName" label="Activity">
             <template slot-scope="scope">
-              {{scope.row.TaskTypeName}}
+              {{scope.row.ActivityName}}
             </template>
           </el-table-column>
           <el-table-column prop="Time Length" label="Time Length">
@@ -32,61 +32,59 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { LogComponent } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
-import moment from 'moment'
 import Chart from 'chart.js'
 
 @Component({
   props: {
-    TaskTypeList: Array
+    LogReportData: Array
   }
 })
 export default class SpentTime extends LogComponent {
   // Data members
   ctx = null
   pieChart = null
-  taskTypeList = []
+  logReportData = []
   pieData = this.initPieData()
 
-
   // Life cycle
-  async mounted() {
-    this.ctx = $("#Chart");
-    if (this.TaskTypeList) {
-      this.taskTypeList = this.TaskTypeList
+  async mounted () {
+    this.ctx = $('#Chart')
+    if (this.LogReportData) {
+      this.logReportData = this.LogReportData
       this.setPieChart()
     }
   }
 
-
   // Methods
-  serializePieData() {
+  serializePieData () {
     this.pieData = this.initPieData()
     this.pieData.labels.length = 0
     this.pieData.datasets[0].data.length = 0
     const maxLabelNums = 7
-    for (let i = 0; i < this.taskTypeList.length; i++) {
+    for (let i = 0; i < this.logReportData.length; i++) {
       if (i < maxLabelNums) {
-        this.pieData.labels.push(this.taskTypeList[i].TaskTypeName)
-        this.pieData.datasets[0].data.push(this.taskTypeList[i].TimeLength.toFixed(0))
-      } else if (i == maxLabelNums) {
-        this.pieData.labels.push("Other TaskTypes")
-        this.pieData.datasets[0].data.push(this.taskTypeList[i].TimeLength.toFixed(0))
+        this.pieData.labels.push(this.logReportData[i].ActivityName)
+        this.pieData.datasets[0].data.push(this.logReportData[i].TimeLength.toFixed(0))
+      } else if (i === maxLabelNums) {
+        this.pieData.labels.push('Other Activities')
+        this.pieData.datasets[0].data.push(this.logReportData[i].TimeLength.toFixed(0))
       } else {
-        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.taskTypeList[i].TimeLength).toFixed(
+        this.pieData.datasets[0].data[5] = (parseInt(this.pieData.datasets[0].data[5]) + this.logReportData[i].TimeLength).toFixed(
           0)
       }
-      this.pieData.datasets[0].timeLength += this.taskTypeList[i].TimeLength
+      this.pieData.datasets[0].timeLength += this.logReportData[i].TimeLength
     }
 
-    //data to hour
+    // data to hour
     for (let i = 0; i < this.pieData.datasets[0].data.length; i++) {
       this.pieData.datasets[0].data[i] = (this.pieData.datasets[0].data[i] / 3600000).toFixed(2)
     }
   }
 
-  initPieData() {
+  initPieData () {
     return {
       labels: [],
       datasets: [{
@@ -105,7 +103,7 @@ export default class SpentTime extends LogComponent {
     }
   }
 
-  generatePieChart() {
+  generatePieChart () {
     if (this.pieChart) {
       this.pieChart.destroy()
     }
@@ -122,17 +120,10 @@ export default class SpentTime extends LogComponent {
           callbacks: {
             label: (tooltipItem, data) => {
               var dataset = data.datasets[tooltipItem.datasetIndex]
-              //計算總和
-              var sum = 0
-              dataset.data.forEach(data => {
-                const t = data.split('.')
-                const time = parseInt(t[0]) * 3600000 + parseInt(t[1]) * 60000
-                sum += time
-              })
-              var currentValue = dataset.data[tooltipItem.index].replace('.', ':')
-              return " " + data.labels[tooltipItem.index] + ": " + currentValue
-              label += Math.round(tooltipItem.yLabel * 100) / 100
-              return label
+
+              var value = parseFloat(dataset.data[tooltipItem.index])
+              var currentValue = parseInt(value) + ':' + (value % 1) * 60
+              return ' ' + data.labels[tooltipItem.index] + ': ' + currentValue
             }
           }
         }
@@ -140,31 +131,30 @@ export default class SpentTime extends LogComponent {
     })
   }
 
-  paddingLeft(str, len) {
+  paddingLeft (str, len) {
     if (str.toString().length >= len) {
       return str
-    }
-    else {
+    } else {
       return this.paddingLeft('0' + str, len)
     }
   }
 
-  getHour(time) {
-    return this.paddingLeft(Math.floor(time / 3600000),2)
+  getHour (time) {
+    return this.paddingLeft(Math.floor(time / 3600000), 2)
   }
 
-  getMinute(time) {
+  getMinute (time) {
     return this.paddingLeft((time %
-    3600000 / 60 / 1000).toFixed(0),2)
+    3600000 / 60 / 1000).toFixed(0), 2)
   }
 
-  setPieChart() {
+  setPieChart () {
     this.serializePieData()
     this.generatePieChart()
   }
 
-  update(taskTypeList) {
-    this.taskTypeList = taskTypeList
+  update () {
+    this.logReportData = this.LogReportData
     this.setPieChart()
   }
 }

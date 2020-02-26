@@ -1,6 +1,6 @@
 <template>
 <el-menu>
-  <img src="../../static/image/timelog.png" alt="logo">
+  <img src="timelog.png" alt="logo">
   <img alt="profile img" :src="this.profilePicture" class="img-circle" />
   <h4>{{this.profileName}}</h4>
   <el-button icon="el-icon-document-add" type="danger" round plain @click="addLog" id="add-button">
@@ -50,24 +50,29 @@ import { Vue, Component } from 'vue-property-decorator'
 @Component
 export default class Sidemenu extends Vue {
   // Computed
-  get profileName() {
+  get profileName () {
     return window.Profile.UserName
   }
 
-  get profilePicture() {
+  get profilePicture () {
     return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`
   }
 
-
   // Methods
-  addLog() {
-    this.$emit("addLog")
+  addLog () {
+    this.$emit('addLog')
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.el-menu {
+  height: calc(100% - 30px);
+  margin-top: 30px;
+}
+
 img {
   width: 80px;
   display: block;
@@ -85,6 +90,4 @@ a {
 #add-button {
   margin-bottom: 10px;
 }
-
-
 </style>

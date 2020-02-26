@@ -2,69 +2,71 @@ const LogProvider = require('../providers/LogProvider.js')
 const moment = require('moment')
 
 module.exports = class {
-  constructor() {
+  constructor () {
     this.logProvider = new LogProvider()
   }
 
-  async getTaskTypeTimeByIteration(userID, iterationID) {
-    var taskTypes = await this.getTaskTypeList(userID);
+  async getActivityTimeByTimeBox (userID, timeBoxID) {
+    var activities = await this.getActivityList(userID)
 
-    taskTypes.forEach(taskType => {
-      taskType.GoalHour = null;
-      taskType.IsEdit = false;
-    });
+    activities.forEach(activity => {
+      activity.GoalHour = null
+      activity.IsEdit = false
+    })
 
-    let targets = await this.logProvider.QueryGoalByIteration({UserID: userID, IterationID: iterationID});
-    if (targets != "no data") {
+    const targets = await this.logProvider.QueryGoalByTimeBox({ UserID: userID, TimeBoxID: timeBoxID })
+    if (targets !== 'no data') {
       targets.forEach(x => {
-        let proj = taskTypes.find(y => y.taskTypeID == x.taskTypeID);
-        if (proj != undefined)
-          proj.GoalHour = x.GoalHour;
+        const proj = activities.find(y => y.activityID === x.activityID)
+        if (proj !== undefined) {
+          proj.GoalHour = x.GoalHour
+        }
       })
     }
 
-    let logs = await this.logProvider.GetUserLogsByIterationID(userID, iterationID);
+    const logs = await this.logProvider.GetUserLogsByTimeBoxID(userID, timeBoxID)
 
-    this.getTaskTypesTime(logs, taskTypes)
-    return taskTypes
+    this.getActivitiesTime(logs, activities)
+    return activities
   }
 
-  async getTaskTypeTimeByDuration(userID, startDate, endDate) {
-    var taskTypes = await this.getTaskTypeList(userID);
-    let logs = await this.logProvider.GetUserLogsByRange(userID, startDate, endDate)
-    this.getTaskTypesTime(logs, taskTypes)
-    return taskTypes
+  async getActivityTimeByDuration (userID, startDate, endDate) {
+    var activities = await this.getActivityList(userID)
+    const logs = await this.logProvider.GetUserLogsByRange(userID, startDate, endDate)
+    this.getActivitiesTime(logs, activities)
+    return activities
   }
 
-  async getTaskTypeList(userID) {
-    let dbTaskTypes = await this.logProvider.GetUserTaskTypes(userID);
-    var taskTypes = [];
+  async getActivityList (userID) {
+    const dbActivities = await this.logProvider.GetUserActivities(userID)
+    var activities = []
 
-    if (dbTaskTypes != 'no data')
-      taskTypes = dbTaskTypes;
-    taskTypes.push({
-      TaskTypeID: null,
-      TaskTypeName: 'Untitled Events'
-    });
-    return taskTypes
+    if (dbActivities !== 'no data') {
+      activities = dbActivities
+    }
+    activities.push({
+      ActivityID: null,
+      ActivityName: 'Untitled Events'
+    })
+    return activities
   }
 
-  async getTaskTypesTime(logs, taskTypes) {
-    taskTypes.forEach(taskType => {
-      taskType.TimeLength = 0;
+  async getActivitiesTime (logs, activities) {
+    activities.forEach(activity => {
+      activity.TimeLength = 0
     })
 
     logs.forEach(log => {
-      log.TaskTypeID
-      let xx = taskTypes.find(y => y.TaskTypeID == log.TaskTypeID);
-      if (xx != undefined)
-        xx.TimeLength += moment(log.EndTime) - moment(log.StartTime);
-    });
+      const xx = activities.find(y => y.ActivityID === log.ActivityID)
+      if (xx !== undefined) {
+        xx.TimeLength += moment(log.EndTime) - moment(log.StartTime)
+      }
+    })
 
-    if (taskTypes[taskTypes.length - 1].TimeLength === 0) {
-      taskTypes.pop()
+    if (activities[activities.length - 1].TimeLength === 0) {
+      activities.pop()
     }
-    //sort by TimeLength DESC
-    taskTypes.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1);
+    // sort by TimeLength DESC
+    activities.sort((x, y) => x.TimeLength < y.TimeLength ? 1 : -1)
   }
 }

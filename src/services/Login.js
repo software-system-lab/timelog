@@ -1,35 +1,14 @@
-import _profileService from "./ProfileService.js";
-import _logService from "./LogService.js";
+import $ from 'jquery'
+import _profileService from './ProfileService.js'
 
-export async function afterLogin() {
-  window.authorized = true;
+export async function afterLogin () {
+  window.authorized = true
 
-  //Get user Profile
-  window.Profile = await _profileService.GetProfile();
-  //Get User TaskTypes
-  let taskTypeList = await _logService.GetUserTaskTypes();
+  // Get user Profile
+  window.Profile = await _profileService.GetProfile()
+  $('.el-icon-loading').hide()
 
-  window.TaskTypeList = [];
-  if (taskTypeList == "no data")
-    vueRoot.$message({
-      message: "Go setting page to add some tags!",
-      type: "warning"
-    });
-  else {
-    taskTypeList.forEach(x => {
-      window.TaskTypeList.push({
-        TaskTypeID: x.TaskTypeID,
-        TaskTypeName: x.TaskTypeName
-      });
-    });
+  if (window.tempNextPath === undefined) {
+    window.tempNextPath = '/Board'
   }
-
-  $(".el-icon-loading").hide();
-
-  if (window.tempNextPath == undefined)
-    window.tempNextPath = "/Board";
-
-  router.push({
-    path: window.tempNextPath
-  });
 }

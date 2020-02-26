@@ -12,18 +12,44 @@ name: rancher_host
 ---
 kind: pipeline
 type: docker
+name: Linter
+
+steps:
+- name: Install node modules
+  image: node:10.16.3
+  commands:
+  - yarn install
+
+- name: Lint server side
+  image: node:10.16.3
+  commands:
+  - yarn run lint-server
+
+- name: Lint web
+  image: node:10.16.3
+  commands:
+  - yarn run lint
+
+when:
+  branch:
+  - master
+  - beta
+  - dev
+---
+kind: pipeline
+type: docker
 name: Build
 
 steps:
 - name: Install node modules
   image: node:10.16.3
   commands:
-  - npm install
+  - yarn install
 
 - name: Build production web
   image: node:10.16.3
   commands:
-  - npm run build --mode production
+  - yarn run build --mode production
   when:
     branch:
     - master
@@ -31,7 +57,7 @@ steps:
 - name: Build beta web
   image: node:10.16.3
   commands:
-  - npm run build --mode beta
+  - yarn run build --mode beta
   when:
     branch:
     - beta
@@ -46,13 +72,13 @@ steps:
     password:
       from_secret: timelog_docker_passwd
 
-trigger:
+when:
   branch:
-  - master
   - beta
-  event:
-  - push
+  - master
 
+depends_on:
+  - Linter
 ---
 kind: pipeline
 type: docker
@@ -96,6 +122,11 @@ steps:
     - master
     event:
     - push
+
+when:
+  branch:
+  - beta
+  - master
 
 depends_on:
   - Build

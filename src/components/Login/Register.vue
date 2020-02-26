@@ -1,6 +1,6 @@
 <template>
 <div>
-  <img src="../../../static/image/timelog.png" alt="logo">
+  <img src="timelog.png" alt="logo">
   <h1>Welcome to timelog</h1>
   <hr>
   <el-row>
@@ -37,9 +37,10 @@
 </template>
 
 <script>
+/* global FB */
 import { Vue, Component } from 'vue-property-decorator'
-import _profileService from '../../services/ProfileService.js'
-import { afterLogin } from "@/services/Login.js"
+import _profileService from '@/services/ProfileService.js'
+import { afterLogin } from '@/services/Login.js'
 
 @Component
 export default class Register extends Vue {
@@ -73,41 +74,43 @@ export default class Register extends Vue {
       required: false,
       message: 'Check Here!',
       trigger: 'blur'
-    }],
+    }]
   }
-
 
   // Computed
-  get profileName() {
-    return window.FBProfile.name;
-  }
-  get profilePicture() {
-    return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`;
+  get profileName () {
+    return window.FBProfile.name
   }
 
+  get profilePicture () {
+    return `https://graph.facebook.com/${window.FBProfile.id}/picture?width=300`
+  }
 
   // Methods
-  async Submit() {
-    this.$refs['form'].validate(async (valid) => {
+  async Submit () {
+    this.$refs.form.validate(async (valid) => {
       if (valid) {
         FB.getLoginStatus(async response => {
-          let result = await _profileService.Register(this.UserForm, response.authResponse.accessToken);
+          const result = await _profileService.Register(this.UserForm, response.authResponse.accessToken)
           if (result) {
-            vueRoot.$alert('Register successed!!', {
+            window.vueRoot.$alert('Register successed!!', {
               confirmButtonText: 'ok',
               type: 'success'
             }).then(async () => {
-              await afterLogin();
-            });
+              await afterLogin(this.$router)
+              this.$router.push({
+                path: window.tempNextPath
+              })
+            })
           } else {
             this.$message({
               type: 'error',
               message: 'Retry Or Contact the administrator'
-            });
+            })
           }
-        });
+        })
       }
-    });
+    })
   }
 }
 </script>

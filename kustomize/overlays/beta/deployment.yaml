@@ -23,7 +23,7 @@ spec:
               containerPort: 80
           env:
             - name: NODE_ENV
-              value: test
+              value: production
             - name: MYSQL_HOST
               valueFrom:
                 secretKeyRef:

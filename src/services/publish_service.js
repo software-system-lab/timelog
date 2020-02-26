@@ -2,15 +2,15 @@ import HTTP from './HttpRequest'
 import moment from 'moment'
 
 export default {
-  publish(userID, startDate, endDate) {
-    let postData = {
+  publish (userID, startDate, endDate) {
+    const postData = {
       UserID: userID,
-      StartDate: moment(startDate).format("YYYY-MM-DD"),
-      EndDate: moment(endDate).format("YYYY-MM-DD")
+      StartDate: moment(startDate).format('YYYY-MM-DD'),
+      EndDate: moment(endDate).format('YYYY-MM-DD')
     }
-    return HTTP.post(`/publish`, postData);
+    return HTTP.post('/publish', postData)
   },
-  getUserDataList() {
-    return HTTP.get("/publish/data");
+  getUserDataList () {
+    return HTTP.get('/publish/data')
   }
 }

@@ -6,7 +6,7 @@
     <el-table :data="userDataList" sortable="true">
       <el-table-column type="expand">
         <template slot-scope="scope">
-          <SpentTime :TaskTypeList="scope.row.taskTypeList"/>
+          <SpentTime :LogReportData="scope.row.activityList"/>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="Name" align="center">
@@ -47,32 +47,30 @@ export default class Publish extends Vue {
   // Data members
   userDataList = []
 
-
   // Life cycle
-  created() {
+  created () {
     this.update()
   }
 
-
   // Methods
-  async update() {
+  async update () {
     this.userDataList = await publishService.getUserDataList()
   }
 
-  paddingLeft(str, len) {
+  paddingLeft (str, len) {
     if (str.toString().length >= len) {
       return str
     }
     return this.paddingLeft('0' + str, len)
   }
 
-  getHour(time) {
-    return this.paddingLeft((time / 3600000).toFixed(0),2)
+  getHour (time) {
+    return this.paddingLeft((time / 3600000).toFixed(0), 2)
   }
 
-  getMinute(time) {
+  getMinute (time) {
     return this.paddingLeft((time %
-    3600000 / 60 / 1000).toFixed(0),2)
+    3600000 / 60 / 1000).toFixed(0), 2)
   }
 }
 </script>

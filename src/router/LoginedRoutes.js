@@ -9,9 +9,10 @@ import TeamList from '../components/Team/team_list.vue'
 import Setting from '../components/Setting.vue'
 import Publish from '../components/publish/index.vue'
 
-const LoginedRoutes = [{
+const LoginedRoutes = [
+  {
     name: 'Board',
-    path: "board",
+    path: 'board',
     components: {
       header: Sidemenu,
       default: Board
@@ -19,15 +20,15 @@ const LoginedRoutes = [{
   },
   {
     name: 'History',
-    path: "history",
+    path: 'history',
     components: {
       header: Sidemenu,
       default: History
     }
   },
   {
-    name: "Team - team list",
-    path: "teamlist",
+    name: 'Team - team list',
+    path: 'teamlist',
     components: {
       header: Sidemenu,
       default: TeamList
@@ -35,34 +36,35 @@ const LoginedRoutes = [{
   },
   {
     name: 'Team',
-    path: "/team",
+    path: '/team',
     components: {
       header: Sidemenu,
       default: Team
     },
     redirect: {
-      name: "Team - team list"
+      name: 'Team - team list'
     },
-    children: [{
-        name: "Team - content",
-        path: "content/:id",
+    children: [
+      {
+        name: 'Team - content',
+        path: 'content/:id',
         component: TeamContent
       },
       {
-        name: "Team - create team",
-        path: "create",
+        name: 'Team - create team',
+        path: 'create',
         component: CreateTeam
       },
       {
-        name: "Team - join team",
-        path: "join",
+        name: 'Team - join team',
+        path: 'join',
         component: JoinTeam
       }
     ]
   },
   {
     name: 'Setting',
-    path: "setting",
+    path: 'setting',
     components: {
       header: Sidemenu,
       default: Setting
@@ -76,6 +78,6 @@ const LoginedRoutes = [{
       default: Publish
     }
   }
-];
+]
 
-export default LoginedRoutes;
+export default LoginedRoutes

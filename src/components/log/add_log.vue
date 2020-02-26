@@ -1,8 +1,8 @@
 <template>
 <div>
-  <div v-if="addTaskTypeVisible" id="add-task-type-popup" class="overlay">
+  <div v-if="addActivityVisible" id="add-task-type-popup" class="overlay">
     <div class="popup">
-      <AddType @close="closePopup" @saved="update"/>
+      <AddType :activityList="activityList" @close="closePopup" @saved="update"/>
     </div>
   </div>
   <el-card>
@@ -13,14 +13,14 @@
       <el-form-item label="Title" prop="Title">
         <el-input v-model="logData.Title"></el-input>
       </el-form-item>
-      <el-form-item label="TaskType" prop="TaskTypeID">
-        <el-select ref="taskTypeSelector" v-model="logData.TaskTypeID" filterable reserve-keyword placeholder="Choose">
+      <el-form-item label="Activity" prop="ActivityID">
+        <el-select ref="activitySelector" v-model="logData.ActivityID" filterable reserve-keyword placeholder="Choose">
           <el-option-group>
-            <el-option v-for="item in TaskTypeList" :key="item.TaskTypeID" :label="item.TaskTypeName" :value="item.TaskTypeID">
+            <el-option v-for="item in activityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
             </el-option>
           </el-option-group>
           <el-option-group>
-            <el-option key="AddTaskType" id="addlog-dropdown-button-newtype">
+            <el-option key="AddActivity" id="addlog-dropdown-button-newtype" value="">
               <el-button @click="createNewType">New Type</el-button>
             </el-option>
           </el-option-group>
@@ -29,12 +29,12 @@
       <el-form-item label="Start Time">
         <el-col :md="12" :sm="24">
           <el-form-item prop="StartDate">
-            <el-date-picker v-model="logData.StartDate" type="date" placeholder="Start Date" align="'center'"></el-date-picker>
+            <el-date-picker v-model="logData.StartDate" type="date" placeholder="Start Date" :picker-options="startDateOption" align="'center'"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :md="12" :sm="24">
           <el-form-item prop="StartTime">
-            <el-time-picker v-model="logData.StartTime" format="HH:mm" value-format="HH:mm">
+            <el-time-picker v-model="logData.StartTime" format="HH:mm" value-format="HH:mm" :picker-options='startTimeOption'>
             </el-time-picker>
           </el-form-item>
         </el-col>
@@ -68,15 +68,16 @@ import moment from 'moment'
 import logService from '@/services/LogService.js'
 import AddType from '@/components/log/add_type.vue'
 
-
 @Component({
   components: {
     AddType
+  },
+  props: {
+    activityList: Array
   }
 })
 export default class AddLog extends Vue {
   // Data members
-  TaskTypeList = window.TaskTypeList
   logData = this.emptyLog()
   formRules = {
     Title: [{
@@ -84,7 +85,7 @@ export default class AddLog extends Vue {
       message: 'Check Here!',
       trigger: 'blur'
     }],
-    TaskTypeID: [{
+    ActivityID: [{
       required: true,
       message: 'Check Here!',
       trigger: 'blur'
@@ -113,44 +114,47 @@ export default class AddLog extends Vue {
       required: false,
       message: 'Check Here!',
       trigger: 'blur'
-    }],
+    }]
   }
-  endDateOption = {}
-  addTaskTypeVisible = false
 
+  startDateOption = {}
+  endDateOption = {}
+  addActivityVisible = false
 
   // Life cycle
-  created() {
-    this.endDateOption.disabledDate = time => {
-      if (moment(this.logData.StartDate) > moment(time.getTime()))
-        return true
-      return false
-    }
+  created () {
+    this.startDateOption.disabledDate = time => moment(this.logData.EndDate) < moment(time.getTime())
+    this.endDateOption.disabledDate = time => moment(this.logData.StartDate) > moment(time.getTime())
   }
 
-
   // Computed
-  get endTimeOption() {
-    if (this.logData.StartDate == this.logData.EndDate) {
+  get endTimeOption () {
+    if (this.logData.StartDate === this.logData.EndDate) {
       return {
         selectableRange: this.logData.StartTime + ':00 - 23:59:59'
       }
     }
-    return
   }
 
+  get startTimeOption () {
+    if (this.logData.StartDate === this.logData.EndDate) {
+      return {
+        selectableRange: '00:00:00 - ' + this.logData.EndTime + ':00'
+      }
+    }
+  }
 
   // Methods
-  async submit() {
-    this.$refs['form'].validate(async (valid) => {
+  async submit () {
+    this.$refs.form.validate(async (valid) => {
       if (valid) {
         this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
         this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
-        let result = await logService.AddALog(this.logData);
+        const result = await logService.AddALog(this.logData)
         if (result) {
           this.successMsg()
           this.cancel()
-          this.$emit("saved")
+          this.$emit('saved')
         } else {
           this.errorMsg()
         }
@@ -158,51 +162,51 @@ export default class AddLog extends Vue {
     })
   }
 
-  cancel() {
-    this.$refs['form'].clearValidate()
+  cancel () {
+    this.$refs.form.clearValidate()
     this.logData = this.emptyLog()
-    this.$emit("close")
+    this.$emit('close')
   }
 
-  emptyLog() {
+  emptyLog () {
     return {
       Title: '',
-      TaskTypeID: null,
-      StartTime: new moment().add(-1, 'hours').format('HH:mm'),
-      EndTime: new moment().format('HH:mm'),
-      StartDate: new moment().add(-1, 'hours').format('YYYY-MM-DD'),
-      EndDate: new moment().format('YYYY-MM-DD'),
+      ActivityID: null,
+      StartTime: moment().add(-1, 'hours').format('HH:mm'),
+      EndTime: moment().format('HH:mm'),
+      StartDate: moment().add(-1, 'hours').format('YYYY-MM-DD'),
+      EndDate: moment().format('YYYY-MM-DD'),
       Description: ''
     }
   }
 
-  successMsg() {
+  successMsg () {
     this.$message({
       message: 'Log Added!',
       type: 'success'
     })
   }
 
-  errorMsg() {
+  errorMsg () {
     this.$message.error('Log Added Fail!Please Retry')
   }
 
-  openPopup() {
-    this.addTaskTypeVisible = true
+  openPopup () {
+    this.addActivityVisible = true
   }
 
-  closePopup() {
-    this.addTaskTypeVisible = false
+  closePopup () {
+    this.addActivityVisible = false
   }
 
-  update(newTaskTypeName) {
+  update (newActivityName) {
     this.closePopup()
+    this.$emit('activityUpdate')
   }
 
-  createNewType() {
+  createNewType () {
     this.openPopup()
   }
-
 }
 </script>
 
