@@ -20,7 +20,6 @@ export default {
       var response =
           await axios.get(`https://${Config.apiDest.host}/api${route}`)
     } catch (err) {
-      console.log(err)
       this.closeLoading()
       window.vueRoot.$message({
         showClose: true,
@@ -40,7 +39,6 @@ export default {
       var response =
           await axios.post(`https://${Config.apiDest.host}/api${route}`, data)
     } catch (err) {
-      console.log(err)
       this.closeLoading()
       window.vueRoot.$message({
         showClose: true,
