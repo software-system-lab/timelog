@@ -36,45 +36,63 @@ export default class Login extends Vue {
       // Get FB Login Status
       FB.getLoginStatus(async response => {
         if (response.status === 'connected') {
-          var loginResult = await _profileService.Login(
-            response.authResponse.userID,
-            response.authResponse.accessToken
-          )
-          await FB.api('/me?fields=name,id,email', async response => {
-            // Get user Profile from FB
-            window.FBProfile = await response
-            if (loginResult === 'logined') {
-              $('.fb-login-button').hide()
-              await afterLogin()
-              this.$router.push({
-                path: window.tempNextPath
-              })
-            } else if (loginResult === 'unregistered') {
-              window.authorized = true
-              await FB.api('/me?fields=name,id,email', async response => {
-                // Get user Profile from FB
-                window.FBProfile = await response
-                this.$router.push({
-                  name: 'Register'
-                })
-              })
+          this.login(response.authResponse)
+        } else if (response.status === 'not_authorized') {
+          FB.login(async res => {
+            if (res.status === 'connected') {
+              this.login(res.authResponse)
             } else {
-              window.vueRoot.$message({
-                showClose: true,
-                message: 'Cannot Login! Please Check Your FB status or internet connection (' +
-                  loginResult +
-                  ')',
-                type: 'error'
-              })
+              this.errorMessage()
             }
           })
         } else {
           $('.el-icon-loading').hide()
           window.userProfile = {}
           window.authorized = false
+          this.errorMessage()
         }
       })
     }
+  }
+
+  errorMessage () {
+    window.vueRoot.$message({
+      showClose: true,
+      message: 'Login failed!',
+      type: 'error'
+    })
+  }
+
+  async login ({ userID, accessToken }) {
+    var loginResult = await _profileService.Login(userID, accessToken)
+    await FB.api('/me?fields=name,id,email', async response => {
+      // Get user Profile from FB
+      window.FBProfile = await response
+      if (loginResult === 'logined') {
+        $('.fb-login-button').hide()
+        await afterLogin()
+        this.$router.push({
+          path: window.tempNextPath
+        })
+      } else if (loginResult === 'unregistered') {
+        window.authorized = true
+        await FB.api('/me?fields=name,id,email', async response => {
+          // Get user Profile from FB
+          window.FBProfile = await response
+          this.$router.push({
+            name: 'Register'
+          })
+        })
+      } else {
+        window.vueRoot.$message({
+          showClose: true,
+          message: 'Cannot Login! Please Check Your FB status or internet connection (' +
+            loginResult +
+            ')',
+          type: 'error'
+        })
+      }
+    })
   }
 }
 </script>
