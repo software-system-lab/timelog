@@ -153,13 +153,26 @@ export default class ModifyModal extends Vue {
         this.LogForm.StartDate = moment(this.LogForm.StartDate).format('YYYY-MM-DD')
         this.LogForm.EndDate = moment(this.LogForm.EndDate).format('YYYY-MM-DD')
 
-        const result = await _logService.ModifyALog(this.LogForm)
+        let result
+        try {
+          result = await _logService.ModifyALog(this.LogForm)
+        } catch (errorCode) {
+          if (errorCode === 777) {
+            this.$message.error('Time overlaps')
+          } else {
+            this.$message.error(`Error Code : ${errorCode}`)
+          }
+          return
+        }
+
         if (result) {
           this.$message({
             message: 'Success!',
             type: 'success'
           })
           this.closeModal()
+        } else {
+          this.$message.error('Update failed')
         }
       }
     })

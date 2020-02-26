@@ -122,7 +122,7 @@ export default class SpentTime extends LogComponent {
               var dataset = data.datasets[tooltipItem.datasetIndex]
 
               var value = parseFloat(dataset.data[tooltipItem.index])
-              var currentValue = parseInt(value) + ':' + (value % 1) * 60
+              var currentValue = parseInt(value) + ':' + parseInt((value % 1) * 60)
               return ' ' + data.labels[tooltipItem.index] + ': ' + currentValue
             }
           }
