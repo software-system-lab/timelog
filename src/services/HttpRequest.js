@@ -45,7 +45,7 @@ export default {
         message: 'Request failed!',
         type: 'error'
       })
-      return
+      throw err.response.status
     }
     this.closeLoading()
     return response.data
