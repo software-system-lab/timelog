@@ -48,7 +48,7 @@ module.exports = class {
         if (result !== 'no data' && dbActivityList !== 'no data') {
           result.forEach(x => {
             const activity = dbActivityList.find(y => x.ActivityID === y.ActivityID)
-            x.ActivityName = activity !== undefined ? activity.ActiviryName : ''
+            x.ActivityName = activity !== undefined ? activity.ActivityName : ''
           })
         }
         res.send(result)
