@@ -5,7 +5,7 @@
   <br>
   <Goal
     v-if="goalDisplay"
-    :activityList="activityList"
+    :activityList="logReportData"
     ref='goal'/>
 </div>
 </template>

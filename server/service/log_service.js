@@ -10,16 +10,16 @@ module.exports = class {
     var activities = await this.getActivityList(userID)
 
     activities.forEach(activity => {
-      activity.GoalHour = null
+      activity.GoalHour = 0
       activity.IsEdit = false
     })
 
     const targets = await this.logProvider.QueryGoalByTimeBox({ UserID: userID, TimeBoxID: timeBoxID })
     if (targets !== 'no data') {
       targets.forEach(x => {
-        const proj = activities.find(y => y.activityID === x.activityID)
-        if (proj !== undefined) {
-          proj.GoalHour = x.GoalHour
+        const activity = activities.find(y => y.ActivityID === x.ActivityID)
+        if (activity !== undefined) {
+          activity.GoalHour = x.GoalHour
         }
       })
     }

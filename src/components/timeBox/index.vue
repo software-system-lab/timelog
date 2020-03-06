@@ -66,15 +66,13 @@ import Selection from '@/components/timeBox/selection.vue'
 import InfoDialog from '@/components/timeBox/info_dialog.vue'
 import GoalDialog from '@/components/timeBox/goal_dialog.vue'
 import profileService from '@/services/ProfileService.js'
+import logService from '@/services/LogService.js'
 
 @Component({
   components: {
     Selection,
     InfoDialog,
     GoalDialog
-  },
-  props: {
-    activityList: Array
   }
 })
 export default class TimeBox extends LogComponent {
@@ -84,8 +82,9 @@ export default class TimeBox extends LogComponent {
   isNew = false
   editDisabled = false
   goalDisabled = false
+  activityList = []
   timeBoxInfo = {
-    timeBoxID: null,
+    TimeBoxID: null,
     StartDate: '',
     EndDate: ''
   }
@@ -147,8 +146,13 @@ export default class TimeBox extends LogComponent {
     this.infoDialogVisible = true
   }
 
-  showGoalManager () {
+  async showGoalManager () {
     this.goalDialogVisible = true
+    const userID = window.Profile.UserID
+    const result = await logService.activityTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
+    if (result !== 'no data') {
+      this.activityList = [...result]
+    }
   }
 
   goalUpdated () {

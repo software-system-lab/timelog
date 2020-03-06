@@ -63,7 +63,6 @@ export default class SpentTime extends LogComponent {
     if (this.LogReportData) {
       this.logReportData = this.LogReportData
     }
-    console.log(this.publishVisible)
   }
 
   // Methods

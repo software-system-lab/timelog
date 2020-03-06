@@ -64,7 +64,6 @@ export default class LoginedLayout extends LogComponent {
 
   openTimeBox () {
     this.changeTimeBoxVisible = true
-    console.log('open time box')
   }
 
   closeTimeBox () {
@@ -120,5 +119,9 @@ export default class LoginedLayout extends LogComponent {
   width: 30%;
   position: relative;
   transition: all 5s ease-in-out;
+}
+
+.el-main {
+  overflow-y: scroll;
 }
 </style>
