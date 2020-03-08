@@ -52,11 +52,7 @@ steps:
       from_secret:
         sonar_project_token
   commands:
-  sonar-scanner \
-  -Dsonar.projectKey=$${SONAR_PROJECT_KEY} \
-  -Dsonar.sources=. \
-  -Dsonar.host.url=$${SONAR_HOST} \
-  -Dsonar.login=$${SONAR_PROJECT_TOKEN}
+  - sonar-scanner -Dsonar.projectKey=$${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_PROJECT_TOKEN}
 
 trigger:
   branch:
