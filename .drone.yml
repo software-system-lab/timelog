@@ -42,17 +42,12 @@ steps:
 - name: Sonar Scanner
   image: sonarsource/sonar-scanner-cli
   environment:
-    SONAR_HOST:
+    SONAR_HOST_URL:
       from_secret:
         sonar_host
-    SONAR_PROJECT_KEY:
-      from_secret:
-        sonar_project_key
-    SONAR_PROJECT_TOKEN:
+    SONAR_TOKEN:
       from_secret:
         sonar_project_token
-  commands:
-  - sonar-scanner -Dsonar.projectKey=$${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_PROJECT_TOKEN}
 
 trigger:
   branch:

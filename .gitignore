@@ -26,3 +26,4 @@ yarn-error.log*
 
 # Sonarq Report
 .scannerwork
+.sonar
