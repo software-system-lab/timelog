@@ -4,7 +4,7 @@
   <img alt="profile img" :src="this.profilePicture" class="img-circle" />
   <h4>{{this.profileName}}</h4>
   <el-button icon="el-icon-document-add" type="danger" round plain @click="addLog" id="add-button">
-    New
+    Add Log
   </el-button>
   <!-- <el-menu-item index="1" @click="addLog">
     <i class="el-icon-document-add"></i>
@@ -34,6 +34,12 @@
       <span slot="title">Publish</span>
     </el-menu-item>
   </router-link>
+  <TimeBox id="timebox"
+    :activityList="activityList"
+    @timeBoxSelected="timeBoxSelected"
+    @goalUpdated="goalUpdated"
+    @durationChanged="durationChanged"
+  />
   <!-- <router-link :to="{ name: 'Team'}">
     <el-menu-item index="5">
       <i class="el-icon-custom"></i>
@@ -46,8 +52,16 @@
 
 <script>
 import { Vue, Component } from 'vue-property-decorator'
+import TimeBox from './timeBox/index.vue'
 
-@Component
+@Component({
+  components: {
+    TimeBox
+  },
+  props: {
+    activityList: Array
+  }
+})
 export default class Sidemenu extends Vue {
   // Computed
   get profileName () {
@@ -61,6 +75,18 @@ export default class Sidemenu extends Vue {
   // Methods
   addLog () {
     this.$emit('addLog')
+  }
+
+  timeBoxSelected (timeBoxId) {
+    this.$emit('timeBoxSelected', timeBoxId)
+  }
+
+  goalUpdated () {
+    this.$emit('goalUpdated')
+  }
+
+  durationChanged (duration) {
+    this.$emit('durationChanged', duration)
   }
 }
 </script>
@@ -89,5 +115,11 @@ a {
 
 #add-button {
   margin-bottom: 10px;
+}
+
+#timebox {
+  position: absolute;
+  bottom: 0px;
+  width: 99%;
 }
 </style>

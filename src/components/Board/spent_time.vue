@@ -22,24 +22,26 @@
           </el-table-column>
           <el-table-column label="Percentage">
             <template slot-scope="scope">
-              {{(scope.row.TimeLength / pieData.datasets[0].timeLength * 100).toFixed(2)}} %
+              {{(scope.row.TimeLength / pieData.datasets[0].timeLength * 100).toFixed(2) || 0}} %
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
+    <el-button v-if="publishVisible" type="warning" @click="publish">Publish</el-button>
   </el-card>
 </template>
 
 <script>
 import $ from 'jquery'
 import { LogComponent } from '@/components/interface.js'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import Chart from 'chart.js'
 
 @Component({
   props: {
-    LogReportData: Array
+    LogReportData: Array,
+    publishVisible: Boolean
   }
 })
 export default class SpentTime extends LogComponent {
@@ -49,12 +51,17 @@ export default class SpentTime extends LogComponent {
   logReportData = []
   pieData = this.initPieData()
 
+  @Watch('LogReportData')
+  logReportDataChanged (newData) {
+    this.logReportData = newData
+    this.setPieChart()
+  }
+
   // Life cycle
   async mounted () {
     this.ctx = $('#Chart')
     if (this.LogReportData) {
       this.logReportData = this.LogReportData
-      this.setPieChart()
     }
   }
 
@@ -155,7 +162,10 @@ export default class SpentTime extends LogComponent {
 
   update () {
     this.logReportData = this.LogReportData
-    this.setPieChart()
+  }
+
+  publish () {
+    this.$emit('publish')
   }
 }
 </script>
