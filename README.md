@@ -1,6 +1,8 @@
 # Timelog
 
-[![Build Status](https://drone.hsiang.me/api/badges/ois/timelog/status.svg)](https://drone.hsiang.me/ois/timelog)
+[![Drone Build Status](https://drone.hsiang.me/api/badges/ois/timelog/status.svg)](https://drone.hsiang.me/ois/timelog)
+
+[![Sonar Quality Gate Status](https://sonarqube.hsiang.me/api/project_badges/measure?project=ois-timelog&metric=alert_status)](https://sonarqube.hsiang.me/dashboard?id=ois-timelog)
 
 ![](static/image/timelog.png)
 

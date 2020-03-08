@@ -10,9 +10,18 @@ name: rancher_cluster_token
 kind: secret
 name: rancher_host
 ---
+kind: secret
+name: sonar_host
+---
+kind: secret
+name: sonar_project_key
+---
+kind: secret
+name: sonar_project_token
+---
 kind: pipeline
 type: docker
-name: Linter
+name: Analysis
 
 steps:
 - name: Install node modules
@@ -30,7 +39,26 @@ steps:
   commands:
   - yarn run lint
 
-when:
+- name: Sonar Scanner
+  image: sonarsource/sonar-scanner-cli
+  environment:
+    SONAR_HOST:
+      from_secret:
+        sonar_host
+    SONAR_PROJECT_KEY:
+      from_secret:
+        sonar_project_key
+    SONAR_PROJECT_TOKEN:
+      from_secret:
+        sonar_project_token
+  commands:
+  sonar-scanner \
+  -Dsonar.projectKey=$${SONAR_PROJECT_KEY} \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=$${SONAR_HOST} \
+  -Dsonar.login=$${SONAR_PROJECT_TOKEN}
+
+trigger:
   branch:
   - master
   - beta
@@ -72,13 +100,13 @@ steps:
     password:
       from_secret: timelog_docker_passwd
 
-when:
+trigger:
   branch:
   - beta
   - master
 
 depends_on:
-  - Linter
+  - Analysis
 ---
 kind: pipeline
 type: docker
@@ -123,7 +151,7 @@ steps:
     event:
     - push
 
-when:
+trigger:
   branch:
   - beta
   - master
