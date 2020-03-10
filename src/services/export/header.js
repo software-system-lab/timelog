@@ -1,4 +1,4 @@
-export default const header = `<head>
+const header = `<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -173,3 +173,4 @@ img[data-v-6a3b5c59] {
 	top: 0;
 }
 </style></head>`
+export default header
