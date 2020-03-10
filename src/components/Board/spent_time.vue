@@ -71,6 +71,9 @@ export default class SpentTime extends LogComponent {
     if (this.LogReportData) {
       this.logReportData = this.LogReportData
     }
+    this.logReportData.forEach((item) => {
+      this.totalTime += item.TimeLength
+    })
     google.charts.load('current', { packages: ['corechart'] })
     google.charts.setOnLoadCallback(this.drawChart)
   }

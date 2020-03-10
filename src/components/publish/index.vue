@@ -6,7 +6,7 @@
     <el-table :data="userDataList" sortable="true">
       <el-table-column type="expand">
         <template slot-scope="scope">
-          <SpentTime :LogReportData="scope.row.activityList" :buttonVisible="false"/>
+          <SpentTime :LogReportData="scope.row.activityList" :buttonVisible="false" :chartID="scope.row.userID"/>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="Name" align="center">
@@ -65,7 +65,7 @@ export default class Publish extends Vue {
   }
 
   getHour (time) {
-    return this.paddingLeft((time / 3600000).toFixed(0), 2)
+    return this.paddingLeft(Math.floor(time / 3600000), 2)
   }
 
   getMinute (time) {

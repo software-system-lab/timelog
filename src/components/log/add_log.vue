@@ -16,7 +16,7 @@
       <el-form-item label="Activity" prop="ActivityID">
         <el-select ref="activitySelector" v-model="logData.ActivityID" filterable reserve-keyword placeholder="Choose">
           <el-option-group>
-            <el-option v-for="item in activityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
+            <el-option v-for="item in enabledActivityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
             </el-option>
           </el-option-group>
           <el-option-group>
@@ -79,6 +79,7 @@ import AddActivity from '@/components/log/add_activity.vue'
 export default class AddLog extends Vue {
   // Data members
   logData = null
+  enabledActivityList = []
   formRules = {
     Title: [{
       required: true,
@@ -150,11 +151,17 @@ export default class AddLog extends Vue {
     this.reloadEndTimeOption()
   }
 
+  @Watch('activityList')
+  activityListUpdated () {
+    this.enabledActivityList = this.activityList.filter(x => x.IsEnable === true)
+  }
+
   // Life cycle
   created () {
     this.emptyLog()
     this.startDateOption.disabledDate = time => moment() <= moment(time.getTime())
     this.reloadDisableDate()
+    this.enabledActivityList = this.activityList.filter(x => x.IsEnable === true)
   }
 
   // Methods
