@@ -1,7 +1,7 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <SpentTime :LogReportData="logReportData" :publishVisible="true" @publish="publish" ref="spentTime"/>
+  <SpentTime :LogReportData="logReportData" :isInPublish="true" @publish="publish" ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"
@@ -57,6 +57,7 @@ export default class Board extends LogView {
     if (result !== 'no data') {
       this.logReportData = [...result]
     }
+    console.log(this.logReportData)
     this.$refs.spentTime.update()
   }
 

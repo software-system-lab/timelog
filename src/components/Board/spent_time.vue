@@ -28,7 +28,8 @@
         </el-table>
       </el-col>
     </el-row>
-    <el-button v-if="publishVisible" type="warning" @click="publish">Publish</el-button>
+    <el-button v-if="isInPublish" type="warning" @click="publish">Publish</el-button>
+    <el-button v-if="isInPublish" type="primary" @click="exportHTML">Export</el-button>
   </el-card>
 </template>
 
@@ -41,7 +42,7 @@ import Chart from 'chart.js'
 @Component({
   props: {
     LogReportData: Array,
-    publishVisible: Boolean
+    isInPublish: Boolean
   }
 })
 export default class SpentTime extends LogComponent {
@@ -166,6 +167,10 @@ export default class SpentTime extends LogComponent {
 
   publish () {
     this.$emit('publish')
+  }
+
+  exportHTML () {
+    
   }
 }
 </script>
