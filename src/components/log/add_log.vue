@@ -133,35 +133,28 @@ export default class AddLog extends Vue {
 
   @Watch('startTime')
   startTimeSelected () {
-    const startDate = moment(this.startDate)
-    const endDate = moment(this.endDate)
-    if (startDate.format('YYYY-MM-DD') === endDate.format('YYYY-MM-DD')) {
-      const timeArray = this.startTime.split(':')
-      const startTime = moment(this.startDate).hour(timeArray[0]).minute(timeArray[1])
-      this.endTimeOption.selectableRange = startTime.add(1, 'minutes').format('HH:mm') + ':00 - 23:59:59'
-      if (this.startTime >= this.endTime) {
-        this.endTime = startTime.add(1, 'hours').add(-1, 'minutes').format('HH:mm')
-      }
-    } else if (startDate < endDate) {
-      this.endTimeOption.selectableRange = '00:00:00 - 23:59:59'
-    } else {
-      this.endTimeOption.selectableRange = '00:00:00 - 00:00:00'
-    }
+    this.reloadDisableDate()
   }
 
   @Watch('startDate')
   startDateSelected () {
-    this.endDateOption.disabledDate = time => moment(this.startDate) > moment(time.getTime())
     if (this.startDate !== this.endDate) {
       this.endDate = this.startDate.toString()
     }
+    this.reloadDisableDate()
+    this.reloadEndTimeOption()
+  }
+
+  @Watch('endDate')
+  endDateSelected () {
+    this.reloadEndTimeOption()
   }
 
   // Life cycle
   created () {
     this.emptyLog()
     this.startDateOption.disabledDate = time => moment() <= moment(time.getTime())
-    this.endDateOption.disabledDate = time => moment(this.startDate) > moment(time.getTime())
+    this.reloadDisableDate()
   }
 
   // Methods
@@ -193,6 +186,35 @@ export default class AddLog extends Vue {
         }
       }
     })
+  }
+
+  reloadDisableDate () {
+    this.endDateOption.disabledDate = (time) => {
+      if (moment(this.startDate) > moment(time.getTime())) {
+        return true
+      } else if (moment() <= moment(time.getTime())) {
+        return true
+      }
+      return false
+    }
+  }
+
+  reloadEndTimeOption () {
+    const startDate = moment(this.startDate)
+    const endDate = moment(this.endDate)
+    if (startDate.format('YYYY-MM-DD') === endDate.format('YYYY-MM-DD')) {
+      const timeArray = this.startTime.split(':')
+      const startTime = moment(this.startDate).hour(timeArray[0]).minute(timeArray[1])
+      this.endTimeOption.selectableRange = startTime.add(1, 'minutes').format('HH:mm') + ':00 - 23:59:59'
+      if (this.startTime >= this.endTime) {
+        console.log('hello')
+        this.endTime = startTime.add(1, 'hours').add(-1, 'minutes').format('HH:mm')
+      }
+    } else if (startDate < endDate) {
+      this.endTimeOption.selectableRange = '00:00:00 - 23:59:59'
+    } else {
+      this.endTimeOption.selectableRange = '00:00:00 - 00:00:00'
+    }
   }
 
   cancel () {

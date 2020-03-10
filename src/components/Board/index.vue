@@ -61,7 +61,6 @@ export default class Board extends LogView {
     if (result !== 'no data') {
       this.logReportData = [...result]
     }
-    console.log(this.logReportData)
     this.$refs.spentTime.update()
   }
 
