@@ -36,7 +36,7 @@ const AppRoutes = [
       requiresAuth: true // 需驗證
     },
     redirect: {
-      name: 'Board'
+      name: 'Dash Board'
     },
     children: LoginedRoutes
   },

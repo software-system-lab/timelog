@@ -10,10 +10,10 @@
     <i class="el-icon-document-add"></i>
     <span slot="title">New</span>
   </el-menu-item> -->
-  <router-link :to="{ name: 'Board'}">
+  <router-link :to="{ name: 'Dash Board'}">
     <el-menu-item index="1">
       <i class="el-icon-edit"></i>
-      <span slot="title">Board</span>
+      <span slot="title">Dash Board</span>
     </el-menu-item>
   </router-link>
   <router-link :to="{ name: 'History'}">

@@ -11,7 +11,7 @@ import Publish from '../components/publish/index.vue'
 
 const LoginedRoutes = [
   {
-    name: 'Board',
+    name: 'Dash Board',
     path: 'board',
     components: {
       header: Sidemenu,
