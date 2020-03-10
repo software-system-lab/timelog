@@ -29,7 +29,7 @@
       </el-col>
     </el-row>
     <el-button v-if="buttonVisible" type="warning" @click="publish">Publish</el-button>
-    <el-button v-if="buttonVisible" type="success" @click="publish">Export</el-button>
+    <el-button v-if="buttonVisible" type="success" @click="exportHTML">Export</el-button>
   </el-card>
 </template>
 
@@ -126,28 +126,8 @@ export default class SpentTime extends LogComponent {
     this.$emit('publish')
   }
 
-  export() {
-    Export.export()
-
-    // const template = this.$el.innerHTML;
-    //         let html = `<!DOCTYPE html>
-    //             <html>
-    //             <head>
-    //                 <meta charset="utf-8">
-    //                 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    //                 <title>X-Find迅聘选才</title>
-    //                 <link rel="stylesheet" href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" />
-    //                 <style>
-    //                     ${resumecss}
-    //                 </style>
-    //             </head>
-    //             <body>
-    //                 <div class="resume_preview_page" style="margin:0 auto;width:1200px">
-    //                 ${template}
-    //                 </div>
-    //             </body>
-    //             </html>`;
-    //         return html;
+  exportHTML () {
+    Export.exportHTML(this.$el)
   }
 }
 </script>

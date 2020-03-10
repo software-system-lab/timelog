@@ -1,7 +1,11 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <SpentTime :LogReportData="logReportData" :buttonVisible="true" @publish="publish" ref="spentTime"/>
+  <SpentTime
+    :LogReportData="logReportData"
+    :buttonVisible="true"
+    @publish="publish"
+    ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"
@@ -46,8 +50,8 @@ export default class Board extends LogView {
 
   // Life cycle
   async created () {
-    this.timeBoxID = await profileService.getCurrentTimeBox()
-    this.getLogReportData()
+    const timeBoxID = await profileService.getCurrentTimeBox()
+    this.displayByTimeBoxID(timeBoxID)
   }
 
   // Methods
