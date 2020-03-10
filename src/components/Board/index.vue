@@ -1,7 +1,7 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <SpentTime :LogReportData="logReportData" :publishVisible="true" @publish="publish" ref="spentTime"/>
+  <SpentTime :LogReportData="logReportData" :buttonVisible="true" @publish="publish" ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"

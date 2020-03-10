@@ -28,7 +28,8 @@
         </el-table>
       </el-col>
     </el-row>
-    <el-button v-if="publishVisible" type="warning" @click="publish">Publish</el-button>
+    <el-button v-if="buttonVisible" type="warning" @click="publish">Publish</el-button>
+    <el-button v-if="buttonVisible" type="success" @click="publish">Export</el-button>
   </el-card>
 </template>
 
@@ -36,11 +37,12 @@
 /* global google */
 import { LogComponent } from '@/components/interface.js'
 import { Component, Watch } from 'vue-property-decorator'
+import Export from '@/services/export/export.js'
 
 @Component({
   props: {
     LogReportData: Array,
-    publishVisible: Boolean,
+    buttonVisible: Boolean,
     chartID: Number
   }
 })
@@ -122,6 +124,30 @@ export default class SpentTime extends LogComponent {
 
   publish () {
     this.$emit('publish')
+  }
+
+  export() {
+    Export.export()
+
+    // const template = this.$el.innerHTML;
+    //         let html = `<!DOCTYPE html>
+    //             <html>
+    //             <head>
+    //                 <meta charset="utf-8">
+    //                 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    //                 <title>X-Find迅聘选才</title>
+    //                 <link rel="stylesheet" href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" />
+    //                 <style>
+    //                     ${resumecss}
+    //                 </style>
+    //             </head>
+    //             <body>
+    //                 <div class="resume_preview_page" style="margin:0 auto;width:1200px">
+    //                 ${template}
+    //                 </div>
+    //             </body>
+    //             </html>`;
+    //         return html;
   }
 }
 </script>
