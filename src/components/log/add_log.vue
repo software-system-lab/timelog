@@ -2,7 +2,7 @@
 <div>
   <div v-if="addActivityVisible" id="add-activity-popup" class="overlay">
     <div class="popup">
-      <AddType :activityList="activityList" @close="closePopup" @saved="update"/>
+      <AddActivity :activityList="activityList" @close="closePopup" @saved="update"/>
     </div>
   </div>
   <el-card>
@@ -21,7 +21,7 @@
           </el-option-group>
           <el-option-group>
             <el-option key="AddActivity" id="addlog-dropdown-button-newtype" value="">
-              <el-button @click="createNewType">New Type</el-button>
+              <el-button @click="createNewActivity">New Activity</el-button>
             </el-option>
           </el-option-group>
         </el-select>
@@ -66,11 +66,11 @@
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import moment from 'moment'
 import logService from '@/services/LogService.js'
-import AddType from '@/components/log/add_type.vue'
+import AddActivity from '@/components/log/add_activity.vue'
 
 @Component({
   components: {
-    AddType
+    AddActivity
   },
   props: {
     activityList: Array
@@ -242,7 +242,7 @@ export default class AddLog extends Vue {
     this.$emit('activityUpdate')
   }
 
-  createNewType () {
+  createNewActivity () {
     this.openPopup()
   }
 }

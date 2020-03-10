@@ -22,7 +22,7 @@
           </el-table-column>
           <el-table-column label="Percentage">
             <template slot-scope="scope">
-              {{(scope.row.TimeLength / totalTime * 100).toFixed(2) || 0}} %
+              {{totalTime === 0 ? 0 : (scope.row.TimeLength / totalTime * 100).toFixed(2)}} %
             </template>
           </el-table-column>
         </el-table>
@@ -49,7 +49,6 @@ import Export from '@/services/export/export.js'
 export default class SpentTime extends LogComponent {
   // Data members
   ctx = null
-  pieChart = null
   logReportData = []
   totalTime = 0
   chart = null
@@ -79,7 +78,11 @@ export default class SpentTime extends LogComponent {
   // Methods
   drawChart () {
     const pieArray = [['Activity', 'Hours']]
+    let flag = true
     this.logReportData.forEach((item) => {
+      if (item.TimeLength !== 0) {
+        flag = false
+      }
       pieArray.push([
         item.ActivityName,
         {
@@ -89,14 +92,27 @@ export default class SpentTime extends LogComponent {
       ])
     })
 
-    var data = google.visualization.arrayToDataTable(pieArray)
-
     var options = {
       title: 'Spent Time',
       pieSliceText: 'value-and-percentage'
     }
 
-    this.chart = new google.visualization.PieChart(document.getElementById('piechart-' + this.chartID))
+    if (flag) {
+      pieArray.push([
+        'No Activity',
+        {
+          v: 1,
+          f: '0'
+        }
+      ])
+      options.pieSliceText = 'label'
+    }
+
+    var data = google.visualization.arrayToDataTable(pieArray)
+
+    if (!this.chart) {
+      this.chart = new google.visualization.PieChart(document.getElementById('piechart-' + this.chartID))
+    }
 
     this.chart.draw(data, options)
   }

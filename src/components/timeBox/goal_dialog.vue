@@ -73,7 +73,6 @@ export default class GoalDialog extends Vue {
     if (result) {
       this.$emit('goalEdit', data)
     }
-    console.log(data)
   }
 
   cancelGoal (data) {
