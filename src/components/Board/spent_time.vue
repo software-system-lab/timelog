@@ -22,7 +22,7 @@
           </el-table-column>
           <el-table-column label="Percentage">
             <template slot-scope="scope">
-              {{(scope.row.TimeLength / pieData.datasets[0].timeLength * 100).toFixed(2) || 0}} %
+              {{(scope.row.TimeLength / totalTime * 100).toFixed(2) || 0}} %
             </template>
           </el-table-column>
         </el-table>
@@ -51,7 +51,6 @@ export default class SpentTime extends LogComponent {
   ctx = null
   pieChart = null
   logReportData = []
-  pieData = this.initPieData()
   totalTime = 0
   chart = null
 
@@ -117,11 +116,6 @@ export default class SpentTime extends LogComponent {
   getMinute (time) {
     return this.paddingLeft((time %
     3600000 / 60 / 1000).toFixed(0), 2)
-  }
-
-  setPieChart () {
-    this.serializePieData()
-    this.generatePieChart()
   }
 
   update () {
