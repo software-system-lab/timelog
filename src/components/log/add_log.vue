@@ -161,15 +161,17 @@ export default class AddLog extends Vue {
   created () {
     this.emptyLog()
     this.startDateOption.disabledDate = time => moment() <= moment(time.getTime())
-    this.endDateOption.disabledDate = time => moment(this.logData.StartDate) > moment(time.getTime())
+    this.endDateOption.disabledDate = time => moment(this.startDate) > moment(time.getTime())
   }
 
   // Methods
   async submit () {
     this.$refs.form.validate(async (valid) => {
       if (valid) {
-        this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
-        this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
+        this.logData.StartDate = moment(this.startDate).format('YYYY-MM-DD')
+        this.logData.EndDate = moment(this.endDate).format('YYYY-MM-DD')
+        this.logData.StartTime = moment(this.logData.StartDate + ' ' + this.startTime).format('HH:mm')
+        this.logData.EndTime = moment(this.logData.EndDate + ' ' + this.endTime).format('HH:mm')
         let result
         try {
           result = await logService.AddALog(this.logData)
