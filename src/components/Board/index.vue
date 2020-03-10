@@ -1,20 +1,15 @@
 <template>
 <div>
   <h1>Dash Board</h1>
-  <TimeBox
-    @update="changeTimeBox"
-    @updateGoal="getLogReportData"
-    @displayByDate="displayByDate"
-    :timeBoxInfo="timeBoxInfo"
-    :activityList="activityList"
-    ref="timeBox"/>
-  <br>
-  <SpentTime :LogReportData="logReportData" ref="spentTime"/>
+  <SpentTime
+    :LogReportData="logReportData"
+    :buttonVisible="true"
+    @publish="publish"
+    ref="spentTime"/>
   <br>
   <Goal
     v-if="goalDisplay"
-    :activityList="activityList"
-    @setting="openTimeBoxSetting"
+    :activityList="logReportData"
     ref='goal'/>
 </div>
 </template>
@@ -22,15 +17,14 @@
 <script>
 import { LogView } from '@/components/interface.js'
 import { Component, Watch } from 'vue-property-decorator'
-import TimeBox from '@/components/Board/timeBox/index.vue'
 import SpentTime from '@/components/Board/spent_time.vue'
 import Goal from '@/components/Board/goal.vue'
 import logService from '@/services/LogService.js'
 import profileService from '@/services/ProfileService.js'
+import publishService from '@/services/publish_service.js'
 
 @Component({
   components: {
-    TimeBox,
     SpentTime,
     Goal
   },
@@ -40,18 +34,14 @@ import profileService from '@/services/ProfileService.js'
 })
 export default class Board extends LogView {
   // Data members
-  timeBoxInfo = {
-    timeBoxID: null
-  }
-
-  timeBoxSetting = false
+  timeBoxID = null
+  duration = null
   goalDisplay = true
   logReportData = []
-  selectedDate = null
 
   @Watch('activityList')
   onActivityUpdate () {
-    if (this.selectedDate) {
+    if (this.duration) {
       this.displayByDate()
     } else {
       this.getLogReportData()
@@ -61,20 +51,15 @@ export default class Board extends LogView {
   // Life cycle
   async created () {
     const timeBoxID = await profileService.getCurrentTimeBox()
-    this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
-    this.getLogReportData()
-    this.$refs.timeBox.timeBoxDate()
+    this.displayByTimeBoxID(timeBoxID)
   }
 
   // Methods
   async getLogReportData () {
     const userID = window.Profile.UserID
-    const result = await logService.activityTimeByTimeBox(userID, this.timeBoxInfo.TimeBoxID)
+    const result = await logService.activityTimeByTimeBox(userID, this.timeBoxID)
     if (result !== 'no data') {
-      this.logReportData.length = 0
-      result.forEach(x => {
-        this.logReportData.push(x)
-      })
+      this.logReportData = [...result]
     }
     this.$refs.spentTime.update()
   }
@@ -82,36 +67,37 @@ export default class Board extends LogView {
   update () {
     this.goalDisplay = true
     this.getLogReportData()
-    this.$refs.timeBox.update()
   }
 
-  async changeTimeBox (timeBoxID) {
-    this.timeBoxInfo = await profileService.GetTimeBoxById(timeBoxID)
-    this.update()
-  }
-
-  openTimeBoxSetting () {
-    this.timeBoxSetting = true
-  }
-
-  closeTimeBoxSetting () {
-    this.timeBoxSetting = false
+  async displayByTimeBoxID (timeBoxID) {
+    this.timeBoxID = timeBoxID
+    const timeBoxInfo = await profileService.GetTimeBoxById(this.timeBoxID)
+    this.duration = (({ StartDate, EndDate }) => ({ StartDate, EndDate }))(timeBoxInfo)
     this.update()
   }
 
   async displayByDate (date) {
     this.goalDisplay = false
-    this.selectedDate = date
-    this.timeBoxInfo.TimeBoxID = ''
+    this.duration = date
+    this.timeBoxID = null
     const userID = window.Profile.UserID
-    const result = await logService.activityTime(userID, date.start, date.end)
+    const result = await logService.activityTime(userID, date.StartDate, date.EndDate)
     if (result !== 'no data') {
-      this.logReportData.length = 0
-      result.forEach(x => {
-        this.logReportData.push(x)
-      })
+      this.logReportData = [...result]
     }
     this.$refs.spentTime.update()
+  }
+
+  async publish () {
+    const result = await publishService.publish(window.Profile.UserID, this.duration.StartDate, this.duration.EndDate)
+    if (result === 'success') {
+      this.$message({
+        message: 'Log Published!',
+        type: 'success'
+      })
+    } else {
+      this.$message.error('Failed to publish log.')
+    }
   }
 }
 </script>

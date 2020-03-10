@@ -5,15 +5,22 @@
       <AddLog @close="closePopup" @saved="update" @activityUpdate="updateActivityList" :activityList="activityList"/>
     </div>
   </div>
+  <div v-if="changeTimeBoxVisible" class="overlay">
+    <div class="popup">
+      <ChangeTimeBox/>
+    </div>
+  </div>
   <el-container>
     <el-aside class="hidden-sm-and-down" width="200px">
-      <router-view name="header" @addLog="openPopup"></router-view>
+      <router-view name="header"
+        :activityList="activityList"
+        @addLog="openPopup"
+        @timeBoxSelected="updateMainView"
+        @goalUpdated="goalUpdated"
+        @durationChanged="durationChanged"
+      />
     </el-aside>
     <el-container>
-      <el-popover placement="right" width="300" trigger="click" class="hidden-md-and-up">
-        <router-view name="header"></router-view>
-        <el-button slot="reference" class="el-icon-more-outline"></el-button>
-      </el-popover>
       <el-main>
         <router-view :activityList="activityList" @activityUpdate="updateActivityList" ref="view"/>
       </el-main>
@@ -26,16 +33,19 @@
 import { LogComponent } from '@/components/interface.js'
 import { Component } from 'vue-property-decorator'
 import AddLog from '@/components/log/add_log.vue'
+import ChangeTimeBox from '@/components/changeTimeBox.vue'
 import _logService from '@/services/LogService.js'
 
 @Component({
   components: {
-    AddLog
+    AddLog,
+    ChangeTimeBox
   }
 })
 export default class LoginedLayout extends LogComponent {
   // Data members
   addLogVisible = false
+  changeTimeBoxVisible = false
   activityList = []
 
   // Life cycle
@@ -52,23 +62,39 @@ export default class LoginedLayout extends LogComponent {
     this.addLogVisible = false
   }
 
+  openTimeBox () {
+    this.changeTimeBoxVisible = true
+  }
+
+  closeTimeBox () {
+    this.changeTimeBoxVisible = false
+  }
+
   async updateActivityList () {
     const activityList = await _logService.GetUserActivities()
-    this.activityList.length = 0
     activityList.forEach(x => {
-      this.activityList.push({
-        ActivityID: x.ActivityID,
-        ActivityName: x.ActivityName,
-        IsPrivate: !!x.IsPrivate,
-        IsEnable: !!x.IsEnable,
-        InputDisabled: true
-      })
+      x.IsPrivate = !!x.IsPrivate
+      x.IsEnable = !!x.IsEnable
+      x.InputDisabled = true
     })
+    this.activityList = [...activityList]
   }
 
   update () {
     this.$refs.view.update()
     this.closePopup()
+  }
+
+  updateMainView (timeBoxID) {
+    this.$refs.view.displayByTimeBoxID(timeBoxID)
+  }
+
+  durationChanged (duration) {
+    this.$refs.view.displayByDate(duration)
+  }
+
+  goalUpdated () {
+    this.$refs.view.getLogReportData()
   }
 }
 </script>
@@ -93,5 +119,9 @@ export default class LoginedLayout extends LogComponent {
   width: 30%;
   position: relative;
   transition: all 5s ease-in-out;
+}
+
+.el-main {
+  overflow-y: scroll;
 }
 </style>

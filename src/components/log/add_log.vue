@@ -2,7 +2,7 @@
 <div>
   <div v-if="addActivityVisible" id="add-activity-popup" class="overlay">
     <div class="popup">
-      <AddType :activityList="activityList" @close="closePopup" @saved="update"/>
+      <AddActivity :activityList="activityList" @close="closePopup" @saved="update"/>
     </div>
   </div>
   <el-card>
@@ -16,12 +16,12 @@
       <el-form-item label="Activity" prop="ActivityID">
         <el-select ref="activitySelector" v-model="logData.ActivityID" filterable reserve-keyword placeholder="Choose">
           <el-option-group>
-            <el-option v-for="item in activityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
+            <el-option v-for="item in enabledActivityList" :key="item.ActivityID" :label="item.ActivityName" :value="item.ActivityID">
             </el-option>
           </el-option-group>
           <el-option-group>
             <el-option key="AddActivity" id="addlog-dropdown-button-newtype" value="">
-              <el-button @click="createNewType">New Type</el-button>
+              <el-button @click="createNewActivity">New Activity</el-button>
             </el-option>
           </el-option-group>
         </el-select>
@@ -29,12 +29,12 @@
       <el-form-item label="Start Time">
         <el-col :md="12" :sm="24">
           <el-form-item prop="StartDate">
-            <el-date-picker v-model="logData.StartDate" type="date" placeholder="Start Date" :picker-options="startDateOption" align="'center'"></el-date-picker>
+            <el-date-picker v-model="startDate" type="date" placeholder="Start Date" :picker-options="startDateOption" align="'center'"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :md="12" :sm="24">
           <el-form-item prop="StartTime">
-            <el-time-picker v-model="logData.StartTime" format="HH:mm" value-format="HH:mm" :picker-options='startTimeOption'>
+            <el-time-picker v-model="startTime" format="HH:mm" value-format="HH:mm" :picker-options='startTimeOption'>
             </el-time-picker>
           </el-form-item>
         </el-col>
@@ -42,12 +42,12 @@
       <el-form-item label="End Time">
         <el-col :md="12" :sm="24">
           <el-form-item prop="EndDate">
-            <el-date-picker v-model="logData.EndDate" type="date" placeholder="End Date" :picker-options="endDateOption" align="'center'"></el-date-picker>
+            <el-date-picker v-model="endDate" type="date" placeholder="End Date" :picker-options="endDateOption" align="'center'"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :md="12" :sm="24">
           <el-form-item prop="EndTime">
-            <el-time-picker v-model="logData.EndTime" format="HH:mm" value-format="HH:mm" :picker-options='endTimeOption'>
+            <el-time-picker v-model="endTime" format="HH:mm" value-format="HH:mm" :picker-options='endTimeOption'>
             </el-time-picker>
           </el-form-item>
         </el-col>
@@ -63,14 +63,14 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import moment from 'moment'
 import logService from '@/services/LogService.js'
-import AddType from '@/components/log/add_type.vue'
+import AddActivity from '@/components/log/add_activity.vue'
 
 @Component({
   components: {
-    AddType
+    AddActivity
   },
   props: {
     activityList: Array
@@ -78,7 +78,8 @@ import AddType from '@/components/log/add_type.vue'
 })
 export default class AddLog extends Vue {
   // Data members
-  logData = this.emptyLog()
+  logData = null
+  enabledActivityList = []
   formRules = {
     Title: [{
       required: true,
@@ -117,39 +118,60 @@ export default class AddLog extends Vue {
     }]
   }
 
+  startTime = null
+  endTime = null
+  startDate = null
+  endDate = null
+
   startDateOption = {}
   endDateOption = {}
+  startTimeOption = {}
+  endTimeOption = {
+    selectableRange: '00:00:00 - 23:59:59'
+  }
+
   addActivityVisible = false
+
+  @Watch('startTime')
+  startTimeSelected () {
+    this.reloadDisableDate()
+  }
+
+  @Watch('startDate')
+  startDateSelected () {
+    if (this.startDate !== this.endDate) {
+      this.endDate = this.startDate.toString()
+    }
+    this.reloadDisableDate()
+    this.reloadEndTimeOption()
+  }
+
+  @Watch('endDate')
+  endDateSelected () {
+    this.reloadEndTimeOption()
+  }
+
+  @Watch('activityList')
+  activityListUpdated () {
+    this.enabledActivityList = this.activityList.filter(x => x.IsEnable === true)
+  }
 
   // Life cycle
   created () {
-    this.startDateOption.disabledDate = time => moment(this.logData.EndDate) < moment(time.getTime())
-    this.endDateOption.disabledDate = time => moment(this.logData.StartDate) > moment(time.getTime())
-  }
-
-  // Computed
-  get endTimeOption () {
-    if (this.logData.StartDate === this.logData.EndDate) {
-      return {
-        selectableRange: this.logData.StartTime + ':00 - 23:59:59'
-      }
-    }
-  }
-
-  get startTimeOption () {
-    if (this.logData.StartDate === this.logData.EndDate) {
-      return {
-        selectableRange: '00:00:00 - ' + this.logData.EndTime + ':00'
-      }
-    }
+    this.emptyLog()
+    this.startDateOption.disabledDate = time => moment() <= moment(time.getTime())
+    this.reloadDisableDate()
+    this.enabledActivityList = this.activityList.filter(x => x.IsEnable === true)
   }
 
   // Methods
   async submit () {
     this.$refs.form.validate(async (valid) => {
       if (valid) {
-        this.logData.StartDate = moment(this.logData.StartDate).format('YYYY-MM-DD')
-        this.logData.EndDate = moment(this.logData.EndDate).format('YYYY-MM-DD')
+        this.logData.StartDate = moment(this.startDate).format('YYYY-MM-DD')
+        this.logData.EndDate = moment(this.endDate).format('YYYY-MM-DD')
+        this.logData.StartTime = moment(this.logData.StartDate + ' ' + this.startTime).format('HH:mm')
+        this.logData.EndTime = moment(this.logData.EndDate + ' ' + this.endTime).format('HH:mm')
         let result
         try {
           result = await logService.AddALog(this.logData)
@@ -173,20 +195,54 @@ export default class AddLog extends Vue {
     })
   }
 
+  reloadDisableDate () {
+    this.endDateOption.disabledDate = (time) => {
+      if (moment(this.startDate) > moment(time.getTime())) {
+        return true
+      } else if (moment() <= moment(time.getTime())) {
+        return true
+      }
+      return false
+    }
+  }
+
+  reloadEndTimeOption () {
+    const startDate = moment(this.startDate)
+    const endDate = moment(this.endDate)
+    if (startDate.format('YYYY-MM-DD') === endDate.format('YYYY-MM-DD')) {
+      const timeArray = this.startTime.split(':')
+      const startTime = moment(this.startDate).hour(timeArray[0]).minute(timeArray[1])
+      this.endTimeOption.selectableRange = startTime.add(1, 'minutes').format('HH:mm') + ':00 - 23:59:59'
+      if (this.startTime >= this.endTime) {
+        console.log('hello')
+        this.endTime = startTime.add(1, 'hours').add(-1, 'minutes').format('HH:mm')
+      }
+    } else if (startDate < endDate) {
+      this.endTimeOption.selectableRange = '00:00:00 - 23:59:59'
+    } else {
+      this.endTimeOption.selectableRange = '00:00:00 - 00:00:00'
+    }
+  }
+
   cancel () {
     this.$refs.form.clearValidate()
-    this.logData = this.emptyLog()
+    this.emptyLog()
     this.$emit('close')
   }
 
   emptyLog () {
-    return {
+    this.startTime = moment().add(-1, 'hours').format('HH:mm')
+    this.endTime = moment().format('HH:mm')
+    this.startDate = moment().add(-1, 'hours').format('YYYY-MM-DD')
+    this.endDate = moment().format('YYYY-MM-DD')
+
+    this.logData = {
       Title: '',
       ActivityID: null,
-      StartTime: moment().add(-1, 'hours').format('HH:mm'),
-      EndTime: moment().format('HH:mm'),
-      StartDate: moment().add(-1, 'hours').format('YYYY-MM-DD'),
-      EndDate: moment().format('YYYY-MM-DD'),
+      StartTime: this.startTime,
+      EndTime: this.endTime,
+      StartDate: this.startDate,
+      EndDate: this.endDate,
       Description: ''
     }
   }
@@ -215,7 +271,7 @@ export default class AddLog extends Vue {
     this.$emit('activityUpdate')
   }
 
-  createNewType () {
+  createNewActivity () {
     this.openPopup()
   }
 }
