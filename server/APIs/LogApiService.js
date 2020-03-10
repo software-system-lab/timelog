@@ -71,7 +71,7 @@ module.exports = class {
     // tag
     this.router.post('/GetUserActivities', async (req, res) => {
       try {
-        let result = await _LogProvider.GetUserActivities(req.body.UserID)
+        const result = await _LogProvider.GetUserActivities(req.body.UserID)
         res.send(result)
       } catch (err) {
         console.log(err)
