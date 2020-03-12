@@ -27,7 +27,8 @@ module.exports = class {
         duration: data.StartDate + ' ~ ' + data.EndDate,
         total: total,
         update: moment(data.UpdateTime).format('YYYY-MM-DD hh:mm'),
-        activityList: activityList
+        activityList: activityList,
+        userID: data.UserID
       })
     }
     return userDataList

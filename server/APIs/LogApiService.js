@@ -71,8 +71,7 @@ module.exports = class {
     // tag
     this.router.post('/GetUserActivities', async (req, res) => {
       try {
-        let result = await _LogProvider.GetUserActivities(req.body.UserID)
-        result = result.filter(x => x.IsDeleted === 0)
+        const result = await _LogProvider.GetUserActivities(req.body.UserID)
         res.send(result)
       } catch (err) {
         console.log(err)

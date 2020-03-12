@@ -7,13 +7,13 @@
         <h3>Duration: {{ timeBoxInfo.StartDate }} ~ {{ timeBoxInfo.EndDate }}</h3>
       </div>
       <el-row>
-        <el-table :data="goalList" sortable="true">
+        <el-table :data="goalList">
           <el-table-column prop="Activity Name" label="Activity">
             <template slot-scope="scope">
               {{scope.row.ActivityName}}
             </template>
           </el-table-column>
-          <el-table-column prop="GoalHour" label="Goal(Hour)">
+          <el-table-column prop="GoalHour" label="Goal (Hour)">
             <template slot-scope="scope">
               <el-input-number :min="0" :disabled="!scope.row.IsEdit" step-strictly v-model="scope.row.GoalHour"></el-input-number>
             </template>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import logService from '@/services/LogService.js'
 
 @Component({
@@ -46,7 +46,12 @@ import logService from '@/services/LogService.js'
 })
 export default class GoalDialog extends Vue {
   // Data members
-  goalList = this.activityList
+  goalList = []
+
+  @Watch('activityList', { deep: true })
+  activityListChanged (activityList) {
+    this.goalList = activityList
+  }
 
   // Methods
   openHandler () {
@@ -71,7 +76,7 @@ export default class GoalDialog extends Vue {
   }
 
   cancelGoal (data) {
-    this.ActivityList.forEach(activity => {
+    this.activityList.forEach(activity => {
       if (activity.ActivityID === data.ActivityID) {
         const keyList = Object.keys(data)
         keyList.forEach(key => {

@@ -10,7 +10,7 @@
       <el-form-item label="Enable" prop="IsEnable">
         <el-switch v-model="activityData.IsEnable"/>
       </el-form-item>
-      <el-form-item label="Name" prop="IsPrivate">
+      <el-form-item label="Private" prop="IsPrivate">
         <el-switch v-model="activityData.IsPrivate"/>
       </el-form-item>
     </el-form>
@@ -28,7 +28,7 @@ import _logService from '@/services/LogService.js'
     activityList: Array
   }
 })
-export default class AddType extends Vue {
+export default class AddActivity extends Vue {
   // Data members
   activityData = {
     Name: '',
