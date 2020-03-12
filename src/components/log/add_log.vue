@@ -135,6 +135,7 @@ export default class AddLog extends Vue {
   @Watch('startTime')
   startTimeSelected () {
     this.reloadDisableDate()
+    this.reloadEndTimeOption()
   }
 
   @Watch('startDate')
@@ -213,7 +214,7 @@ export default class AddLog extends Vue {
       const timeArray = this.startTime.split(':')
       const startTime = moment(this.startDate).hour(timeArray[0]).minute(timeArray[1])
       this.endTimeOption.selectableRange = startTime.add(1, 'minutes').format('HH:mm') + ':00 - 23:59:59'
-      if (this.startTime >= this.endTime) {
+      if (Date.parse(`01/01/2011 ${this.startTime}:45`) >= Date.parse(`01/01/2011 ${this.endTime}:45`)) {
         this.endTime = startTime.add(1, 'hours').add(-1, 'minutes').format('HH:mm')
       }
     } else if (startDate < endDate) {
