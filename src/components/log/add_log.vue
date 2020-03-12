@@ -214,7 +214,6 @@ export default class AddLog extends Vue {
       const startTime = moment(this.startDate).hour(timeArray[0]).minute(timeArray[1])
       this.endTimeOption.selectableRange = startTime.add(1, 'minutes').format('HH:mm') + ':00 - 23:59:59'
       if (this.startTime >= this.endTime) {
-        console.log('hello')
         this.endTime = startTime.add(1, 'hours').add(-1, 'minutes').format('HH:mm')
       }
     } else if (startDate < endDate) {
