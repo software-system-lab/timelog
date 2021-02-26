@@ -1,0 +1,8 @@
+{
+  "realm": "OIS",
+  "auth-server-url": "https://ssl-sonarqube.csie.ntut.edu.tw/auth/",
+  "ssl-required": "external",
+  "resource": "timelog",
+  "public-client": true,
+  "confidential-port": 0
+}

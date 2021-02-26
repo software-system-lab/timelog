@@ -1,40 +1,10 @@
 # Timelog
 
-[![Drone Build Status](https://drone.hsiang.me/api/badges/ois/timelog/status.svg)](https://drone.hsiang.me/ois/timelog)
+## Build status
+Server: 
 
-[![Sonar Quality Gate Status](https://sonarqube.hsiang.me/api/project_badges/measure?project=ois-timelog&metric=alert_status)](https://sonarqube.hsiang.me/dashboard?id=ois-timelog)
+[![Server](https://drone.hsiang.me/api/badges/software-system-lab/timelog_server/status.svg)](https://drone.hsiang.me/software-system-lab/timelog_server)
 
-![](static/image/timelog.png)
+Web: 
 
-Timelog is a web app for users to record their time usage.
-It have been developed by Vue.js and Node.js.
-
-## Quick Start
-1. Clone the project
-
-2. Setup config files in `src/config.js` and server/config.js`.
-
-3. Build and start
-```
-$ npm install
-$ npm run build
-$ node server.js
-```
-
-4. Server starts.
-
-If NODE_ENV is production
-```
-warning: please use IANA standard timezone format ('Etc/GMT-8')
-Server running at http://0.0.0.0:80/
-```
-Else
-```
-warning: please use IANA standard timezone format ('Etc/GMT-8')
-Server running at http://0.0.0.0:5000/
-```
-
-## Quick View
-
-### login
-![](/UI/assets/sampleLogin.png)
+[![Web](https://drone.hsiang.me/api/badges/software-system-lab/timelog_web/status.svg)](https://drone.hsiang.me/software-system-lab/timelog_web)

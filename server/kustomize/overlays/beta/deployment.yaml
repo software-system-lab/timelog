@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timelog-v2-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timelog-v2-server
+  template:
+    metadata:
+      labels:
+        app: timelog-v2-server
+    spec:
+      containers:
+        - name: timelog-v2-server
+          image: nightlord851108/timelog_server
+          imagePullPolicy: Always
+          ports:
+            - name: api-http
+              containerPort: 9000
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_HOST
+                  name: timelog-server-env-beta
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: timelog-server-env-beta
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: timelog-server-env-beta
+            - name: TIMELOG_MYSQL_DB
+              valueFrom:
+                secretKeyRef:
+                  key: TIMELOG_MYSQL_DB
+                  name: timelog-server-env-beta

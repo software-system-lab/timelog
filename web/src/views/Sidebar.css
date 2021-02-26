@@ -1,0 +1,41 @@
+.sidebar-list-item {
+  text-align: center;
+  display: block;
+}
+
+.sidebar-list {
+  orientation: vertical;
+  display: block;
+}
+
+.logo {
+  max-width: 100%;
+  width: 100%;
+}
+
+.AddLog {
+  width: 100%;
+  margin: 10px;
+}
+
+.sidebar-button { 
+  margin: 10px 0%;
+  width: 100%;
+}
+
+.report-button{
+  position: relative;
+  bottom: 0;
+  text-decoration: none;
+  color: black;
+  width: 15%;
+}
+
+@media screen and (min-width: 1024px){
+  .report-button{
+    position: fixed;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+  }
+}
