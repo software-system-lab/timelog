@@ -57,8 +57,8 @@ steps:
       password:
         from_secret:
           docker_hub_password
-    commands:
-      - cd server
+      dockerfile: server/Dockerfile
+      target: server
 
 trigger:
   branch:
@@ -90,8 +90,8 @@ steps:
         from_secret: timelog_docker_user
       password:
         from_secret: timelog_docker_passwd
-    commands:
-      - cd web
+      dockerfile: web/Dockerfile
+      target: web
 
 trigger:
   branch:
