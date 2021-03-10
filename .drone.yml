@@ -45,7 +45,7 @@ type: docker
 name: Publish Server
 
 steps:
-  - name: Publish Docker Image
+  - name: Publish Server
     image: plugins/docker
     settings:
       repo: ssl1321ois/timelog_server
@@ -58,7 +58,7 @@ steps:
         from_secret:
           docker_hub_password
       dockerfile: server/Dockerfile
-      target: server
+      context: server
 
 trigger:
   branch:
@@ -81,7 +81,7 @@ steps:
       - yarn
       - yarn run build
 
-  - name: Publish
+  - name: Publish Server
     image: plugins/docker
     settings:
       repo: ssl1321ois/timelog_web
@@ -91,7 +91,7 @@ steps:
       password:
         from_secret: timelog_docker_passwd
       dockerfile: web/Dockerfile
-      target: web
+      context: web
 
 trigger:
   branch:
