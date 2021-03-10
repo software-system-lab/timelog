@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: timelog
+  namespace: ois-production
+
+spec:
+  rules:
+  - host: ssl-timelog.csie.ntut.edu.tw
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: timelog-server
+          servicePort: 9000
+        pathType: ImplementationSpecific
+      - path: /
+        backend:
+          serviceName: timelog-web
+          servicePort: 80
+        pathType: ImplementationSpecific

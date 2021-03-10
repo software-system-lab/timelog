@@ -1,0 +1,129 @@
+
+kind: secret
+name: mysql_user
+---
+kind: secret
+name: mysql_password
+---
+kind: secret
+name: docker_hub_user
+---
+kind: secret
+name: docker_hub_password
+---
+kind: secret
+name: rancher_kube_cluster_url
+---
+kind: secret
+name: rancher_kube_cluster_token
+---
+kind: pipeline
+type: docker
+name: Server Test
+
+steps:
+  - name: Run server test
+    image: maven:3.6.3-jdk-11
+    environment:
+      MYSQL_USER:
+        from_secret:
+          mysql_user
+      MYSQL_PASSWORD:
+        from_secret:
+          mysql_password
+    commands:
+      - cd server
+      - mvn test
+
+trigger:
+  branch:
+    - master
+    - dev
+---
+kind: pipeline
+type: docker
+name: Publish Server
+
+steps:
+  - name: Publish Docker Image
+    image: plugins/docker
+    settings:
+      repo: ssl1321ois/timelog_server
+      tags:
+        ${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+      username:
+        from_secret:
+          docker_hub_user
+      password:
+        from_secret:
+          docker_hub_password
+    commands:
+      - cd server
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+
+depends_on:
+  - Server Test
+---
+kind: pipeline
+type: docker
+name: Publish Web
+
+steps:
+  - name: Build production web
+    image: node:10.16.3
+    commands:
+      - cd web
+      - yarn
+      - yarn run build
+
+  - name: Publish
+    image: plugins/docker
+    settings:
+      repo: ssl1321ois/timelog_web
+      tags: ${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+      username:
+        from_secret: timelog_docker_user
+      password:
+        from_secret: timelog_docker_passwd
+    commands:
+      - cd web
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+---
+kind: pipeline
+type: docker
+name: Deployment
+
+steps:
+  - name: Deploy Production
+    image: nightlord851108/kustomize
+    environment:
+      KUBE_CLUSTER_URL:
+        from_secret:
+          rancher_kube_cluster_url
+      CLUSTER_TOKEN:
+        from_secret:
+          rancher_cluster_token
+    commands:
+      - cd kustomize
+      - kustomize edit set image ssl1321ois/timelog_server:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+      - kustomize edit set image ssl1321ois/timelog_web:${DRONE_COMMIT_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+      - kustomize build . | kubectl apply --server=$${KUBE_CLUSTER_URL}  --token=$${CLUSTER_TOKEN} --insecure-skip-tls-verify=true --namespace=ois-production -f -
+
+depends_on:
+  - Publish Server
+  - Publish Web
+trigger:
+  branch:
+    - master
+  event:
+    - push
